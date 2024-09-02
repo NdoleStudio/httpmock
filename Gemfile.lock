@@ -296,7 +296,7 @@ GEM
       opentelemetry-common (~> 0.20)
       opentelemetry-registry (~> 0.2)
       opentelemetry-semantic_conventions
-    opentelemetry-semantic_conventions (1.10.0)
+    opentelemetry-semantic_conventions (1.10.1)
       opentelemetry-api (~> 1.0)
     os (1.1.4)
     parallel (1.25.1)
