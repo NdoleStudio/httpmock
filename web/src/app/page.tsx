@@ -1,5 +1,7 @@
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
-  return <div className={styles.page}></div>;
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/projects");
 }
