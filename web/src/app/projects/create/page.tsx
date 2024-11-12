@@ -8,13 +8,26 @@ import {
   Text,
   Textarea,
   TextInput,
-  useTheme,
 } from "@primer/react";
-import { ArrowLeftIcon } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
+import { MouseEvent, useState } from "react";
+import { ErrorMessages } from "@/utils/errors";
+import { BackButton } from "@/components/back-button";
 
 export default function ProjectCreate() {
   const router = useRouter();
+  const [errorMessages, setErrorMessages] = useState<ErrorMessages>(
+    ErrorMessages.create(),
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [projectName, setProjectName] = useState<string>("");
+  const [projectDescription, setProjectDescription] = useState<string>("");
+
+  const createProject = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setErrorMessages(ErrorMessages.create());
+    setLoading(true);
+  };
 
   return (
     <Box
@@ -26,13 +39,7 @@ export default function ProjectCreate() {
       }}
     >
       <Box>
-        <Button
-          onClick={() => router.push("/")}
-          sx={{ mb: 3 }}
-          leadingVisual={ArrowLeftIcon}
-        >
-          Back to dashboard
-        </Button>
+        <BackButton href={"/"}></BackButton>
         <Box
           sx={{
             backgroundColor: "canvas.inset",
@@ -50,13 +57,35 @@ export default function ProjectCreate() {
           </Text>
           <FormControl sx={{ mt: 4 }} required={true}>
             <FormControl.Label>Project Name</FormControl.Label>
-            <TextInput block={true} size={"large"} />
+            <TextInput
+              disabled={loading}
+              value={projectName}
+              onChange={(event) => {
+                setProjectName(event.target.value);
+              }}
+              block={true}
+              size={"large"}
+            />
           </FormControl>
           <FormControl sx={{ mt: 4 }} required={true}>
             <FormControl.Label>Project Description</FormControl.Label>
-            <Textarea block={true} rows={2} />
+            <Textarea
+              disabled={loading}
+              value={projectDescription}
+              onChange={(event) => {
+                setProjectDescription(event.target.value);
+              }}
+              block={true}
+              rows={2}
+            />
           </FormControl>
-          <Button sx={{ mt: 4 }} variant={"primary"}>
+          <Button
+            loading={loading}
+            disabled={loading}
+            onClick={createProject}
+            sx={{ mt: 4 }}
+            variant={"primary"}
+          >
             Create Project
           </Button>
         </Box>

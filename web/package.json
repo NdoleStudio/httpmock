@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "api:model": "npx swagger-typescript-api -p ..\\api\\docs\\swagger.json -o .\\src\\api -n model.ts --no-client",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -16,6 +17,7 @@
     "axios": "^1.7.7",
     "next": "15.0.3",
     "next-themes": "^0.4.3",
+    "prettier": "^3.3.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "styled-components": "^5.3.11",

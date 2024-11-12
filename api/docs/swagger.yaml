@@ -1,0 +1,384 @@
+definitions:
+  entities.Project:
+    properties:
+      created_at:
+        example: "2022-06-05T14:26:02.302718+03:00"
+        type: string
+      description:
+        example: Mock API for an online store for selling shoes
+        type: string
+      id:
+        example: 8f9c71b8-b84e-4417-8408-a62274f65a08
+        type: string
+      name:
+        example: Mock Stripe API
+        type: string
+      subdomain:
+        example: api
+        type: string
+      updated_at:
+        example: "2022-06-05T14:26:10.303278+03:00"
+        type: string
+      user_id:
+        example: WB7DRDWrJZRGbYrv2CKGkqbzvqdC
+        type: string
+    required:
+      - created_at
+      - description
+      - id
+      - name
+      - subdomain
+      - updated_at
+      - user_id
+    type: object
+  requests.ProjectCreateRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      subdomain:
+        type: string
+    required:
+      - description
+      - name
+      - subdomain
+    type: object
+  requests.ProjectUpdateRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+      - description
+      - name
+    type: object
+  responses.BadRequest:
+    properties:
+      data:
+        example: The request body is not a valid JSON string
+        type: string
+      message:
+        example: The request isn't properly formed
+        type: string
+      status:
+        example: error
+        type: string
+    required:
+      - data
+      - message
+      - status
+    type: object
+  responses.InternalServerError:
+    properties:
+      message:
+        example: We ran into an internal error while handling the request.
+        type: string
+      status:
+        example: error
+        type: string
+    required:
+      - message
+      - status
+    type: object
+  responses.NoContent:
+    properties:
+      message:
+        example: item deleted successfully
+        type: string
+      status:
+        example: success
+        type: string
+    required:
+      - message
+      - status
+    type: object
+  responses.NotFound:
+    properties:
+      message:
+        example: cannot find item with ID [32343a19-da5e-4b1b-a767-3298a73703ca]
+        type: string
+      status:
+        example: error
+        type: string
+    required:
+      - message
+      - status
+    type: object
+  responses.Ok-array_entities_Project:
+    properties:
+      data:
+        items:
+          $ref: "#/definitions/entities.Project"
+        type: array
+      message:
+        example: Request handled successfully
+        type: string
+      status:
+        example: success
+        type: string
+    required:
+      - data
+      - message
+      - status
+    type: object
+  responses.Ok-entities_Project:
+    properties:
+      data:
+        $ref: "#/definitions/entities.Project"
+      message:
+        example: Request handled successfully
+        type: string
+      status:
+        example: success
+        type: string
+    required:
+      - data
+      - message
+      - status
+    type: object
+  responses.Unauthorized:
+    properties:
+      data:
+        example:
+          Make sure your Bearer token is set in the [Bearer] header in the
+          request
+        type: string
+      message:
+        example: You are not authorized to carry out this request.
+        type: string
+      status:
+        example: error
+        type: string
+    required:
+      - data
+      - message
+      - status
+    type: object
+  responses.UnprocessableEntity:
+    properties:
+      data:
+        additionalProperties:
+          items:
+            type: string
+          type: array
+        type: object
+      message:
+        example: validation errors while sending message
+        type: string
+      status:
+        example: error
+        type: string
+    required:
+      - data
+      - message
+      - status
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: arnold@httpmock.dev
+    name: Acho Arnold
+  description: Backend HTTP Mock API server.
+  license:
+    name: AGPL-3.0
+    url: https://raw.githubusercontent.com/NdoleStudio/httpmock/main/LICENSE
+  title: HTTP Mock API
+  version: "1.0"
+paths:
+  /v1/lemonsqueezy/event:
+    post:
+      consumes:
+        - application/json
+      description: Publish a lemonsqueezy event to the registered listeners
+      produces:
+        - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: "#/definitions/responses.NoContent"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: Consume a lemonsqueezy event
+      tags:
+        - Lemonsqueezy
+  /v1/projects:
+    get:
+      description:
+        Fetches the list of all projects available to the currently authenticated
+        user
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/responses.Ok-array_entities_Project"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: List of projects
+      tags:
+        - Projects
+    post:
+      description: This endpoint creates a new project for a user
+      parameters:
+        - description: project create payload
+          in: body
+          name: payload
+          required: true
+          schema:
+            $ref: "#/definitions/requests.ProjectCreateRequest"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/responses.Ok-entities_Project"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: Create a project
+      tags:
+        - Projects
+  /v1/projects/{projectID}:
+    delete:
+      description: This endpoint deletes a project
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/responses.NoContent"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "404":
+          description: Not Found
+          schema:
+            $ref: "#/definitions/responses.NotFound"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: Delete a project
+      tags:
+        - Projects
+    put:
+      description: This endpoint updates a project for a user
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectID
+          required: true
+          type: string
+        - description: project update payload
+          in: body
+          name: payload
+          required: true
+          schema:
+            $ref: "#/definitions/requests.ProjectUpdateRequest"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/responses.Ok-entities_Project"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: Update a project
+      tags:
+        - Projects
+schemes:
+  - http
+  - https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

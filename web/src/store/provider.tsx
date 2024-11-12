@@ -1,43 +1,36 @@
 "use client";
 
 import { type ReactNode, createContext, useRef, useContext } from "react";
-import { useStore } from "zustand";
+import { useStore as useZustandStore } from "zustand";
+import { type Store, createStore } from "@/store/state";
 
-import { type CounterStore, createCounterStore } from "@/store/state";
+export type StoreApi = ReturnType<typeof createStore>;
 
-export type CounterStoreApi = ReturnType<typeof createCounterStore>;
+export const StoreContext = createContext<StoreApi | undefined>(undefined);
 
-export const CounterStoreContext = createContext<CounterStoreApi | undefined>(
-  undefined,
-);
-
-export interface CounterStoreProviderProps {
+export interface StoreProviderProps {
   children: ReactNode;
 }
 
-export const CounterStoreProvider = ({
-  children,
-}: CounterStoreProviderProps) => {
-  const storeRef = useRef<CounterStoreApi>();
+export const StoreProvider = ({ children }: StoreProviderProps) => {
+  const storeRef = useRef<StoreApi>();
   if (!storeRef.current) {
-    storeRef.current = createCounterStore();
+    storeRef.current = createStore();
   }
 
   return (
-    <CounterStoreContext.Provider value={storeRef.current}>
+    <StoreContext.Provider value={storeRef.current}>
       {children}
-    </CounterStoreContext.Provider>
+    </StoreContext.Provider>
   );
 };
 
-export const useCounterStore = <T,>(
-  selector: (store: CounterStore) => T,
-): T => {
-  const counterStoreContext = useContext(CounterStoreContext);
+export const useStore = <T,>(selector: (store: Store) => T): T => {
+  const storeContext = useContext(StoreContext);
 
-  if (!counterStoreContext) {
-    throw new Error(`useCounterStore must be used within CounterStoreProvider`);
+  if (!storeContext) {
+    throw new Error(`useStore must be used within StoreProvider`);
   }
 
-  return useStore(counterStoreContext, selector);
+  return useZustandStore(storeContext, selector);
 };

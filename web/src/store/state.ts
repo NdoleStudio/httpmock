@@ -1,26 +1,43 @@
-import { createStore } from "zustand/vanilla";
+import { createStore as createZustandStore } from "zustand/vanilla";
+import {
+  EntitiesProject,
+  RequestsProjectCreateRequest,
+  ResponsesOkEntitiesProject,
+} from "@/api/model";
+import axios from "@/api/axios";
+import { AxiosError } from "axios";
+import { getErrorMessages } from "@/utils/errors";
 
-export type CounterState = {
-  count: number;
+export type State = {
+  notificationMessage?: string;
 };
 
-export type CounterActions = {
-  decrementCount: () => void;
-  incrementCount: () => void;
+export type Actions = {
+  createProject: (
+    request: RequestsProjectCreateRequest,
+  ) => Promise<EntitiesProject>;
 };
 
-export type CounterStore = CounterState & CounterActions;
+export type Store = State & Actions;
 
-export const defaultInitState: CounterState = {
-  count: 0,
+export const defaultInitState: State = {
+  notificationMessage: "",
 };
 
-export const createCounterStore = (
-  initState: CounterState = defaultInitState,
-) => {
-  return createStore<CounterStore>()((set) => ({
+export const createStore = (initState: State = defaultInitState) => {
+  return createZustandStore<Store>()((set, get) => ({
     ...initState,
-    decrementCount: () => set((state) => ({ count: state.count - 1 })),
-    incrementCount: () => set((state) => ({ count: state.count + 1 })),
+    createProject: async (request) => {
+      return new Promise<EntitiesProject>((resolve, reject) => {
+        axios
+          .post<ResponsesOkEntitiesProject>(`/v1/projects/`, request)
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError) => {
+            reject(getErrorMessages(error));
+          });
+      });
+    },
   }));
 };

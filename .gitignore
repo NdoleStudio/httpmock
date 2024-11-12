@@ -25,3 +25,5 @@ go.work.sum
 
 # Jetbrains IDE
 .idea
+
+node_modules
