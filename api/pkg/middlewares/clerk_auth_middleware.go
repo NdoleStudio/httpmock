@@ -16,12 +16,12 @@ import (
 // ClerkBearerAuth authenticates a user based on the bearer token
 func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		_, span := tracer.StartFromFiberCtx(c, "middlewares.ClerkBearerAuth")
+		_, span, ctxLogger := tracer.StartFromFiberCtxWithLogger(c, logger, "middlewares.ClerkBearerAuth")
 		defer span.End()
 
 		authToken := c.Get(authHeaderBearer)
 		if !strings.HasPrefix(authToken, bearerScheme) {
-			span.AddEvent(fmt.Sprintf("The request header has no [%s] token", bearerScheme))
+			span.AddEvent(fmt.Sprintf("the request header has no [%s] token", bearerScheme))
 			return c.Next()
 		}
 
@@ -29,12 +29,10 @@ func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer) fiber.Han
 			authToken = authToken[len(bearerScheme)+1:]
 		}
 
-		ctxLogger := tracer.CtxLogger(logger, span)
-
 		claims, err := jwt.Verify(c.Context(), &jwt.VerifyParams{Token: authToken})
 		if err != nil {
-			msg := fmt.Sprintf("invalid clerk id token [%s]", tracer.Redact(authToken))
-			ctxLogger.Warn(tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))
+			msg := fmt.Sprintf("invalid clerk id token [%s] and error message [%s]", tracer.Redact(authToken), err.Error())
+			span.AddEvent(msg)
 			return c.Next()
 		}
 
@@ -45,10 +43,10 @@ func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer) fiber.Han
 			return c.Next()
 		}
 
-		span.AddEvent(fmt.Sprintf("[%s] token is valid", bearerScheme))
+		span.AddEvent(fmt.Sprintf("the clerk [%s] token [%s] is valid", bearerScheme, tracer.Redact(authToken)))
 
 		authUser := entities.AuthUser{
-			Email:     *u.PrimaryEmailAddressID,
+			Email:     u.EmailAddresses[0].EmailAddress,
 			FirstName: u.FirstName,
 			LastName:  u.LastName,
 			ID:        entities.UserID(u.ID),

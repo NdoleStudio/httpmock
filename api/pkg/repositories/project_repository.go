@@ -24,4 +24,7 @@ type ProjectRepository interface {
 
 	// Delete an entities.Project by entities.UserID and projectID
 	Delete(ctx context.Context, userID entities.UserID, projectID uuid.UUID) error
+
+	// ExistsWithSubdomain checks if an entities.Project subdomain already exists
+	ExistsWithSubdomain(ctx context.Context, subdomain string) (bool, error)
 }

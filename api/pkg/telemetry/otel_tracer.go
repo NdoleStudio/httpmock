@@ -23,9 +23,12 @@ func NewOtelLogger(logger Logger) Tracer {
 	}
 }
 
-// Redact replaces the middle of a string with ****
+// Redact replaces the middle of a string with *****
 func (tracer *otelTracer) Redact(secret string) string {
 	visible := int(math.Ceil(float64(len(secret)) / 5))
+	if visible > 5 {
+		visible = 5
+	}
 
 	result := strings.Builder{}
 

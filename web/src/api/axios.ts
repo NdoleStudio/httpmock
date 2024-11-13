@@ -1,7 +1,6 @@
 "use client";
 
 import axios from "axios";
-import { useAuth } from "@clerk/nextjs";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000",
@@ -11,7 +10,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (request) => {
-  const token = await useAuth().getToken();
+  const token = await (window as any).Clerk.session.getToken();
   if (token) {
     request.headers.Authorization = `Bearer ${token}`;
   }

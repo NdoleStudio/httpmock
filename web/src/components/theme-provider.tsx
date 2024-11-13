@@ -5,17 +5,21 @@ import {
   ThemeProvider as PrimerThemeProvider,
   BaseStyles,
 } from "@primer/react";
-import { StoreProvider } from "@/store/provider";
+import { Toaster } from "sonner";
+import { AppStoreProvider } from "@/store/provider";
 
 export function ThemeProvider({
   children,
   ...props
 }: React.ComponentProps<typeof PrimerThemeProvider>) {
   return (
-    <StoreProvider>
+    <AppStoreProvider>
       <PrimerThemeProvider {...props} colorMode={"night"}>
-        <BaseStyles>{children}</BaseStyles>
+        <BaseStyles>
+          <Toaster closeButton={true} richColors={true} />
+          {children}
+        </BaseStyles>
       </PrimerThemeProvider>
-    </StoreProvider>
+    </AppStoreProvider>
   );
 }

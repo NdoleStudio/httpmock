@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/clerk/clerk-sdk-go/v2"
+
 	"github.com/NdoleStudio/go-otelroundtripper"
 	"github.com/NdoleStudio/httpmock/pkg/entities"
 	"github.com/NdoleStudio/httpmock/pkg/handlers"
@@ -68,6 +70,8 @@ func NewLiteContainer() (container *Container) {
 		TimeLocation: time.UTC,
 	}
 
+	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
+
 	return &Container{
 		logger: logger(3).WithService(fmt.Sprintf("%T", container)),
 	}
@@ -79,6 +83,8 @@ func NewContainer(projectID string, version string) (container *Container) {
 	now.DefaultConfig = &now.Config{
 		TimeLocation: time.UTC,
 	}
+
+	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
 
 	container = &Container{
 		projectID: projectID,
@@ -245,6 +251,7 @@ func (container *Container) ProjectHandlerValidator() (validator *validators.Pro
 	return validators.NewProjectHandlerValidator(
 		container.Logger(),
 		container.Tracer(),
+		container.ProjectRepository(),
 	)
 }
 

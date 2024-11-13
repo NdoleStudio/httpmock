@@ -19,6 +19,23 @@ type gormProjectRepository struct {
 	db     *gorm.DB
 }
 
+func (repository *gormProjectRepository) ExistsWithSubdomain(ctx context.Context, subdomain string) (bool, error) {
+	ctx, span := repository.tracer.Start(ctx)
+	defer span.End()
+
+	var exists bool
+	err := repository.db.WithContext(ctx).Model(&entities.Project{}).
+		Select("count(*) > 0").
+		Where("subdomain = ?", subdomain).
+		Find(&exists).
+		Error
+	if err != nil {
+		msg := fmt.Sprintf("cannot check if a project exists with subdomain [%s]", subdomain)
+		return exists, repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
+	}
+	return exists, nil
+}
+
 // NewGormProjectRepository creates the GORM version of the ProjectRepository
 func NewGormProjectRepository(
 	logger telemetry.Logger,
