@@ -10,11 +10,17 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (request) => {
-  const token = await (window as any).Clerk.session.getToken();
-  if (token) {
-    request.headers.Authorization = `Bearer ${token}`;
+  if ((window as any).Clerk.session) {
+    const token = await (window as any).Clerk.session.getToken();
+    if (token) {
+      request.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return request;
 });
+
+export function setAuthHeader(token: string | null) {
+  axiosInstance.defaults.headers.common.Authorization = "Bearer " + token;
+}
 
 export default axiosInstance;

@@ -37,6 +37,20 @@ func NewProjectService(
 	}
 }
 
+// Load an entities.Project for an authenticated user
+func (service *ProjectService) Load(ctx context.Context, userID entities.UserID, projectID uuid.UUID) (*entities.Project, error) {
+	ctx, span := service.tracer.Start(ctx)
+	defer span.End()
+
+	project, err := service.repository.Load(ctx, userID, projectID)
+	if err != nil {
+		msg := fmt.Sprintf("could load project for user with ID [%s] and projectID [%s]", userID, projectID)
+		return nil, service.tracer.WrapErrorSpan(span, stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg))
+	}
+
+	return project, nil
+}
+
 // Index fetches all entities.Project for an authenticated user
 func (service *ProjectService) Index(ctx context.Context, userID entities.UserID) ([]*entities.Project, error) {
 	ctx, span := service.tracer.Start(ctx)

@@ -16,6 +16,7 @@ import (
 
 // ProjectHandlerValidator validates models used in handlers.ProjectHandler
 type ProjectHandlerValidator struct {
+	validator
 	logger     telemetry.Logger
 	tracer     telemetry.Tracer
 	repository repositories.ProjectRepository

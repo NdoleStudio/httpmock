@@ -45,8 +45,9 @@ func (h *ProjectHandler) RegisterRoutes(app *fiber.App, middlewares []fiber.Hand
 	router := app.Group("/v1/projects")
 	router.Get("/", h.computeRoute(h.index, middlewares)...)
 	router.Post("/", h.computeRoute(h.create, middlewares)...)
-	router.Put("/:projectID", h.computeRoute(h.update, middlewares)...)
-	router.Delete("/:projectID", h.computeRoute(h.delete, middlewares)...)
+	router.Get("/:projectId", h.computeRoute(h.show, middlewares)...)
+	router.Put("/:projectId", h.computeRoute(h.update, middlewares)...)
+	router.Delete("/:projectId", h.computeRoute(h.delete, middlewares)...)
 }
 
 // @Summary      List of projects
@@ -69,7 +70,7 @@ func (h *ProjectHandler) index(c *fiber.Ctx) error {
 	projects, err := h.service.Index(ctx, authUser.ID)
 	if err != nil {
 		msg := fmt.Sprintf("cannot fetch projects for user with ID [%s]", authUser.ID)
-		ctxLogger.Error(stacktrace.Propagate(err, msg))
+		ctxLogger.Error(h.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))
 		return h.responseInternalServerError(c)
 	}
 
@@ -128,7 +129,7 @@ func (h *ProjectHandler) create(c *fiber.Ctx) error {
 // @Failure 	 401    	{object}	responses.Unauthorized
 // @Failure      422		{object}	responses.UnprocessableEntity
 // @Failure      500		{object}	responses.InternalServerError
-// @Router       /v1/projects/{projectID} 	[put]
+// @Router       /v1/projects/{projectId} 	[put]
 func (h *ProjectHandler) update(c *fiber.Ctx) error {
 	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
@@ -139,7 +140,7 @@ func (h *ProjectHandler) update(c *fiber.Ctx) error {
 		ctxLogger.Warn(stacktrace.Propagate(err, msg))
 		return h.responseBadRequest(c, err)
 	}
-	request.ProjectID = c.Params("projectID")
+	request.ProjectID = c.Params("projectId")
 
 	if errors := h.validator.ValidateUpdate(ctx, request.Sanitize()); len(errors) != 0 {
 		msg := fmt.Sprintf("validation errors [%s], while creating project with request [%s]", spew.Sdump(errors), c.Body())
@@ -165,6 +166,47 @@ func (h *ProjectHandler) update(c *fiber.Ctx) error {
 	return h.responseOK(c, "project updated successfully", project)
 }
 
+// @Summary      Get a project
+// @Description  This endpoint gets a project for a user
+// @Security	 BearerAuth
+// @Tags         Projects
+// @Produce      json
+// @Param 		 projectID	path 		string true "Project ID"
+// @Success      200 		{object}	responses.Ok[entities.Project]
+// @Failure      400		{object}	responses.BadRequest
+// @Failure 	 401    	{object}	responses.Unauthorized
+// @Failure      422		{object}	responses.UnprocessableEntity
+// @Failure      500		{object}	responses.InternalServerError
+// @Router       /v1/projects/{projectId} 	[get]
+func (h *ProjectHandler) show(c *fiber.Ctx) error {
+	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
+	defer span.End()
+
+	if errors := h.validator.ValidateUUID(c, "projectId"); len(errors) != 0 {
+		msg := fmt.Sprintf("validation errors [%s], while creating project with request [%s]", spew.Sdump(errors), c.Body())
+		ctxLogger.Warn(stacktrace.NewError(msg))
+		return h.responseUnprocessableEntity(c, errors, "validation errors while creating project")
+	}
+
+	projectID := uuid.MustParse(c.Params("projectId"))
+	authUser := h.userFromContext(c)
+
+	project, err := h.service.Load(ctx, authUser.ID, projectID)
+	if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {
+		msg := fmt.Sprintf("cannot load project with id [%s] for user [%s]", projectID, authUser.ID)
+		ctxLogger.Warn(stacktrace.Propagate(err, msg))
+		return h.responseNotFound(c, msg)
+	}
+
+	if err != nil {
+		msg := fmt.Sprintf("cannot load project [%s] user with ID [%s]", projectID, authUser.ID)
+		ctxLogger.Error(stacktrace.Propagate(err, msg))
+		return h.responseInternalServerError(c)
+	}
+
+	return h.responseOK(c, "project fetched successfully", project)
+}
+
 // @Summary      Delete a project
 // @Description  This endpoint deletes a project
 // @Security	 BearerAuth
@@ -177,19 +219,19 @@ func (h *ProjectHandler) update(c *fiber.Ctx) error {
 // @Failure 	 404    	{object}	responses.NotFound
 // @Failure      422		{object}	responses.UnprocessableEntity
 // @Failure      500		{object}	responses.InternalServerError
-// @Router       /v1/projects/{projectID} [delete]
+// @Router       /v1/projects/{projectId} [delete]
 func (h *ProjectHandler) delete(c *fiber.Ctx) error {
 	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
 
-	if errors := h.mergeErrors(h.validateUUID(c, "projectID")); len(errors) != 0 {
+	if errors := h.mergeErrors(h.validateUUID(c, "projectId")); len(errors) != 0 {
 		msg := fmt.Sprintf("validation errors [%s], while deleting project with url [%s]", spew.Sdump(errors), c.OriginalURL())
 		ctxLogger.Warn(stacktrace.NewError(msg))
 		return h.responseUnprocessableEntity(c, errors, "validation errors while deleting project")
 	}
 
 	authUser := h.userFromContext(c)
-	projectID := uuid.MustParse(c.Params("projectID"))
+	projectID := uuid.MustParse(c.Params("projectId"))
 
 	err := h.service.Delete(ctx, c.OriginalURL(), authUser.ID, projectID)
 	if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {

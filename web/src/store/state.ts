@@ -20,6 +20,7 @@ export type Actions = {
   createProject: (
     request: RequestsProjectCreateRequest,
   ) => Promise<EntitiesProject>;
+  fetchProject: (projectId: string) => Promise<EntitiesProject>;
 };
 
 export type Store = State & Actions;
@@ -33,7 +34,6 @@ export const createStore = (initState: State = defaultInitState) => {
     ...initState,
     createProject: (request): Promise<EntitiesProject> => {
       return new Promise<EntitiesProject>((resolve, reject) => {
-        console.log("createProject", request);
         axios
           .post<ResponsesOkEntitiesProject>(`/v1/projects`, request)
           .then((response) => {
@@ -44,6 +44,22 @@ export const createStore = (initState: State = defaultInitState) => {
             toast.error(
               error.response?.data.message ??
                 "Error while creating a new project",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    fetchProject: (projectId: string): Promise<EntitiesProject> => {
+      return new Promise<EntitiesProject>((resolve, reject) => {
+        axios
+          .get<ResponsesOkEntitiesProject>(`/v1/projects/${projectId}`)
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            console.log(error);
+            toast.error(
+              error.response?.data.message ?? "Error while fetching project",
             );
             reject(getErrorMessages(error));
           });
