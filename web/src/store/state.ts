@@ -37,12 +37,13 @@ export const createStore = (initState: State = defaultInitState) => {
         axios
           .post<ResponsesOkEntitiesProject>(`/v1/projects`, request)
           .then((response) => {
+            toast.success("Project created successfully.");
             resolve(response.data.data);
           })
           .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
             toast.error(
               error.response?.data.message ??
-                "Error while creating your mock project",
+                "Error while creating a new project",
             );
             reject(getErrorMessages(error));
           });

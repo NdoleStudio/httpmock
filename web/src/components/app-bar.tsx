@@ -8,6 +8,7 @@ import {
   ActionMenu,
   ActionList,
   IconButton,
+  Avatar,
 } from "@primer/react";
 import { Heading } from "@primer/react";
 import Logo from "@/app/logo.svg";
@@ -66,10 +67,11 @@ export function AppBar() {
         {user.isSignedIn && (
           <ActionMenu>
             <ActionMenu.Anchor>
-              <IconButton
-                size={"small"}
-                icon={KebabHorizontalIcon}
-                aria-label="User Settings"
+              <Avatar
+                size={30}
+                sx={{ cursor: "pointer" }}
+                alt={"account image"}
+                src={user.user.imageUrl}
               />
             </ActionMenu.Anchor>
             <ActionMenu.Overlay>

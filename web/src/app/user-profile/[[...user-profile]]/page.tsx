@@ -1,5 +1,6 @@
 import { UserProfile } from "@clerk/nextjs";
 import { Box } from "@primer/react";
+import { BackButton } from "@/components/back-button";
 
 export default function Page() {
   return (
@@ -11,7 +12,10 @@ export default function Page() {
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      <UserProfile path="/user-profile" />
+      <Box>
+        <BackButton href={"/"}></BackButton>
+        <UserProfile path="/user-profile" />
+      </Box>
     </Box>
   );
 }

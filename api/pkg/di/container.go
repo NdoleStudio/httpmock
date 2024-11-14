@@ -284,8 +284,8 @@ func (container *Container) EventsQueue() queue.Client {
 		container.Logger(),
 		container.Tracer(),
 		container.CloudTasksClient(),
-		os.Getenv("QUEUE_NAME_EVENTS"),
-		os.Getenv("QUEUE_AUTH_EMAIL"),
+		os.Getenv("EVENTS_QUEUE_NAME"),
+		os.Getenv("EVENTS_QUEUE_AUTH_EMAIL"),
 	)
 }
 
@@ -311,7 +311,7 @@ func (container *Container) EventDispatcher() (dispatcher *services.EventDispatc
 			"measures the duration of processing CloudEvents",
 		),
 		container.EventsQueue(),
-		os.Getenv("QUEUE_URL_EVENTS"),
+		os.Getenv("EVENTS_QUEUE_WEBHOOK"),
 	)
 
 	container.eventDispatcher = dispatcher
@@ -447,8 +447,8 @@ func (container *Container) RegisterEventRoutes() {
 	container.EventsHandler().RegisterRoutes(
 		container.App(),
 		container.GoogleAuthMiddlewares(
-			os.Getenv("QUEUE_URL_EVENTS"),
-			os.Getenv("QUEUE_AUTH_SUBJECT"),
+			os.Getenv("EVENTS_QUEUE_WEBHOOK"),
+			os.Getenv("EVENTS_QUEUE_AUTH_EMAIL"),
 		),
 	)
 }

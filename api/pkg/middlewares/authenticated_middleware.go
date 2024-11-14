@@ -22,7 +22,7 @@ func Authenticated(tracer telemetry.Tracer) fiber.Handler {
 		_, span := tracer.StartFromFiberCtx(c, "middlewares.Authenticated")
 		defer span.End()
 
-		if _, ok := c.Locals(ContextKeyAuthUserID).(entities.AuthUser); !ok {
+		if _, ok := c.Locals(ContextKeyAuthUserID).(*entities.AuthUser); !ok {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"status":  "error",
 				"message": "You are not authorized to carry out this request.",

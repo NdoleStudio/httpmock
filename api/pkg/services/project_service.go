@@ -76,7 +76,7 @@ func (service *ProjectService) Create(ctx context.Context, params *ProjectCreate
 	}
 
 	if err := service.repository.Store(ctx, project); err != nil {
-		msg := fmt.Sprintf("could store project for user with ID [%s]", params.UserID)
+		msg := fmt.Sprintf("could store project [%s] for user with ID [%s]", params.Name, params.UserID)
 		return nil, service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 

@@ -19,7 +19,7 @@ type ProjectCreateRequest struct {
 func (request *ProjectCreateRequest) Sanitize() *ProjectCreateRequest {
 	request.Name = request.sanitizeString(request.Name)
 	request.Description = request.sanitizeString(request.Description)
-	request.Subdomain = strings.TrimRight(request.sanitizeString(request.Subdomain), ".httpmock.dev")
+	request.Subdomain = strings.TrimSuffix(request.sanitizeString(request.Subdomain), ".httpmock.dev")
 	return request
 }
 

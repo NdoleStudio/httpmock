@@ -45,7 +45,7 @@ func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer) fiber.Han
 
 		span.AddEvent(fmt.Sprintf("the clerk [%s] token [%s] is valid", bearerScheme, tracer.Redact(authToken)))
 
-		authUser := entities.AuthUser{
+		authUser := &entities.AuthUser{
 			Email:     u.EmailAddresses[0].EmailAddress,
 			FirstName: u.FirstName,
 			LastName:  u.LastName,

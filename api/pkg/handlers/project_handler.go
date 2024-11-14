@@ -109,7 +109,7 @@ func (h *ProjectHandler) create(c *fiber.Ctx) error {
 
 	project, err := h.service.Create(ctx, request.ToProjectCreateParams(c.OriginalURL(), authUser.ID))
 	if err != nil {
-		ctxLogger.Error(stacktrace.Propagate(err, fmt.Sprintf("cannot get user with ID [%s]", authUser.ID)))
+		ctxLogger.Error(stacktrace.Propagate(err, fmt.Sprintf("cannot create project [%s] for user [%s]", request.Name, authUser.ID)))
 		return h.responseInternalServerError(c)
 	}
 
