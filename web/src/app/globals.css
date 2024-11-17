@@ -40,3 +40,36 @@ a {
     color-scheme: dark;
   }
 }
+
+.text--clamp-1 {
+  word-break: break-all;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 1;
+  height: 1.5em;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.text--clamp-2 {
+  word-break: break-all;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2;
+  height: 3em;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.text--clamp-3 {
+  word-break: break-all;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 3;
+  height: 4.5em;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}

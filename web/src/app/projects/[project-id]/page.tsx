@@ -27,7 +27,7 @@ export default function ProjectShow() {
   const router = useRouter();
   const auth = useAuth();
   const pathName = usePathname();
-  const { fetchProject } = useAppStore((state) => state);
+  const { showProject } = useAppStore((state) => state);
 
   const [errorMessages, setErrorMessages] = useState<ErrorMessages>(
     ErrorMessages.create(),
@@ -40,7 +40,7 @@ export default function ProjectShow() {
   const projectId = pathName.split("/")[2];
 
   const loadProject = () => {
-    fetchProject(projectId)
+    showProject(projectId)
       .then((project: EntitiesProject) => {
         setProject(project);
       })
@@ -50,13 +50,8 @@ export default function ProjectShow() {
   };
 
   useEffect(() => {
-    if (auth.isLoaded) {
-      auth.getToken().then((token: string | null) => {
-        setAuthHeader(token);
-        loadProject();
-      });
-    }
-  }, [projectId, auth.isLoaded]);
+    loadProject();
+  }, [projectId]);
 
   return (
     <Box
@@ -99,7 +94,9 @@ export default function ProjectShow() {
             </ActionMenu.Anchor>
             <ActionMenu.Overlay>
               <ActionList>
-                <ActionList.Item onSelect={() => alert("Edit comment clicked")}>
+                <ActionList.Item
+                  onClick={() => router.push(`/projects/${projectId}/edit`)}
+                >
                   Edit Project
                   <ActionList.LeadingVisual>
                     <PencilIcon></PencilIcon>
@@ -120,6 +117,14 @@ export default function ProjectShow() {
           </ActionMenu>
         </PageHeader.Actions>
       </PageHeader>
+      <Box
+        sx={{
+          borderBottomWidth: 1,
+          mt: 2,
+          borderBottomStyle: "solid",
+          borderColor: "border.default",
+        }}
+      ></Box>
     </Box>
   );
 }

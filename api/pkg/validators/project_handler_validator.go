@@ -37,33 +37,16 @@ func NewProjectHandlerValidator(
 
 // ValidateUpdate validates the requests.ProjectUpdateRequest
 func (validator *ProjectHandlerValidator) ValidateUpdate(ctx context.Context, request *requests.ProjectUpdateRequest) url.Values {
-	_, span := validator.tracer.Start(ctx)
+	ctx, span, ctxLogger := validator.tracer.StartWithLogger(ctx, validator.logger)
 	defer span.End()
 
 	v := govalidator.New(govalidator.Options{
 		Data: request,
 		Rules: govalidator.MapData{
-			"name": []string{
+			"projectId": []string{
 				"required",
-				"min:1",
-				"max:30",
+				"uuid",
 			},
-			"description": []string{
-				"max:500",
-			},
-		},
-	})
-	return v.ValidateStruct()
-}
-
-// ValidateCreate validates the requests.ProjectCreateRequest
-func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, request *requests.ProjectCreateRequest) url.Values {
-	_, span, ctxLogger := validator.tracer.StartWithLogger(ctx, validator.logger)
-	defer span.End()
-
-	v := govalidator.New(govalidator.Options{
-		Data: request,
-		Rules: govalidator.MapData{
 			"name": []string{
 				"required",
 				"min:1",
@@ -72,7 +55,7 @@ func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, re
 			"subdomain": []string{
 				"required",
 				"alpha_dash",
-				"min:6",
+				"min:7",
 				"max:30",
 			},
 			"description": []string{
@@ -86,8 +69,8 @@ func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, re
 		return result
 	}
 
-	exists, err := validator.repository.ExistsWithSubdomain(ctx, request.Subdomain)
-	if err != nil {
+	project, err := validator.repository.LoadWithSubdomain(ctx, request.Subdomain)
+	if err != nil && stacktrace.GetCode(err) != repositories.ErrCodeNotFound {
 		msg := fmt.Sprintf("cannot check if the [%s] subdomain has already been taken.", request.Subdomain)
 		ctxLogger.Error(validator.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))
 
@@ -95,7 +78,54 @@ func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, re
 		return result
 	}
 
-	if exists {
+	if err == nil && project.ID.String() != request.ProjectID {
+		result.Add("subdomain", fmt.Sprintf("The subdomain [%s] has already been taken.", request.Subdomain))
+		return result
+	}
+
+	return result
+}
+
+// ValidateCreate validates the requests.ProjectCreateRequest
+func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, request *requests.ProjectCreateRequest) url.Values {
+	ctx, span, ctxLogger := validator.tracer.StartWithLogger(ctx, validator.logger)
+	defer span.End()
+
+	v := govalidator.New(govalidator.Options{
+		Data: request,
+		Rules: govalidator.MapData{
+			"name": []string{
+				"required",
+				"min:1",
+				"max:30",
+			},
+			"subdomain": []string{
+				"required",
+				"alpha_dash",
+				"min:7",
+				"max:30",
+			},
+			"description": []string{
+				"max:500",
+			},
+		},
+	})
+
+	result := v.ValidateStruct()
+	if len(result) != 0 {
+		return result
+	}
+
+	_, err := validator.repository.LoadWithSubdomain(ctx, request.Subdomain)
+	if err != nil && stacktrace.GetCode(err) != repositories.ErrCodeNotFound {
+		msg := fmt.Sprintf("cannot check if the [%s] subdomain has already been taken.", request.Subdomain)
+		ctxLogger.Error(validator.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))
+
+		result.Add("subdomain", fmt.Sprintf("We could not check if the [%s] subdomain has already been taken.", request.Subdomain))
+		return result
+	}
+
+	if err != nil {
 		result.Add("subdomain", fmt.Sprintf("The subdomain [%s] has already been taken.", request.Subdomain))
 		return result
 	}

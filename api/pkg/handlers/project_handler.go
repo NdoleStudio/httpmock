@@ -134,22 +134,21 @@ func (h *ProjectHandler) update(c *fiber.Ctx) error {
 	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
 
-	var request requests.ProjectUpdateRequest
-	if err := c.BodyParser(&request); err != nil {
+	request := new(requests.ProjectUpdateRequest)
+	if err := c.BodyParser(request); err != nil {
 		msg := fmt.Sprintf("cannot marshall params [%s] into %T", c.OriginalURL(), request)
 		ctxLogger.Warn(stacktrace.Propagate(err, msg))
 		return h.responseBadRequest(c, err)
 	}
-	request.ProjectID = c.Params("projectId")
 
+	request.ProjectID = c.Params("projectId")
 	if errors := h.validator.ValidateUpdate(ctx, request.Sanitize()); len(errors) != 0 {
-		msg := fmt.Sprintf("validation errors [%s], while creating project with request [%s]", spew.Sdump(errors), c.Body())
+		msg := fmt.Sprintf("validation errors [%s], while updating project with request [%s]", spew.Sdump(errors), c.Body())
 		ctxLogger.Warn(stacktrace.NewError(msg))
-		return h.responseUnprocessableEntity(c, errors, "validation errors while creating project")
+		return h.responseUnprocessableEntity(c, errors, "validation errors while updating project")
 	}
 
 	authUser := h.userFromContext(c)
-
 	project, err := h.service.Update(ctx, request.ToProjectUpdatePrams(c.OriginalURL(), authUser.ID))
 	if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {
 		msg := fmt.Sprintf("cannot find project with id [%s] for user [%s]", request.ProjectID, authUser.ID)

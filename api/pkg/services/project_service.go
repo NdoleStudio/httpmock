@@ -121,6 +121,7 @@ func (service *ProjectService) Create(ctx context.Context, params *ProjectCreate
 type ProjectUpdateParams struct {
 	UserID      entities.UserID
 	ProjectID   uuid.UUID
+	Subdomain   string
 	Name        string
 	Description string
 	Source      string
@@ -139,6 +140,7 @@ func (service *ProjectService) Update(ctx context.Context, params *ProjectUpdate
 
 	project.Name = params.Name
 	project.UpdatedAt = time.Now().UTC()
+	project.Subdomain = params.Subdomain
 	project.Description = params.Description
 
 	if err = service.repository.Update(ctx, project); err != nil {

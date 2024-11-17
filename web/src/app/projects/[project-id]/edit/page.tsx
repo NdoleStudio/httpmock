@@ -9,32 +9,52 @@ import {
   Textarea,
   TextInput,
 } from "@primer/react";
-import { useRouter } from "next/navigation";
-import { MouseEvent, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { MouseEvent, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
 import { BackButton } from "@/components/back-button";
 import { useAppStore } from "@/store/provider";
 import { EntitiesProject } from "@/api/model";
 
-export default function ProjectCreate() {
+export default function ProjectEdit() {
   const router = useRouter();
-  const { storeProject } = useAppStore((state) => state);
+  const pathName = usePathname();
 
+  const { updateProject, showProject } = useAppStore((state) => state);
   const [errorMessages, setErrorMessages] = useState<ErrorMessages>(
     ErrorMessages.create(),
   );
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [projectName, setProjectName] = useState<string>("");
   const [projectSubdomain, setProjectSubdomain] = useState<string>("");
   const [projectDescription, setProjectDescription] = useState<string>("");
 
-  const onCreateProject = (event: MouseEvent<HTMLButtonElement>) => {
+  const projectId = pathName.split("/")[2];
+
+  const loadProject = () => {
+    showProject(projectId)
+      .then((project: EntitiesProject) => {
+        setProjectName(project.name);
+        setProjectSubdomain(project.subdomain);
+        setProjectDescription(project.description);
+        setLoading(false);
+      })
+      .catch((errorMessages: ErrorMessages) => {
+        setErrorMessages(errorMessages);
+      });
+  };
+
+  useEffect(() => {
+    loadProject();
+  }, [projectId]);
+
+  const onUpdateProject = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     setLoading(true);
     setErrorMessages(ErrorMessages.create());
 
-    storeProject({
+    updateProject(projectId, {
       name: projectName,
       subdomain: projectSubdomain,
       description: projectDescription,
@@ -71,7 +91,7 @@ export default function ProjectCreate() {
             p: 3,
           }}
         >
-          <Heading>Create Project</Heading>
+          <Heading>Edit Project</Heading>
           <Text sx={{ color: "fg.muted" }}>
             Your mocked endpoints are grouped into projects for better
             organization.
@@ -139,11 +159,11 @@ export default function ProjectCreate() {
           <Button
             loading={loading}
             disabled={loading}
-            onClick={onCreateProject}
+            onClick={onUpdateProject}
             sx={{ mt: 4 }}
             variant={"primary"}
           >
-            Create Project
+            Update Project
           </Button>
         </Box>
       </Box>

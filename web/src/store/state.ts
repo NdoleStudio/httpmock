@@ -4,6 +4,9 @@ import { createStore as createZustandStore } from "zustand/vanilla";
 import {
   EntitiesProject,
   RequestsProjectCreateRequest,
+  RequestsProjectUpdateRequest,
+  ResponsesNoContent,
+  ResponsesOkArrayEntitiesProject,
   ResponsesOkEntitiesProject,
   ResponsesUnprocessableEntity,
 } from "@/api/model";
@@ -17,10 +20,16 @@ export type State = {
 };
 
 export type Actions = {
-  createProject: (
+  storeProject: (
     request: RequestsProjectCreateRequest,
   ) => Promise<EntitiesProject>;
-  fetchProject: (projectId: string) => Promise<EntitiesProject>;
+  updateProject: (
+    projectId: string,
+    request: RequestsProjectCreateRequest,
+  ) => Promise<EntitiesProject>;
+  showProject: (projectId: string) => Promise<EntitiesProject>;
+  deleteProject: (projectId: string) => Promise<void>;
+  indexProjects: () => Promise<Array<EntitiesProject>>;
 };
 
 export type Store = State & Actions;
@@ -32,7 +41,9 @@ export const defaultInitState: State = {
 export const createStore = (initState: State = defaultInitState) => {
   return createZustandStore<Store>()((set, get) => ({
     ...initState,
-    createProject: (request): Promise<EntitiesProject> => {
+    storeProject: (
+      request: RequestsProjectCreateRequest,
+    ): Promise<EntitiesProject> => {
       return new Promise<EntitiesProject>((resolve, reject) => {
         axios
           .post<ResponsesOkEntitiesProject>(`/v1/projects`, request)
@@ -49,7 +60,27 @@ export const createStore = (initState: State = defaultInitState) => {
           });
       });
     },
-    fetchProject: (projectId: string): Promise<EntitiesProject> => {
+    updateProject: (
+      projectId: string,
+      request: RequestsProjectUpdateRequest,
+    ): Promise<EntitiesProject> => {
+      return new Promise<EntitiesProject>((resolve, reject) => {
+        axios
+          .put<ResponsesOkEntitiesProject>(`/v1/projects/${projectId}`, request)
+          .then((response) => {
+            toast.success("Project updated successfully.");
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while updating your project",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    showProject: (projectId: string): Promise<EntitiesProject> => {
       return new Promise<EntitiesProject>((resolve, reject) => {
         axios
           .get<ResponsesOkEntitiesProject>(`/v1/projects/${projectId}`)
@@ -57,9 +88,39 @@ export const createStore = (initState: State = defaultInitState) => {
             resolve(response.data.data);
           })
           .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
-            console.log(error);
             toast.error(
               error.response?.data.message ?? "Error while fetching project",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    deleteProject: (projectId: string): Promise<void> => {
+      return new Promise<void>((resolve, reject) => {
+        axios
+          .get<ResponsesNoContent>(`/v1/projects/${projectId}`)
+          .then(() => {
+            resolve();
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while deleting your project",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    indexProjects: (): Promise<Array<EntitiesProject>> => {
+      return new Promise<Array<EntitiesProject>>((resolve, reject) => {
+        axios
+          .get<ResponsesOkArrayEntitiesProject>(`/v1/projects`)
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ?? "Error while loading projects",
             );
             reject(getErrorMessages(error));
           });
