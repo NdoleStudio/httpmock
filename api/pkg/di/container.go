@@ -96,6 +96,7 @@ func NewContainer(projectID string, version string) (container *Container) {
 
 	container.RegisterEventRoutes()
 	container.RegisterProjectRoutes()
+	container.RegisterProjectEndpointRoutes()
 
 	// UnAuthenticated routes
 	container.RegisterLemonsqueezyRoutes()
@@ -191,6 +192,9 @@ func (container *Container) DB() (db *gorm.DB) {
 	if err = db.AutoMigrate(&entities.Project{}); err != nil {
 		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.Project{})))
 	}
+	if err = db.AutoMigrate(&entities.ProjectEndpoint{}); err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.ProjectEndpoint{})))
+	}
 	if err = db.AutoMigrate(&entities.User{}); err != nil {
 		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.User{})))
 	}
@@ -234,6 +238,12 @@ func (container *Container) RegisterProjectRoutes() {
 	container.ProjectHandler().RegisterRoutes(container.App(), container.ClerkBearerAuthMiddlewares())
 }
 
+// RegisterProjectEndpointRoutes registers routes for the /projects/:projectId/endpoints prefix
+func (container *Container) RegisterProjectEndpointRoutes() {
+	container.logger.Debug(fmt.Sprintf("registering %T routes", &handlers.ProjectEndpointHandler{}))
+	container.ProjectEndpointHandler().RegisterRoutes(container.App(), container.ClerkBearerAuthMiddlewares())
+}
+
 // ProjectHandler creates a new instance of handlers.ProjectHandler
 func (container *Container) ProjectHandler() (handler *handlers.ProjectHandler) {
 	container.logger.Debug(fmt.Sprintf("creating %T", handler))
@@ -241,6 +251,18 @@ func (container *Container) ProjectHandler() (handler *handlers.ProjectHandler) 
 		container.Logger(),
 		container.Tracer(),
 		container.ProjectHandlerValidator(),
+		container.ProjectService(),
+	)
+}
+
+// ProjectEndpointHandler creates a new instance of handlers.ProjectEndpointHandler
+func (container *Container) ProjectEndpointHandler() (handler *handlers.ProjectEndpointHandler) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return handlers.NewProjectEndpointHandler(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectHandlerEndpointValidator(),
+		container.ProjectEndpointService(),
 		container.ProjectService(),
 	)
 }
@@ -255,6 +277,16 @@ func (container *Container) ProjectHandlerValidator() (validator *validators.Pro
 	)
 }
 
+// ProjectHandlerEndpointValidator creates a new instance of validators.ProjectEndpointHandlerValidator
+func (container *Container) ProjectHandlerEndpointValidator() (validator *validators.ProjectEndpointHandlerValidator) {
+	container.logger.Debug(fmt.Sprintf("creating %T", validator))
+	return validators.NewProjectEndpointHandlerValidator(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectEndpointRepository(),
+	)
+}
+
 // ProjectService creates a new instance of services.ProjectService
 func (container *Container) ProjectService() (service *services.ProjectService) {
 	container.logger.Debug(fmt.Sprintf("creating %T", service))
@@ -266,10 +298,30 @@ func (container *Container) ProjectService() (service *services.ProjectService) 
 	)
 }
 
+// ProjectEndpointService creates a new instance of services.ProjectEndpointService
+func (container *Container) ProjectEndpointService() (service *services.ProjectEndpointService) {
+	container.logger.Debug(fmt.Sprintf("creating %T", service))
+	return services.NewProjectEndpointService(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectEndpointRepository(),
+	)
+}
+
 // ProjectRepository registers a new instance of repositories.ProjectRepository
 func (container *Container) ProjectRepository() repositories.ProjectRepository {
 	container.logger.Debug("creating GORM repositories.ProjectRepository")
 	return repositories.NewGormProjectRepository(
+		container.Logger(),
+		container.Tracer(),
+		container.DB(),
+	)
+}
+
+// ProjectEndpointRepository registers a new instance of repositories.ProjectEndpointRepository
+func (container *Container) ProjectEndpointRepository() repositories.ProjectEndpointRepository {
+	container.logger.Debug("creating GORM repositories.ProjectEndpointRepository")
+	return repositories.NewGormProjectEndpointRepository(
 		container.Logger(),
 		container.Tracer(),
 		container.DB(),

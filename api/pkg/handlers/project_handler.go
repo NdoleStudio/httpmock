@@ -77,7 +77,7 @@ func (h *ProjectHandler) index(c *fiber.Ctx) error {
 	return h.responseOK(c, "projects fetched successfully", projects)
 }
 
-// @Summary      Create a project
+// @Summary      Store a project
 // @Description  This endpoint creates a new project for a user
 // @Security	 BearerAuth
 // @Tags         Projects
@@ -110,7 +110,7 @@ func (h *ProjectHandler) create(c *fiber.Ctx) error {
 
 	project, err := h.service.Create(ctx, request.ToProjectCreateParams(c.OriginalURL(), authUser.ID))
 	if err != nil {
-		ctxLogger.Error(stacktrace.Propagate(err, fmt.Sprintf("cannot create project [%s] for user [%s]", request.Name, authUser.ID)))
+		ctxLogger.Error(stacktrace.Propagate(err, fmt.Sprintf("cannot store project [%s] for user [%s]", request.Name, authUser.ID)))
 		return h.responseInternalServerError(c)
 	}
 

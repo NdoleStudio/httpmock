@@ -125,7 +125,7 @@ func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, re
 		return result
 	}
 
-	if err != nil {
+	if err == nil {
 		result.Add("subdomain", fmt.Sprintf("The subdomain [%s] has already been taken.", request.Subdomain))
 		return result
 	}

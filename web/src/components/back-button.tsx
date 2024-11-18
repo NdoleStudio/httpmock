@@ -17,7 +17,7 @@ export function BackButton({ ...props }: BackButtonProps) {
       sx={{ mb: 3 }}
       leadingVisual={ArrowLeftIcon}
     >
-      Back to dashboard
+      Go Back
     </Button>
   );
 }

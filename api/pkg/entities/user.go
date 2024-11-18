@@ -18,7 +18,7 @@ const SubscriptionName10kYearly = SubscriptionName("100k-yearly")
 
 // User stores information about a user
 type User struct {
-	ID                   UserID           `json:"id" gorm:"primaryKey;type:string;" example:"WB7DRDWrJZRGbYrv2CKGkqbzvqdC"`
+	ID                   UserID           `json:"id" gorm:"primaryKey;type:string;" example:"user_2oeyIzOf9xxxxxxxxxxxxxx"`
 	Email                string           `json:"email" example:"name@email.com"`
 	FirstName            *string          `json:"first_name" example:"John"`
 	LastName             *string          `json:"last_name" example:"Doe"`

@@ -18,11 +18,38 @@ export interface EntitiesProject {
   id: string;
   /** @example "Mock Stripe API" */
   name: string;
-  /** @example "api" */
+  /** @example "stripe-mock-api" */
   subdomain: string;
   /** @example "2022-06-05T14:26:10.303278+03:00" */
   updated_at: string;
-  /** @example "WB7DRDWrJZRGbYrv2CKGkqbzvqdC" */
+  /** @example "user_2oeyIzOf9xxxxxxxxxxxxxx" */
+  user_id: string;
+}
+
+export interface EntitiesProjectEndpoint {
+  /** @example "2022-06-05T14:26:02.302718+03:00" */
+  created_at: string;
+  /** @example 1000 */
+  delay_in_milliseconds: number;
+  /** @example "Mock API for an online store for the /v1/products endpoint" */
+  description: string;
+  /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
+  id: string;
+  /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
+  project_id: string;
+  /** @example "GET" */
+  request_method: string;
+  /** @example "/v1/products" */
+  request_path: string;
+  /** @example "{"message": "Hello World","status": 200}" */
+  response_body: string;
+  /** @example 200 */
+  response_code: number;
+  /** @example "[{"Content-Type":"application/json"}]" */
+  response_headers: string;
+  /** @example "2022-06-05T14:26:10.303278+03:00" */
+  updated_at: string;
+  /** @example "user_2oeyIzOf9xxxxxxxxxxxxxx" */
   user_id: string;
 }
 
@@ -32,9 +59,30 @@ export interface RequestsProjectCreateRequest {
   subdomain: string;
 }
 
+export interface RequestsProjectEndpointCreateRequest {
+  delay_in_milliseconds: number;
+  description: string;
+  request_method: string;
+  request_path: string;
+  response_body: string;
+  response_code: number;
+  response_headers: string;
+}
+
+export interface RequestsProjectEndpointUpdateRequest {
+  delay_in_milliseconds: number;
+  description: string;
+  request_method: string;
+  request_path: string;
+  response_body: string;
+  response_code: number;
+  response_headers: string;
+}
+
 export interface RequestsProjectUpdateRequest {
   description: string;
   name: string;
+  subdomain: string;
 }
 
 export interface ResponsesBadRequest {
@@ -75,8 +123,24 @@ export interface ResponsesOkArrayEntitiesProject {
   status: string;
 }
 
+export interface ResponsesOkArrayEntitiesProjectEndpoint {
+  data: EntitiesProjectEndpoint[];
+  /** @example "Request handled successfully" */
+  message: string;
+  /** @example "success" */
+  status: string;
+}
+
 export interface ResponsesOkEntitiesProject {
   data: EntitiesProject;
+  /** @example "Request handled successfully" */
+  message: string;
+  /** @example "success" */
+  status: string;
+}
+
+export interface ResponsesOkEntitiesProjectEndpoint {
+  data: EntitiesProjectEndpoint;
   /** @example "Request handled successfully" */
   message: string;
   /** @example "success" */

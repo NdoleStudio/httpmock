@@ -19,6 +19,19 @@ type gormProjectRepository struct {
 	db     *gorm.DB
 }
 
+// NewGormProjectRepository creates the GORM version of the ProjectRepository
+func NewGormProjectRepository(
+	logger telemetry.Logger,
+	tracer telemetry.Tracer,
+	db *gorm.DB,
+) ProjectRepository {
+	return &gormProjectRepository{
+		logger: logger.WithService(fmt.Sprintf("%T", &gormProjectRepository{})),
+		tracer: tracer,
+		db:     db,
+	}
+}
+
 func (repository *gormProjectRepository) LoadWithSubdomain(ctx context.Context, subdomain string) (*entities.Project, error) {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
@@ -38,19 +51,6 @@ func (repository *gormProjectRepository) LoadWithSubdomain(ctx context.Context, 
 		return project, repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 	return project, nil
-}
-
-// NewGormProjectRepository creates the GORM version of the ProjectRepository
-func NewGormProjectRepository(
-	logger telemetry.Logger,
-	tracer telemetry.Tracer,
-	db *gorm.DB,
-) ProjectRepository {
-	return &gormProjectRepository{
-		logger: logger.WithService(fmt.Sprintf("%T", &gormProjectRepository{})),
-		tracer: tracer,
-		db:     db,
-	}
 }
 
 func (repository *gormProjectRepository) Delete(ctx context.Context, userID entities.UserID, projectID uuid.UUID) error {

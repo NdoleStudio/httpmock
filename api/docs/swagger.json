@@ -161,7 +161,158 @@
         }
       }
     },
-    "/v1/projects/{projectID}": {
+    "/v1/projects/:projectId/endpoints": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Fetches the list of all projects endpoints available to the currently authenticated user and project",
+        "produces": ["application/json"],
+        "tags": ["ProjectEndpoints"],
+        "summary": "List of project endpoints",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/responses.Ok-array_entities_ProjectEndpoint"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/responses.BadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/responses.Unauthorized"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/responses.UnprocessableEntity"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/responses.InternalServerError"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This endpoint creates a new project endpoint for a user",
+        "produces": ["application/json"],
+        "tags": ["ProjectEndpoints"],
+        "summary": "Create a project endpoint",
+        "parameters": [
+          {
+            "description": "project endpoint create payload",
+            "name": "payload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/requests.ProjectEndpointCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/responses.Ok-entities_ProjectEndpoint"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/responses.BadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/responses.Unauthorized"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/responses.UnprocessableEntity"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/responses.InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{projectId}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This endpoint gets a project for a user",
+        "produces": ["application/json"],
+        "tags": ["Projects"],
+        "summary": "Get a project",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Project ID",
+            "name": "projectID",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/responses.Ok-entities_Project"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/responses.BadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/responses.Unauthorized"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/responses.UnprocessableEntity"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/responses.InternalServerError"
+            }
+          }
+        }
+      },
       "put": {
         "security": [
           {
@@ -281,6 +432,200 @@
           }
         }
       }
+    },
+    "/v1/projects/{projectId}/endpoints/{projectEndpointId}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This URL gets a project endpoint for a user",
+        "produces": ["application/json"],
+        "tags": ["ProjectEndpoints"],
+        "summary": "Get a project endpoint",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Project ID",
+            "name": "projectId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Project Endpoint ID",
+            "name": "projectEndpointId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/responses.Ok-entities_ProjectEndpoint"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/responses.BadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/responses.Unauthorized"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/responses.UnprocessableEntity"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/responses.InternalServerError"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This endpoint updates a project endpoint for a user",
+        "produces": ["application/json"],
+        "tags": ["ProjectEndpoints"],
+        "summary": "Update a project endpoint",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Project ID",
+            "name": "projectId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Project Endpoint ID",
+            "name": "projectEndpointId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "project update payload",
+            "name": "payload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/requests.ProjectEndpointUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/responses.Ok-entities_ProjectEndpoint"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/responses.BadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/responses.Unauthorized"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/responses.UnprocessableEntity"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/responses.InternalServerError"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This API deletes a project endpoint for a user",
+        "produces": ["application/json"],
+        "tags": ["ProjectEndpoints"],
+        "summary": "Delete a project endpoint",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Project ID",
+            "name": "projectId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Project Endpoint ID",
+            "name": "projectEndpointId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/responses.NoContent"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/responses.BadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/responses.Unauthorized"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/responses.NotFound"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/responses.UnprocessableEntity"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/responses.InternalServerError"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -314,7 +659,7 @@
         },
         "subdomain": {
           "type": "string",
-          "example": "api"
+          "example": "stripe-mock-api"
         },
         "updated_at": {
           "type": "string",
@@ -322,7 +667,74 @@
         },
         "user_id": {
           "type": "string",
-          "example": "WB7DRDWrJZRGbYrv2CKGkqbzvqdC"
+          "example": "user_2oeyIzOf9xxxxxxxxxxxxxx"
+        }
+      }
+    },
+    "entities.ProjectEndpoint": {
+      "type": "object",
+      "required": [
+        "created_at",
+        "delay_in_milliseconds",
+        "description",
+        "id",
+        "project_id",
+        "request_method",
+        "request_path",
+        "response_body",
+        "response_code",
+        "response_headers",
+        "updated_at",
+        "user_id"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2022-06-05T14:26:02.302718+03:00"
+        },
+        "delay_in_milliseconds": {
+          "type": "integer",
+          "example": 1000
+        },
+        "description": {
+          "type": "string",
+          "example": "Mock API for an online store for the /v1/products endpoint"
+        },
+        "id": {
+          "type": "string",
+          "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
+        },
+        "project_id": {
+          "type": "string",
+          "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
+        },
+        "request_method": {
+          "type": "string",
+          "example": "GET"
+        },
+        "request_path": {
+          "type": "string",
+          "example": "/v1/products"
+        },
+        "response_body": {
+          "type": "string",
+          "example": "{\"message\": \"Hello World\",\"status\": 200}"
+        },
+        "response_code": {
+          "type": "integer",
+          "example": 200
+        },
+        "response_headers": {
+          "type": "string",
+          "example": "[{\"Content-Type\":\"application/json\"}]"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2022-06-05T14:26:10.303278+03:00"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user_2oeyIzOf9xxxxxxxxxxxxxx"
         }
       }
     },
@@ -341,14 +753,87 @@
         }
       }
     },
+    "requests.ProjectEndpointCreateRequest": {
+      "type": "object",
+      "required": [
+        "delay_in_milliseconds",
+        "description",
+        "request_method",
+        "request_path",
+        "response_body",
+        "response_code",
+        "response_headers"
+      ],
+      "properties": {
+        "delay_in_milliseconds": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "request_method": {
+          "type": "string"
+        },
+        "request_path": {
+          "type": "string"
+        },
+        "response_body": {
+          "type": "string"
+        },
+        "response_code": {
+          "type": "integer"
+        },
+        "response_headers": {
+          "type": "string"
+        }
+      }
+    },
+    "requests.ProjectEndpointUpdateRequest": {
+      "type": "object",
+      "required": [
+        "delay_in_milliseconds",
+        "description",
+        "request_method",
+        "request_path",
+        "response_body",
+        "response_code",
+        "response_headers"
+      ],
+      "properties": {
+        "delay_in_milliseconds": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "request_method": {
+          "type": "string"
+        },
+        "request_path": {
+          "type": "string"
+        },
+        "response_body": {
+          "type": "string"
+        },
+        "response_code": {
+          "type": "integer"
+        },
+        "response_headers": {
+          "type": "string"
+        }
+      }
+    },
     "requests.ProjectUpdateRequest": {
       "type": "object",
-      "required": ["description", "name"],
+      "required": ["description", "name", "subdomain"],
       "properties": {
         "description": {
           "type": "string"
         },
         "name": {
+          "type": "string"
+        },
+        "subdomain": {
           "type": "string"
         }
       }
@@ -433,12 +918,49 @@
         }
       }
     },
+    "responses.Ok-array_entities_ProjectEndpoint": {
+      "type": "object",
+      "required": ["data", "message", "status"],
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entities.ProjectEndpoint"
+          }
+        },
+        "message": {
+          "type": "string",
+          "example": "Request handled successfully"
+        },
+        "status": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
     "responses.Ok-entities_Project": {
       "type": "object",
       "required": ["data", "message", "status"],
       "properties": {
         "data": {
           "$ref": "#/definitions/entities.Project"
+        },
+        "message": {
+          "type": "string",
+          "example": "Request handled successfully"
+        },
+        "status": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "responses.Ok-entities_ProjectEndpoint": {
+      "type": "object",
+      "required": ["data", "message", "status"],
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/entities.ProjectEndpoint"
         },
         "message": {
           "type": "string",

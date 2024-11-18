@@ -3,11 +3,14 @@
 import { createStore as createZustandStore } from "zustand/vanilla";
 import {
   EntitiesProject,
+  EntitiesProjectEndpoint,
   RequestsProjectCreateRequest,
+  RequestsProjectEndpointCreateRequest,
   RequestsProjectUpdateRequest,
   ResponsesNoContent,
   ResponsesOkArrayEntitiesProject,
   ResponsesOkEntitiesProject,
+  ResponsesOkEntitiesProjectEndpoint,
   ResponsesUnprocessableEntity,
 } from "@/api/model";
 import axios from "@/api/axios";
@@ -30,6 +33,10 @@ export type Actions = {
   showProject: (projectId: string) => Promise<EntitiesProject>;
   deleteProject: (projectId: string) => Promise<void>;
   indexProjects: () => Promise<Array<EntitiesProject>>;
+  storeProjectEndpoint: (
+    projectId: string,
+    request: RequestsProjectEndpointCreateRequest,
+  ) => Promise<EntitiesProjectEndpoint>;
 };
 
 export type Store = State & Actions;
@@ -98,7 +105,7 @@ export const createStore = (initState: State = defaultInitState) => {
     deleteProject: (projectId: string): Promise<void> => {
       return new Promise<void>((resolve, reject) => {
         axios
-          .get<ResponsesNoContent>(`/v1/projects/${projectId}`)
+          .delete<ResponsesNoContent>(`/v1/projects/${projectId}`)
           .then(() => {
             resolve();
           })
@@ -121,6 +128,29 @@ export const createStore = (initState: State = defaultInitState) => {
           .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
             toast.error(
               error.response?.data.message ?? "Error while loading projects",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    storeProjectEndpoint: (
+      projectId: string,
+      request: RequestsProjectEndpointCreateRequest,
+    ): Promise<EntitiesProjectEndpoint> => {
+      return new Promise<EntitiesProjectEndpoint>((resolve, reject) => {
+        axios
+          .post<ResponsesOkEntitiesProjectEndpoint>(
+            `/v1/projects/${projectId}/endpoints`,
+            request,
+          )
+          .then((response) => {
+            toast.success("Project endpoint created successfully.");
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while creating a new project endpoint",
             );
             reject(getErrorMessages(error));
           });

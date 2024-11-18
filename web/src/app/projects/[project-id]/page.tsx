@@ -8,9 +8,11 @@ import {
   ActionMenu,
   ActionList,
   Spinner,
+  Dialog,
+  BranchName,
 } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
-import { MouseEvent, useEffect, useState } from "react";
+import { useCallback, useEffect, MouseEvent, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
 import { useAppStore } from "@/store/provider";
 import { EntitiesProject } from "@/api/model";
@@ -20,14 +22,13 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@primer/octicons-react";
-import { useAuth } from "@clerk/nextjs";
-import { setAuthHeader } from "@/api/axios";
+import { toast } from "sonner";
 
 export default function ProjectShow() {
   const router = useRouter();
-  const auth = useAuth();
   const pathName = usePathname();
-  const { showProject } = useAppStore((state) => state);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { showProject, deleteProject } = useAppStore((state) => state);
 
   const [errorMessages, setErrorMessages] = useState<ErrorMessages>(
     ErrorMessages.create(),
@@ -35,6 +36,11 @@ export default function ProjectShow() {
   const [loading, setLoading] = useState<boolean>(false);
   const [project, setProject] = useState<EntitiesProject | undefined>(
     undefined,
+  );
+
+  const onDeleteDialogClose = useCallback(
+    () => setIsDeleteDialogOpen(false),
+    [],
   );
 
   const projectId = pathName.split("/")[2];
@@ -52,6 +58,20 @@ export default function ProjectShow() {
   useEffect(() => {
     loadProject();
   }, [projectId]);
+
+  const onDeleteProject = async (event: MouseEvent) => {
+    event.preventDefault();
+    setLoading(true);
+    deleteProject(projectId)
+      .then(() => {
+        setIsDeleteDialogOpen(false);
+        toast.info("Project deleted successfully.");
+        router.push("/projects");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <Box
@@ -84,6 +104,9 @@ export default function ProjectShow() {
           <Button
             disabled={!project}
             variant="primary"
+            onClick={() =>
+              router.push(`/projects/${projectId}/endpoints/create`)
+            }
             leadingVisual={PlusIcon}
           >
             New Endpoint
@@ -105,7 +128,7 @@ export default function ProjectShow() {
                 <ActionList.Divider />
                 <ActionList.Item
                   variant="danger"
-                  onSelect={() => alert("Delete file clicked")}
+                  onSelect={() => setIsDeleteDialogOpen(true)}
                 >
                   <ActionList.LeadingVisual>
                     <TrashIcon />
@@ -125,6 +148,41 @@ export default function ProjectShow() {
           borderColor: "border.default",
         }}
       ></Box>
+      {isDeleteDialogOpen && (
+        <Dialog
+          width={"large"}
+          onClose={onDeleteDialogClose}
+          title={`Delete ${project?.name}`}
+          footerButtons={[
+            {
+              disabled: loading,
+              content: "Close",
+              onClick: onDeleteDialogClose,
+            },
+            {
+              buttonType: "danger",
+              block: true,
+              loading: loading,
+              disabled: loading,
+              content: "Delete this project",
+              onClick: onDeleteProject,
+            },
+          ]}
+        >
+          <Box>
+            <Text>
+              Are you sure you want to delete the{" "}
+              <BranchName>{project?.name}</BranchName> project. This is a
+              permanent action and it cannot be reversed.
+            </Text>
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <Text sx={{ color: "fg.muted" }}>
+              {project?.subdomain}.httpmock.dev
+            </Text>
+          </Box>
+        </Dialog>
+      )}
     </Box>
   );
 }
