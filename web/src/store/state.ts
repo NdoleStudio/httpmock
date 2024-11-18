@@ -6,9 +6,11 @@ import {
   EntitiesProjectEndpoint,
   RequestsProjectCreateRequest,
   RequestsProjectEndpointCreateRequest,
+  RequestsProjectEndpointUpdateRequest,
   RequestsProjectUpdateRequest,
   ResponsesNoContent,
   ResponsesOkArrayEntitiesProject,
+  ResponsesOkArrayEntitiesProjectEndpoint,
   ResponsesOkEntitiesProject,
   ResponsesOkEntitiesProjectEndpoint,
   ResponsesUnprocessableEntity,
@@ -37,6 +39,22 @@ export type Actions = {
     projectId: string,
     request: RequestsProjectEndpointCreateRequest,
   ) => Promise<EntitiesProjectEndpoint>;
+  updateProjectEndpoint: (
+    projectId: string,
+    projectEndpointId: string,
+    request: RequestsProjectEndpointUpdateRequest,
+  ) => Promise<EntitiesProjectEndpoint>;
+  indexProjectEndpoint: (
+    projectId: string,
+  ) => Promise<Array<EntitiesProjectEndpoint>>;
+  showProjectEndpoint: (
+    projectId: string,
+    endpointId: string,
+  ) => Promise<EntitiesProjectEndpoint>;
+  deleteProjectEndpoint: (
+    projectId: string,
+    projectEndpointId: string,
+  ) => Promise<void>;
 };
 
 export type Store = State & Actions;
@@ -151,6 +169,92 @@ export const createStore = (initState: State = defaultInitState) => {
             toast.error(
               error.response?.data.message ??
                 "Error while creating a new project endpoint",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    updateProjectEndpoint: (
+      projectId: string,
+      projectEndpointId: string,
+      request: RequestsProjectEndpointUpdateRequest,
+    ): Promise<EntitiesProjectEndpoint> => {
+      return new Promise<EntitiesProjectEndpoint>((resolve, reject) => {
+        axios
+          .put<ResponsesOkEntitiesProjectEndpoint>(
+            `/v1/projects/${projectId}/endpoints/${projectEndpointId}`,
+            request,
+          )
+          .then((response) => {
+            toast.success("Endpoint updated successfully.");
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while updating a project endpoint",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    indexProjectEndpoint: (
+      projectId: string,
+    ): Promise<Array<EntitiesProjectEndpoint>> => {
+      return new Promise<Array<EntitiesProjectEndpoint>>((resolve, reject) => {
+        axios
+          .get<ResponsesOkArrayEntitiesProjectEndpoint>(
+            `/v1/projects/${projectId}/endpoints`,
+          )
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while loading project endpoints",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    showProjectEndpoint: (
+      projectId: string,
+      projectEndpointId,
+    ): Promise<EntitiesProjectEndpoint> => {
+      return new Promise<EntitiesProjectEndpoint>((resolve, reject) => {
+        axios
+          .get<ResponsesOkEntitiesProjectEndpoint>(
+            `/v1/projects/${projectId}/endpoints/${projectEndpointId}`,
+          )
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while fetching project endpoint",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    deleteProjectEndpoint: (
+      projectId: string,
+      projectEndpointId: string,
+    ): Promise<void> => {
+      return new Promise<void>((resolve, reject) => {
+        axios
+          .delete<ResponsesNoContent>(
+            `/v1/projects/${projectId}/endpoints/${projectEndpointId}`,
+          )
+          .then(() => {
+            resolve();
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while deleting your endpoint",
             );
             reject(getErrorMessages(error));
           });

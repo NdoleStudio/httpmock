@@ -70,7 +70,7 @@ func (repository *gormProjectEndpointRepository) Delete(ctx context.Context, use
 		Where("user_id = ?", userID).
 		Where("project_id = ?", projectID).
 		Where("id = ?", projectEndpointID).
-		Delete(&entities.Project{}).
+		Delete(&entities.ProjectEndpoint{}).
 		Error
 	if err != nil {
 		msg := fmt.Sprintf("cannot save project endpoint with ID [%s] for user [%s]", projectEndpointID, userID)

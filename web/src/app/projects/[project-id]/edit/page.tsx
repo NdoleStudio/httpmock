@@ -80,7 +80,7 @@ export default function ProjectEdit() {
       }}
     >
       <Box sx={{ maxWidth: "500px" }}>
-        <BackButton href={"/"}></BackButton>
+        <BackButton href={`/projects/${projectId}`}></BackButton>
         <Box
           sx={{
             backgroundColor: "canvas.inset",
