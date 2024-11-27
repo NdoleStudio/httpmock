@@ -279,7 +279,16 @@ export default function ProjectShow() {
                 <CopyButton data={getEndpointURL(endpoint.request_path)} />
               </Box>
               <Box sx={{ mt: 2, display: "flex" }}>
-                <Button size={"small"} variant="default" sx={{ mr: 2 }}>
+                <Button
+                  onClick={() =>
+                    router.push(
+                      `/projects/${projectId}/endpoints/${endpoint.id}`,
+                    )
+                  }
+                  size={"small"}
+                  variant="default"
+                  sx={{ mr: 2 }}
+                >
                   View Requests
                 </Button>
                 <Button
