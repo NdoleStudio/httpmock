@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: "/app"
+    schedule:
+      interval: monthly
+      time: "01:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - AchoArnold
+    assignees:
+      - AchoArnold
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
+
+  # Fetch and update latest `npm` packages
+  - package-ecosystem: npm
+    directory: "/web"
+    schedule:
+      interval: monthly
+      time: "01:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - AchoArnold
+    assignees:
+      - AchoArnold
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: monthly
+      time: "01:00"
+    labels:
+      - "dependencies"
+      - "gh-action"
