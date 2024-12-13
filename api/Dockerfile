@@ -34,5 +34,4 @@ ENV ZONEINFO=/zoneinfo.zip
 
 EXPOSE 8000
 
-
 ENTRYPOINT ["./httpmock", "--dotenv=false"]

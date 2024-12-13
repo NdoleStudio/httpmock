@@ -3,38 +3,27 @@
 import {
   Box,
   Text,
-  Button,
   PageHeader,
-  ActionMenu,
-  ActionList,
   Spinner,
   Dialog,
   BranchName,
   Heading,
   Label,
 } from "@primer/react";
-import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, MouseEvent, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useAppStore } from "@/store/provider";
 import { EntitiesProject, EntitiesProjectEndpoint } from "@/api/model";
-import {
-  GearIcon,
-  MirrorIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon,
-} from "@primer/octicons-react";
+import { MirrorIcon } from "@primer/octicons-react";
 import { CopyButton } from "@/components/copy-button";
 import { getEndpointURL, labelColor } from "@/utils/filters";
 import { BackButton } from "@/components/back-button";
 
 export default function EndpointShow() {
-  const router = useRouter();
   const pathName = usePathname();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { showProject, showProjectEndpoint } = useAppStore((state) => state);
   const [loading, setLoading] = useState<boolean>(false);
-  const [endpoints, setEndpoints] = useState<EntitiesProjectEndpoint[]>([]);
   const [loadingEndpoint, setLoadingEndpoint] = useState<boolean>(false);
   const [project, setProject] = useState<EntitiesProject | undefined>(
     undefined,
@@ -143,7 +132,7 @@ export default function EndpointShow() {
               block: true,
               loading: loading,
               disabled: loading,
-              content: "Delete this Reuest",
+              content: "Delete this Request",
             },
           ]}
         >
