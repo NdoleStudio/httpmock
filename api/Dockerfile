@@ -1,4 +1,4 @@
-FROM golang:1.23.4 as builder
+FROM golang:latest as builder
 
 ARG GIT_COMMIT
 ENV GIT_COMMIT=$GIT_COMMIT
