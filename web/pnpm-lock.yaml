@@ -21,8 +21,8 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2
       '@primer/react':
-        specifier: ^37.3.0
-        version: 37.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(styled-components@6.1.13(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))
+        specifier: ^37.8.0
+        version: 37.8.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(styled-components@6.1.13(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -382,8 +382,8 @@ packages:
   '@primer/primitives@9.1.2':
     resolution: {integrity: sha512-KecRJpUdIf14J3gVpoyMMJeQD6Sh5kcHk93N5bYch4XGB0GOZP3ypxz+NByMjr/2HHPsRfCCO5EEgNjmeWYUGQ==}
 
-  '@primer/react@37.3.0':
-    resolution: {integrity: sha512-mXtcghyLabCyq/H1KDeLjl/S6fnVQWmJW6Pjcw4YuK/EqS1HUpbY3JOyGMYkdD1FMi8MGnpZOUfN03eU7QFomA==}
+  '@primer/react@37.8.0':
+    resolution: {integrity: sha512-q8Q5gvmWGHuXkv2p4lv7WhRlraOmJZqB8cWAUmMQl4wmLHTZMwKe5kj6dHkKmoZ7pEsNYM5PdkJ1Ize45cLLRA==}
     engines: {node: '>=12', npm: '>=7'}
     peerDependencies:
       '@types/react': ^18.0.0
@@ -2241,7 +2241,7 @@ snapshots:
       '@prettier/sync': 0.5.2(prettier@3.3.3)
       prettier: 3.3.3
 
-  '@primer/react@37.3.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(styled-components@6.1.13(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))':
+  '@primer/react@37.8.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(styled-components@6.1.13(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))':
     dependencies:
       '@github/relative-time-element': 4.4.3
       '@github/tab-container-element': 4.8.2
