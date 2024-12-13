@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/gofiber/fiber/v2"
+
 	_ "github.com/NdoleStudio/httpmock/docs"
 	"github.com/NdoleStudio/httpmock/pkg/di"
 )
@@ -32,5 +34,23 @@ func main() {
 	}
 
 	container := di.NewContainer(Version, os.Getenv("GCP_PROJECT_ID"))
-	container.Logger().Info(container.App().Listen(":8000").Error())
+
+	app := container.App()
+	err := make(chan error, 1)
+
+	go serveHTTP(app, err)
+
+	if os.Getenv("TLS_CERT_FILE") != "" {
+		go serveHTTPS(app, err)
+	}
+
+	container.Logger().Error(<-err)
+}
+
+func serveHTTP(app *fiber.App, err chan<- error) {
+	err <- app.Listen(":8000")
+}
+
+func serveHTTPS(app *fiber.App, err chan<- error) {
+	err <- app.ListenTLS(":8443", os.Getenv("TLS_CERT_FILE"), os.Getenv("TLS_KEY_FILE"))
 }
