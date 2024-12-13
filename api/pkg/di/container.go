@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gofiber/fiber/v2/middleware/healthcheck"
+
 	"github.com/clerk/clerk-sdk-go/v2"
 
 	"github.com/NdoleStudio/go-otelroundtripper"
@@ -124,8 +126,8 @@ func (container *Container) App() (app *fiber.App) {
 	app.Use(otelfiber.Middleware())
 	app.Use(cors.New())
 	app.Use(middlewares.HTTPRequestLogger(container.Tracer(), container.Logger()))
-
 	app.Use(middlewares.ClerkBearerAuth(container.Logger().WithService("middlewares.ClerkBearerAuth"), container.Tracer()))
+	app.Use(healthcheck.New())
 
 	container.app = app
 	return app
