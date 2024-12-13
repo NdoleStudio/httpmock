@@ -1,4 +1,4 @@
-FROM golang as builder
+FROM golang:latest as builder
 
 ARG GIT_COMMIT
 ENV GIT_COMMIT=$GIT_COMMIT
@@ -17,6 +17,7 @@ RUN go get github.com/swaggo/swag/cmd/swag@v1.8.7
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.7
 
 RUN swag init
+RUN go get ./...
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$GIT_COMMIT" -o /bin/httpmock .
 
