@@ -12,8 +12,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0(next@15.0.3(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
       '@clerk/themes':
-        specifier: ^2.1.45
-        version: 2.1.45
+        specifier: ^2.2.2
+        version: 2.2.2
       '@primer/octicons-react':
         specifier: ^19.12.0
         version: 19.12.0(react@19.0.0-rc-66855b96-20241106)
@@ -110,16 +110,16 @@ packages:
       react-dom:
         optional: true
 
-  '@clerk/themes@2.1.45':
-    resolution: {integrity: sha512-o8hb8ttQVdoTuAEpAGWDwbCzTvcJJNTAWI8wbJULvvy6FB0WhU62o0t0DX0VKGXe+nRs+qDmQ3bz1d5lahr2Xw==}
+  '@clerk/themes@2.2.2':
+    resolution: {integrity: sha512-VINTqMeJgPyhGL8AjdvET/osQ2lczPGk8gGZmIjsz8mxjGadqZ2a7/khVEdQUxv3R6sHwSMfH5e4W8zKOoGQQw==}
     engines: {node: '>=18.17.0'}
 
   '@clerk/types@4.31.0':
     resolution: {integrity: sha512-Cs+4fcVr404IWYVcucZXHCg8xUyghQkjSI98Bw+5XdkTdMThIYcjCuaF1g1da4SkMWlzfQYpIxQOc7lXvhKJ6Q==}
     engines: {node: '>=18.17.0'}
 
-  '@clerk/types@4.34.0':
-    resolution: {integrity: sha512-4ghDvf80/sFlpx5HnmIl3vW7SOqEaTDwyKAw64H/E2ahgGUMk+qLVpxnBumTpowq+bGjfMVwbneDQOhtmYidoQ==}
+  '@clerk/types@4.39.4':
+    resolution: {integrity: sha512-qBtCyTM6oHiFbAGo5hUUvl6INZJeX5ZKRWkIz3v3dNWYFp096nYWPjqv2RmoQCLkYJM7m5dnGWgBUa33xOVD3A==}
     engines: {node: '>=18.17.0'}
 
   '@emnapi/runtime@1.3.1':
@@ -2027,16 +2027,16 @@ snapshots:
       react: 19.0.0-rc-66855b96-20241106
       react-dom: 19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106)
 
-  '@clerk/themes@2.1.45':
+  '@clerk/themes@2.2.2':
     dependencies:
-      '@clerk/types': 4.34.0
+      '@clerk/types': 4.39.4
       tslib: 2.4.1
 
   '@clerk/types@4.31.0':
     dependencies:
       csstype: 3.1.1
 
-  '@clerk/types@4.34.0':
+  '@clerk/types@4.39.4':
     dependencies:
       csstype: 3.1.1
 
