@@ -32,6 +32,6 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "15.1.0",
     "eslint-plugin-primer-react": "^6.1.6",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
