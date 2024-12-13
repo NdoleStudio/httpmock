@@ -8,6 +8,10 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     env:
       DOCKER_BUILDKIT: 1
 
