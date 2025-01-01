@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.3.0",
-    "@clerk/themes": "^2.2.2",
+    "@clerk/themes": "^2.2.3",
     "@primer/octicons-react": "^19.12.0",
     "@primer/primitives": "^9.1.2",
     "@primer/react": "^37.8.0",
