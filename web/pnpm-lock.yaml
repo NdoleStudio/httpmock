@@ -18,8 +18,8 @@ importers:
         specifier: ^19.12.0
         version: 19.12.0(react@19.0.0-rc-66855b96-20241106)
       '@primer/primitives':
-        specifier: ^9.1.2
-        version: 9.1.2
+        specifier: ^10.3.2
+        version: 10.3.2
       '@primer/react':
         specifier: ^37.8.0
         version: 37.8.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(styled-components@6.1.13(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))
@@ -378,6 +378,9 @@ packages:
     engines: {node: '>=8'}
     peerDependencies:
       react: '>=16.3'
+
+  '@primer/primitives@10.3.2':
+    resolution: {integrity: sha512-TNFkoKEBj+5D5JG05IxWaXfPU5v156pY93E5+SMCGqZqQ8ID3c0lDhLBmjbNG03aRErErViSrBKQW0b327r/Cw==}
 
   '@primer/primitives@9.1.2':
     resolution: {integrity: sha512-KecRJpUdIf14J3gVpoyMMJeQD6Sh5kcHk93N5bYch4XGB0GOZP3ypxz+NByMjr/2HHPsRfCCO5EEgNjmeWYUGQ==}
@@ -2240,6 +2243,8 @@ snapshots:
   '@primer/octicons-react@19.12.0(react@19.0.0-rc-66855b96-20241106)':
     dependencies:
       react: 19.0.0-rc-66855b96-20241106
+
+  '@primer/primitives@10.3.2': {}
 
   '@primer/primitives@9.1.2':
     dependencies:
