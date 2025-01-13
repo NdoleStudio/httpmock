@@ -1,3 +1,5 @@
+"use client";
+
 import { UserProfile } from "@clerk/nextjs";
 import { Box } from "@primer/react";
 import { BackButton } from "@/components/back-button";
