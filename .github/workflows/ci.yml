@@ -108,13 +108,12 @@ jobs:
           REACT_APP_BACKEND_BASE_URL: https://api.httpmock.dev
 
       - name: Deploy 🚀
-        uses: cloudflare/pages-action@1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: httpmock-cloud
-          directory: web/out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy web/out --project-name=httpmock-cloud
 
       - name: Create Sentry Release
         uses: getsentry/action-release@v1
