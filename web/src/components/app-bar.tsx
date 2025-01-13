@@ -2,21 +2,13 @@
 
 import * as React from "react";
 import Image from "next/image";
-import {
-  Header,
-  Button,
-  ActionMenu,
-  ActionList,
-  IconButton,
-  Avatar,
-} from "@primer/react";
+import { Header, Button, ActionMenu, ActionList, Avatar } from "@primer/react";
 import { Heading } from "@primer/react";
 import Logo from "@/app/logo.svg";
 import {
   SignInIcon,
   SignOutIcon,
   PersonFillIcon,
-  KebabHorizontalIcon,
 } from "@primer/octicons-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";

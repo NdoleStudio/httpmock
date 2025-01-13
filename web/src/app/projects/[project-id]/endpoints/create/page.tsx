@@ -77,7 +77,7 @@ export default function EndpointsCreate() {
 
   useEffect(() => {
     loadProject();
-  }, [projectId]);
+  });
 
   return (
     <Box
@@ -100,7 +100,7 @@ export default function EndpointsCreate() {
             p: 3,
           }}
         >
-          <Heading>Create Mock Endpoint</Heading>
+          <Heading as={"h2"}>Create Mock Endpoint</Heading>
           <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
             <FormControl.Label>Request Method</FormControl.Label>
             <FormControl.Caption>

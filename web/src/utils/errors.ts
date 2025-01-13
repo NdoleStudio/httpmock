@@ -26,14 +26,18 @@ export const getErrorMessages = (error: AxiosError): ErrorMessages => {
   const errors = new ErrorMessages();
   if (
     error === null ||
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     typeof (error.response?.data as any)?.data !== "object" ||
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     (error.response?.data as any)?.data === null ||
     error.response?.status !== 422
   ) {
     return errors;
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   Object.keys((error.response?.data as any).data).forEach((key: string) => {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     errors.addMany(key, sanitize(key, (error.response?.data as any).data[key]));
   });
 

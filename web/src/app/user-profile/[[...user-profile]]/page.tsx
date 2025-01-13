@@ -12,10 +12,10 @@ export default function Page() {
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      <Box>
+      <div>
         <BackButton href={"/"}></BackButton>
         <UserProfile path="/user-profile" />
-      </Box>
+      </div>
     </Box>
   );
 }

@@ -20,7 +20,6 @@ export function ThemeProvider({
   const [loading, setLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
-    console.log("auth.isLoaded", auth.isLoaded);
     if (auth.isLoaded) {
       auth
         .getToken()
@@ -33,7 +32,7 @@ export function ThemeProvider({
           setLoading(false);
         });
     }
-  }, [auth.isLoaded]);
+  }, [auth, auth.isLoaded]);
 
   return (
     <AppStoreProvider>

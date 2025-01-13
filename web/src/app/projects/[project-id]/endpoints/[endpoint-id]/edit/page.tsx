@@ -100,7 +100,7 @@ export default function EndpointsEdit() {
   };
   useEffect(() => {
     loadProjectEndpoint();
-  }, [projectId, projectEndpointId]);
+  });
 
   const loadProject = () => {
     showProject(projectId).then((project: EntitiesProject) => {
@@ -109,7 +109,7 @@ export default function EndpointsEdit() {
   };
   useEffect(() => {
     loadProject();
-  }, [projectId]);
+  });
 
   const onDeleteDialogClose = useCallback(
     () => setIsDeleteDialogOpen(false),
@@ -155,7 +155,7 @@ export default function EndpointsEdit() {
             p: 3,
           }}
         >
-          <Heading>Update Mock Endpoint</Heading>
+          <Heading as={"h2"}>Update Mock Endpoint</Heading>
           <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
             <FormControl.Label>Request Method</FormControl.Label>
             <FormControl.Caption>
@@ -380,13 +380,13 @@ export default function EndpointsEdit() {
             },
           ]}
         >
-          <Box>
-            <Text>
+          <div>
+            <p>
               Are you sure you want to delete the{" "}
               <BranchName>{endpoint.request_path}</BranchName> endpoint. This is
               a permanent action and it cannot be reversed.
-            </Text>
-          </Box>
+            </p>
+          </div>
           <Box sx={{ mt: 2 }}>
             <Text sx={{ color: "fg.muted" }}>{endpoint.description}</Text>
           </Box>

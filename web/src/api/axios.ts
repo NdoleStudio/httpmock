@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (request) => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   if ((window as any).Clerk.session) {
     const token = await (window as any).Clerk.session.getToken();
     if (token) {

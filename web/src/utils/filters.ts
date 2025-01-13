@@ -1,4 +1,4 @@
-import { EntitiesProject, EntitiesProjectEndpoint } from "@/api/model";
+import { EntitiesProject } from "@/api/model";
 
 export const capitalize = function (value: string | null) {
   if (!value) {

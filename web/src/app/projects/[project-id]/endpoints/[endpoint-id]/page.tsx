@@ -23,7 +23,6 @@ export default function EndpointShow() {
   const pathName = usePathname();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { showProject, showProjectEndpoint } = useAppStore((state) => state);
-  const [loading, setLoading] = useState<boolean>(false);
   const [loadingEndpoint, setLoadingEndpoint] = useState<boolean>(false);
   const [project, setProject] = useState<EntitiesProject | undefined>(
     undefined,
@@ -52,7 +51,7 @@ export default function EndpointShow() {
   };
   useEffect(() => {
     loadProjectEndpoint();
-  }, [projectId, projectEndpointId]);
+  });
 
   const loadProject = () => {
     showProject(projectId).then((project: EntitiesProject) => {
@@ -61,7 +60,7 @@ export default function EndpointShow() {
   };
   useEffect(() => {
     loadProject();
-  }, [projectId]);
+  });
 
   return (
     <Box
@@ -72,8 +71,8 @@ export default function EndpointShow() {
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      <PageHeader role="banner" aria-label="project details">
-        <PageHeader.TitleArea variant={"large"}>
+      <PageHeader role="banner" aria-label="Project details">
+        <PageHeader.TitleArea aria-label={"Project endpoint"} variant={"large"}>
           {project && projectEndpoint && (
             <PageHeader.Title>
               <Box sx={{ display: "flex", alignItems: "baseline" }}>
@@ -123,26 +122,26 @@ export default function EndpointShow() {
           title={`Delete ${project?.name}`}
           footerButtons={[
             {
-              disabled: loading,
+              disabled: loadingEndpoint,
               content: "Close",
               onClick: onDeleteDialogClose,
             },
             {
               buttonType: "danger",
               block: true,
-              loading: loading,
-              disabled: loading,
+              loading: loadingEndpoint,
+              disabled: loadingEndpoint,
               content: "Delete this Request",
             },
           ]}
         >
-          <Box>
-            <Text>
+          <div>
+            <p>
               Are you sure you want to delete the{" "}
               <BranchName>{project?.name}</BranchName> project. This is a
               permanent action and it cannot be reversed.
-            </Text>
-          </Box>
+            </p>
+          </div>
           <Box sx={{ mt: 2 }}>
             <Text sx={{ color: "fg.muted" }}>
               {project?.subdomain}.httpmock.dev
@@ -151,15 +150,15 @@ export default function EndpointShow() {
         </Dialog>
       )}
 
-      <Box>
+      <div>
         <Heading as="h2" sx={{ mt: 32 }} variant="medium">
           <MirrorIcon size={24} />
           <Text sx={{ ml: 2 }}>HTTP Requests</Text>
         </Heading>
-      </Box>
-      <Box>
+      </div>
+      <div>
         <Spinner size="large" />
-      </Box>
+      </div>
     </Box>
   );
 }

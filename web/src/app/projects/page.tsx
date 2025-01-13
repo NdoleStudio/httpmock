@@ -34,7 +34,7 @@ export default function ProjectIndex() {
 
   useEffect(() => {
     loadProjects();
-  }, []);
+  });
 
   return (
     <Box
@@ -45,7 +45,7 @@ export default function ProjectIndex() {
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      <PageHeader role="banner" aria-label="project list">
+      <PageHeader role="banner" aria-label="Project list">
         <PageHeader.TitleArea variant={"large"}>
           All Projects
         </PageHeader.TitleArea>

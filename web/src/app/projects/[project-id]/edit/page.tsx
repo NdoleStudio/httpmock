@@ -46,7 +46,7 @@ export default function ProjectEdit() {
 
   useEffect(() => {
     loadProject();
-  }, [projectId]);
+  });
 
   const onUpdateProject = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -91,7 +91,7 @@ export default function ProjectEdit() {
             p: 3,
           }}
         >
-          <Heading>Edit Project</Heading>
+          <Heading as={"h2"}>Edit Project</Heading>
           <Text sx={{ color: "fg.muted" }}>
             Your mocked endpoints are grouped into projects for better
             organization.

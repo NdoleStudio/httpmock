@@ -13,6 +13,7 @@ export function CopyButton({ ...props }: CopyButtonProps) {
   const [copied, setCopied] = useState<boolean>(false);
 
   const onClick = (event: MouseEvent) => {
+    event.preventDefault();
     navigator.clipboard.writeText(props.data).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 4000);

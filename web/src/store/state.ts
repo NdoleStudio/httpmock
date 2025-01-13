@@ -64,7 +64,7 @@ export const defaultInitState: State = {
 };
 
 export const createStore = (initState: State = defaultInitState) => {
-  return createZustandStore<Store>()((set, get) => ({
+  return createZustandStore<Store>()(() => ({
     ...initState,
     storeProject: (
       request: RequestsProjectCreateRequest,

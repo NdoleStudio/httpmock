@@ -71,7 +71,7 @@ export default function ProjectCreate() {
             p: 3,
           }}
         >
-          <Heading>Create Project</Heading>
+          <Heading as={"h2"}>Create Project</Heading>
           <Text sx={{ color: "fg.muted" }}>
             Your mocked endpoints are grouped into projects for better
             organization.

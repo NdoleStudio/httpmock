@@ -12,17 +12,13 @@ import {
   BranchName,
   Heading,
   Label,
-  LabelColorOptions,
-  StateLabel,
   RelativeTime,
 } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, MouseEvent, useState } from "react";
-import { ErrorMessages } from "@/utils/errors";
 import { useAppStore } from "@/store/provider";
 import { EntitiesProject, EntitiesProjectEndpoint } from "@/api/model";
 import {
-  CopyIcon,
   GearIcon,
   LinkIcon,
   PencilIcon,
@@ -66,7 +62,7 @@ export default function ProjectShow() {
 
   useEffect(() => {
     loadProject();
-  }, [projectId]);
+  });
 
   const loadProjectEndpoints = () => {
     setLoadingEndpoints(true);
@@ -81,7 +77,7 @@ export default function ProjectShow() {
 
   useEffect(() => {
     loadProjectEndpoints();
-  }, [projectId]);
+  });
 
   const onDeleteProject = async (event: MouseEvent) => {
     event.preventDefault();
@@ -129,7 +125,7 @@ export default function ProjectShow() {
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      <PageHeader role="banner" aria-label="project details">
+      <PageHeader role="banner" aria-label="Project details">
         <PageHeader.TitleArea variant={"large"}>
           {project && (
             <PageHeader.Title>{project && project.name}</PageHeader.Title>
@@ -165,7 +161,7 @@ export default function ProjectShow() {
             <ActionMenu.Overlay>
               <ActionList>
                 <ActionList.Item
-                  onClick={() => router.push(`/projects/${projectId}/edit`)}
+                  onSelect={() => router.push(`/projects/${projectId}/edit`)}
                 >
                   Edit Project
                   <ActionList.LeadingVisual>
@@ -216,13 +212,13 @@ export default function ProjectShow() {
             },
           ]}
         >
-          <Box>
-            <Text>
+          <div>
+            <p>
               Are you sure you want to delete the{" "}
               <BranchName>{project?.name}</BranchName> project. This is a
               permanent action and it cannot be reversed.
-            </Text>
-          </Box>
+            </p>
+          </div>
           <Box sx={{ mt: 2 }}>
             <Text sx={{ color: "fg.muted" }}>
               {project?.subdomain}.httpmock.dev
@@ -231,16 +227,16 @@ export default function ProjectShow() {
         </Dialog>
       )}
 
-      <Box>
+      <div>
         <Heading as="h2" sx={{ mt: 32 }} variant="medium">
           <LinkIcon size={24} />
           <Text sx={{ ml: 2 }}>Endpoints</Text>
         </Heading>
-      </Box>
+      </div>
       {loadingEndpoints && (
-        <Box>
+        <div>
           <Spinner size="large" />
-        </Box>
+        </div>
       )}
       {!loadingEndpoints && (
         <Box
@@ -268,7 +264,7 @@ export default function ProjectShow() {
           }}
         >
           {endpoints.map((endpoint) => (
-            <Box key={endpoint.id}>
+            <div key={endpoint.id}>
               <Box sx={{ display: "flex", alignItems: "baseline" }}>
                 <Label sx={{ color: getLabelColor(endpoint.request_method) }}>
                   {endpoint.request_method}
@@ -304,7 +300,7 @@ export default function ProjectShow() {
                 >
                   Manage
                 </Button>
-                <Box>
+                <div>
                   <Text size="small" sx={{ mr: 1, color: "fg.muted" }}>
                     Updated
                   </Text>
@@ -313,9 +309,9 @@ export default function ProjectShow() {
                     date={new Date(endpoint.updated_at)}
                     noTitle={true}
                   ></RelativeTime>
-                </Box>
+                </div>
               </Box>
-            </Box>
+            </div>
           ))}
         </Box>
       )}

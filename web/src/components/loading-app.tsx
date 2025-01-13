@@ -21,7 +21,7 @@ export function LoadingApp() {
         </Box>
         <Box sx={{ display: "flex" }}>
           <Spinner sx={{ mt: 2, color: "accent.emphasis" }} size={"medium"} />
-          <Heading sx={{ ml: 2, fontWeight: "light" }}>
+          <Heading as={"h2"} sx={{ ml: 2, fontWeight: "light" }}>
             Loading httpmock<Text sx={{ color: "accent.emphasis" }}>.</Text>dev
           </Heading>
         </Box>
