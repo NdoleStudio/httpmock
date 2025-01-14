@@ -9,5 +9,6 @@ services:
       driver: "gcplogs"
       options:
         gcp-project: "httpmock-dev"
+
     volumes:
       - ./certs:/app/certs
