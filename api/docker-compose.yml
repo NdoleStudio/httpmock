@@ -1,8 +1,6 @@
 services:
   api:
-    build:
-      dockerfile: Dockerfile
-      context: .
+    image: ndolestudio/httpmock:latest
     ports:
       - "80:8000"
       - "443:8443"
