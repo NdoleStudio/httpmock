@@ -8,4 +8,4 @@ services:
       - "443:8443"
     env_file: .env
     volumes:
-      - ./certs:/app/certs
+      - /etc/letsencrypt/live/httpmock.dev:/app/certs
