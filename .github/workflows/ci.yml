@@ -38,6 +38,12 @@ jobs:
             type=raw,value=latest
             type=raw,value=main
 
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
       - name: Build and push docker image
         uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355
         with:
@@ -45,7 +51,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: GIT_COMMIT=${{ github.sha::8 }}
+          build-args: GIT_COMMIT=${{ env.COMMIT_SHORT_SHA }}
         if: github.event_name != 'pull_request'
 
       - name: Docker Hub Description
