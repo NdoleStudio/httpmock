@@ -41,23 +41,10 @@ func NewLemonsqueezyHandlerHandler(
 // RegisterRoutes registers the routes for the MessageHandler
 func (h *LemonsqueezyHandler) RegisterRoutes(app *fiber.App) {
 	router := app.Group("/v1/lemonsqueezy")
-	router.Post("/event", h.Event)
+	router.Post("/event", h.event)
 }
 
-// Event consumes a lemonsqueezy event
-// @Summary      Consume a lemonsqueezy event
-// @Description  Publish a lemonsqueezy event to the registered listeners
-// @Security	 BearerAuth
-// @Tags         Lemonsqueezy
-// @Accept       json
-// @Produce      json
-// @Success      204 		{object}	responses.NoContent
-// @Failure      400		{object}	responses.BadRequest
-// @Failure 	 401    	{object}	responses.Unauthorized
-// @Failure      422		{object}	responses.UnprocessableEntity
-// @Failure      500		{object}	responses.InternalServerError
-// @Router       /v1/lemonsqueezy/event [post]
-func (h *LemonsqueezyHandler) Event(c *fiber.Ctx) error {
+func (h *LemonsqueezyHandler) event(c *fiber.Ctx) error {
 	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
 

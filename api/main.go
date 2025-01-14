@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/NdoleStudio/httpmock/docs"
+
 	"github.com/gofiber/fiber/v2"
 
 	_ "github.com/NdoleStudio/httpmock/docs"
@@ -22,8 +24,8 @@ var Version string
 // @license.name AGPL-3.0
 // @license.url  https://raw.githubusercontent.com/NdoleStudio/httpmock/main/LICENSE
 //
-// @host     localhost:8000
-// @schemes  http https
+// @host     api.httpmock.dev
+// @schemes  https
 //
 // @securitydefinitions.apikey BearerAuth
 // @in header
@@ -31,6 +33,10 @@ var Version string
 func main() {
 	if len(os.Args) == 1 {
 		di.LoadEnv()
+	}
+
+	if Version != "" {
+		docs.SwaggerInfo.Version = Version
 	}
 
 	container := di.NewContainer(Version, os.Getenv("GCP_PROJECT_ID"))

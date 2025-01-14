@@ -45,7 +45,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: APP_VERSION=${{ github.sha }}
+          build-args: GIT_COMMIT=${{ github.sha::8 }}
         if: github.event_name != 'pull_request'
 
       - name: Docker Hub Description

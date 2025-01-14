@@ -122,7 +122,7 @@ func (h *ProjectHandler) create(c *fiber.Ctx) error {
 // @Security	 BearerAuth
 // @Tags         Projects
 // @Produce      json
-// @Param 		 projectID	path 		string true "Project ID"
+// @Param 		 projectId	path 		string true "Project ID"
 // @Param        payload	body 		requests.ProjectUpdateRequest	true 	"project update payload"
 // @Success      200 		{object}	responses.Ok[entities.Project]
 // @Failure      400		{object}	responses.BadRequest
