@@ -639,10 +639,10 @@ func (container *Container) initializeAxiomProvider(version string, namespace st
 
 func logger(skipFrameCount int) telemetry.Logger {
 	return telemetry.NewSlogLogger(
+		context.Background(),
 		skipFrameCount,
 		getSlogHandler(),
 		[]any{string(semconv.ProcessPIDKey), os.Getpid(), string(semconv.HostNameKey), hostName()},
-		context.Background(),
 	)
 }
 
