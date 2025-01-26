@@ -35,7 +35,7 @@ func NewProjectEndpointHandler(
 	projectService *services.ProjectService,
 ) (h *ProjectEndpointHandler) {
 	return &ProjectEndpointHandler{
-		logger:         logger.WithService(fmt.Sprintf("%T", h)),
+		logger:         logger.WithCodeNamespace(fmt.Sprintf("%T", h)),
 		tracer:         tracer,
 		validator:      validator,
 		service:        service,

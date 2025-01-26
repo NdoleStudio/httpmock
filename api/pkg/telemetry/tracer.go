@@ -21,9 +21,6 @@ type Tracer interface {
 	// StartWithLogger creates a spanContext and a context.Context containing the newly-created spanContext with a logger
 	StartWithLogger(c context.Context, logger Logger, name ...string) (context.Context, trace.Span, Logger)
 
-	// CtxLogger creates a telemetry.Logger with spanContext attributes in the structured logger
-	CtxLogger(logger Logger, span trace.Span) Logger
-
 	// WrapErrorSpan sets a spanContext as error
 	WrapErrorSpan(span trace.Span, err error) error
 

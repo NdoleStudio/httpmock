@@ -1,22 +1,17 @@
 package telemetry
 
-import (
-	"go.opentelemetry.io/otel/trace"
-)
+import "context"
 
 // Logger is an interface for creating customer logger implementations
 type Logger interface {
 	// Error logs an error
 	Error(err error)
 
-	// WithService creates a new structured logger instance with a service name
-	WithService(string) Logger
+	// WithCodeNamespace creates a new structured logger instance with a service name
+	WithCodeNamespace(string) Logger
 
-	// WithString creates a new structured logger instance with a string
-	WithString(key string, value string) Logger
-
-	// WithSpan creates a new structured logger instance for a spanContext
-	WithSpan(span trace.SpanContext) Logger
+	// WithAttribute creates a new structured logger instance with a string
+	WithAttribute(key string, value any) Logger
 
 	// Trace logs a new message with trace level.
 	Trace(value string)
@@ -34,5 +29,8 @@ type Logger interface {
 	Fatal(err error)
 
 	// Printf makes the logger compatible with retryablehttp.Logger
-	Printf(string, ...interface{})
+	Printf(string, ...any)
+
+	// WithContext adds a context.Context to a logger
+	WithContext(ctx context.Context) Logger
 }

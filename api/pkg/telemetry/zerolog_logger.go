@@ -1,6 +1,7 @@
 package telemetry
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hirosassa/zerodriver"
@@ -12,13 +13,13 @@ import (
 type zerologLogger struct {
 	zerolog     *zerodriver.Logger
 	spanContext *trace.SpanContext
-	fields      map[string]string
+	fields      map[string]any
 	projectID   string
 	level       zerolog.Level
 }
 
 // NewZerologLogger creates a new instance of the zerolog logger
-func NewZerologLogger(projectID string, fields map[string]string, driver *zerodriver.Logger, span *trace.SpanContext) Logger {
+func NewZerologLogger(projectID string, fields map[string]any, driver *zerodriver.Logger, span *trace.SpanContext) Logger {
 	logger := &zerologLogger{
 		zerolog:     driver,
 		fields:      fields,
@@ -30,8 +31,8 @@ func NewZerologLogger(projectID string, fields map[string]string, driver *zerodr
 	return logger
 }
 
-// WithService creates a new structured zerolog logger instance with a service name
-func (logger *zerologLogger) WithService(service string) Logger {
+// WithCodeNamespace creates a new structured zerolog logger instance with a service name
+func (logger *zerologLogger) WithCodeNamespace(service string) Logger {
 	return NewZerologLogger(
 		logger.projectID,
 		logger.addField(string(semconv.ServiceNameKey), service),
@@ -44,8 +45,8 @@ func (logger *zerologLogger) Printf(s string, i ...interface{}) {
 	logger.decorateEvent(logger.zerolog.Info()).Msg(fmt.Sprintf(s, i...))
 }
 
-// WithString creates a new structured zerolog logger instance with a key value pair
-func (logger *zerologLogger) WithString(key string, value string) Logger {
+// WithAttribute creates a new structured zerolog logger instance with a key value pair
+func (logger *zerologLogger) WithAttribute(key string, value any) Logger {
 	return NewZerologLogger(
 		logger.projectID,
 		logger.addField(key, value),
@@ -84,13 +85,14 @@ func (logger *zerologLogger) Error(err error) {
 	logger.decorateEvent(logger.zerolog.Error()).Err(err).Send()
 }
 
-// WithSpan adds a spanContext to a logger
-func (logger *zerologLogger) WithSpan(spanContext trace.SpanContext) Logger {
+// WithContext adds a context.Context to a logger
+func (logger *zerologLogger) WithContext(ctx context.Context) Logger {
+	spanCtx := trace.SpanContextFromContext(ctx)
 	return NewZerologLogger(
 		logger.projectID,
 		logger.fields,
 		logger.zerolog,
-		&spanContext,
+		&spanCtx,
 	)
 }
 
@@ -99,13 +101,13 @@ func (logger *zerologLogger) decorateEvent(event *zerodriver.Event) *zerolog.Eve
 		event.TraceContext(logger.spanContext.TraceID().String(), logger.spanContext.SpanID().String(), logger.spanContext.IsSampled(), logger.projectID)
 	}
 	for key, value := range logger.fields {
-		event.Str(key, value)
+		event.Any(key, value)
 	}
 	return event.Event
 }
 
-func (logger *zerologLogger) addField(key string, value string) map[string]string {
-	fields := map[string]string{}
+func (logger *zerologLogger) addField(key string, value any) map[string]any {
+	fields := map[string]any{}
 	for oldKey, oldValue := range logger.fields {
 		fields[oldKey] = oldValue
 	}

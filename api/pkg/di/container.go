@@ -2,11 +2,23 @@ package di
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/caarlos0/env/v11"
+	"github.com/lmittmann/tint"
+	"go.opentelemetry.io/contrib/bridges/otelslog"
+	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/log/global"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/log"
+	"go.opentelemetry.io/otel/sdk/trace"
 
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 
@@ -55,6 +67,8 @@ import (
 	gormLogger "gorm.io/gorm/logger"
 )
 
+var configuration *Configuration
+
 // Container is used to resolve services at runtime
 type Container struct {
 	projectID       string
@@ -75,7 +89,7 @@ func NewLiteContainer() (container *Container) {
 	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
 
 	return &Container{
-		logger: logger(3).WithService(fmt.Sprintf("%T", container)),
+		logger: logger(3).WithCodeNamespace(fmt.Sprintf("%T", container)),
 	}
 }
 
@@ -91,7 +105,7 @@ func NewContainer(projectID string, version string) (container *Container) {
 	container = &Container{
 		projectID: projectID,
 		version:   version,
-		logger:    logger(3).WithService(fmt.Sprintf("%T", container)),
+		logger:    logger(3).WithCodeNamespace(fmt.Sprintf("%T", container)),
 	}
 
 	container.InitializeTraceProvider()
@@ -126,7 +140,7 @@ func (container *Container) App() (app *fiber.App) {
 	app.Use(otelfiber.Middleware())
 	app.Use(cors.New())
 	app.Use(middlewares.HTTPRequestLogger(container.Tracer(), container.Logger()))
-	app.Use(middlewares.ClerkBearerAuth(container.Logger().WithService("middlewares.ClerkBearerAuth"), container.Tracer()))
+	app.Use(middlewares.ClerkBearerAuth(container.Logger().WithCodeNamespace("middlewares.ClerkBearerAuth"), container.Tracer()))
 	app.Use(healthcheck.New())
 
 	container.app = app
@@ -154,7 +168,7 @@ func (container *Container) Logger(skipFrameCount ...int) telemetry.Logger {
 	if len(skipFrameCount) > 0 {
 		return logger(skipFrameCount[0])
 	}
-	return logger(3)
+	return logger(2)
 }
 
 // GormLogger creates a new instance of gormLogger.Interface
@@ -162,7 +176,7 @@ func (container *Container) GormLogger() gormLogger.Interface {
 	container.logger.Debug("creating gormLogger.Interface")
 	return telemetry.NewGormLogger(
 		container.Tracer(),
-		container.Logger(6),
+		container.Logger(5),
 	)
 }
 
@@ -227,7 +241,7 @@ func (container *Container) ClerkBearerAuthMiddlewares() []fiber.Handler {
 	container.logger.Debug("creating ClerkBearerAuthRouter")
 	return []fiber.Handler{
 		middlewares.ClerkBearerAuth(
-			container.Logger().WithService(fmt.Sprintf("%T", middlewares.ClerkBearerAuth)),
+			container.Logger().WithCodeNamespace(fmt.Sprintf("%T", middlewares.ClerkBearerAuth)),
 			container.Tracer(),
 		),
 		container.AuthenticatedMiddleware(),
@@ -515,7 +529,7 @@ func (container *Container) RegisterSwaggerRoutes() {
 
 // InitializeTraceProvider initializes the open telemetry trace provider
 func (container *Container) InitializeTraceProvider() func() {
-	return container.initializeUptraceProvider(container.version, container.projectID)
+	return container.initializeAxiomProvider(container.version, container.projectID)
 }
 
 func (container *Container) initializeUptraceProvider(version string, namespace string) (flush func()) {
@@ -537,10 +551,113 @@ func (container *Container) initializeUptraceProvider(version string, namespace 
 	}
 }
 
+// Config loads the configuration from .env
+func Config() *Configuration {
+	if configuration != nil {
+		return configuration
+	}
+
+	if err := env.Parse(configuration); err != nil {
+		panic(stacktrace.Propagate(err, fmt.Sprintf("cannot parse [%T]", configuration)))
+	}
+
+	return configuration
+}
+
+// Resource creates a new instance of resource.Resource
+func (container *Container) Resource(version string, namespace string) *resource.Resource {
+	// Defines resource with service name, version, and environment.
+	return resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.ServiceNameKey.String(namespace),
+		semconv.ServiceVersionKey.String(version),
+		semconv.DeploymentEnvironmentKey.String(os.Getenv("APP_ENV")),
+	)
+}
+
+func (container *Container) initializeAxiomProvider(version string, namespace string) func() {
+	// Sets up OTLP HTTP exporter with endpoint, headers, and TLS config.
+	exporter, err := otlptracehttp.New(context.Background(),
+		otlptracehttp.WithEndpoint("api.axiom.co"),
+		otlptracehttp.WithHeaders(map[string]string{
+			"Authorization":   "Bearer " + os.Getenv("AXIOM_API_KEY"),
+			"X-AXIOM-DATASET": os.Getenv("APP_ENV"),
+		}),
+		otlptracehttp.WithTLSClientConfig(&tls.Config{}),
+	)
+	if err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot initialize axiom OTLP HTTP exporter"))
+	}
+
+	// Configures the tracer provider with the exporter and resource.
+	tracerProvider := trace.NewTracerProvider(
+		trace.WithBatcher(exporter),
+		trace.WithResource(container.Resource(version, namespace)),
+	)
+	otel.SetTracerProvider(tracerProvider)
+
+	// Sets global propagator to W3C Trace Context and Baggage.
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
+		propagation.TraceContext{},
+		propagation.Baggage{},
+	))
+
+	// Create the OTLP log exporter that sends logs to configured destination
+	logExporter, err := otlploghttp.New(
+		context.Background(),
+		otlploghttp.WithEndpoint("api.axiom.co"),
+		otlploghttp.WithHeaders(map[string]string{
+			"Authorization":   "Bearer " + os.Getenv("AXIOM_API_KEY"),
+			"X-AXIOM-DATASET": os.Getenv("APP_ENV"),
+		}),
+		otlploghttp.WithTLSClientConfig(&tls.Config{}),
+	)
+	if err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot initialize axiom OTLP HTTP exporter"))
+	}
+
+	// Create the logger provider
+	loggerProvider := log.NewLoggerProvider(
+		log.WithResource(container.Resource(version, namespace)),
+		log.WithProcessor(
+			log.NewBatchProcessor(logExporter),
+		),
+	)
+	global.SetLoggerProvider(loggerProvider)
+
+	return func() {
+		err = tracerProvider.Shutdown(context.Background())
+		if err != nil {
+			container.logger.Error(stacktrace.Propagate(err, "cannot shutdown axiom trace exporter"))
+		}
+		err = loggerProvider.Shutdown(context.Background())
+		if err != nil {
+			container.logger.Error(stacktrace.Propagate(err, "cannot shutdown axiom log exporter"))
+		}
+	}
+}
+
 func logger(skipFrameCount int) telemetry.Logger {
-	fields := map[string]string{
-		"pid":      strconv.Itoa(os.Getpid()),
-		"hostname": hostName(),
+	return telemetry.NewSlogLogger(
+		skipFrameCount,
+		getSlogHandler(),
+		[]any{string(semconv.ProcessPIDKey), os.Getpid(), string(semconv.HostNameKey), hostName()},
+		context.Background(),
+	)
+}
+
+func getSlogHandler() slog.Handler {
+	// Create a new Slog handler
+	if Config().UseOtelLogger {
+		return tint.NewHandler(os.Stderr, nil)
+	}
+	return otelslog.NewHandler(os.Getenv("GCP_PROJECT_ID"))
+}
+
+func initializeZerologLogger(skipFrameCount int) telemetry.Logger {
+	fields := map[string]any{
+		string(semconv.ProcessPIDKey): os.Getpid(),
+		string(semconv.HostNameKey):   hostName(),
 	}
 
 	return telemetry.NewZerologLogger(

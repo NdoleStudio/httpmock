@@ -27,7 +27,7 @@ func NewProjectEndpointService(
 	repository repositories.ProjectEndpointRepository,
 ) (s *ProjectEndpointService) {
 	return &ProjectEndpointService{
-		logger:     logger.WithService(fmt.Sprintf("%T", s)),
+		logger:     logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
 		tracer:     tracer,
 		repository: repository,
 	}

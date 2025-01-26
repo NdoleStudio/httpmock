@@ -47,20 +47,20 @@ func (tracer *otelTracer) Redact(secret string) string {
 
 func (tracer *otelTracer) StartFromFiberCtxWithLogger(c *fiber.Ctx, logger Logger, name ...string) (context.Context, trace.Span, Logger) {
 	ctx, span := tracer.StartFromFiberCtx(c, getName(name...))
-	return ctx, span, tracer.CtxLogger(logger, span)
+	return ctx, span, tracer.ctxLogger(ctx, logger)
 }
 
 func (tracer *otelTracer) StartFromFiberCtx(c *fiber.Ctx, name ...string) (context.Context, trace.Span) {
 	return tracer.Start(c.UserContext(), getName(name...))
 }
 
-func (tracer *otelTracer) CtxLogger(logger Logger, span trace.Span) Logger {
-	return logger.WithSpan(span.SpanContext())
+func (tracer *otelTracer) ctxLogger(ctx context.Context, logger Logger) Logger {
+	return logger.WithContext(ctx)
 }
 
 func (tracer *otelTracer) StartWithLogger(c context.Context, logger Logger, name ...string) (context.Context, trace.Span, Logger) {
 	ctx, span := tracer.Start(c, getName(name...))
-	return ctx, span, tracer.CtxLogger(logger, span)
+	return ctx, span, tracer.ctxLogger(ctx, logger)
 }
 
 func (tracer *otelTracer) Start(c context.Context, name ...string) (context.Context, trace.Span) {

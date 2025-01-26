@@ -29,7 +29,7 @@ func NewProjectHandlerValidator(
 	repository repositories.ProjectRepository,
 ) (v *ProjectHandlerValidator) {
 	return &ProjectHandlerValidator{
-		logger:     logger.WithService(fmt.Sprintf("%T", v)),
+		logger:     logger.WithCodeNamespace(fmt.Sprintf("%T", v)),
 		tracer:     tracer,
 		repository: repository,
 	}

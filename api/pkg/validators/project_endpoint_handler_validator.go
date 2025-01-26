@@ -32,7 +32,7 @@ func NewProjectEndpointHandlerValidator(
 	repository repositories.ProjectEndpointRepository,
 ) (v *ProjectEndpointHandlerValidator) {
 	return &ProjectEndpointHandlerValidator{
-		logger:     logger.WithService(fmt.Sprintf("%T", v)),
+		logger:     logger.WithCodeNamespace(fmt.Sprintf("%T", v)),
 		tracer:     tracer,
 		repository: repository,
 	}

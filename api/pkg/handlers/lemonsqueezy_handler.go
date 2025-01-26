@@ -31,7 +31,7 @@ func NewLemonsqueezyHandlerHandler(
 	validator *validators.LemonsqueezyHandlerValidator,
 ) (h *LemonsqueezyHandler) {
 	return &LemonsqueezyHandler{
-		logger:    logger.WithService(fmt.Sprintf("%T", h)),
+		logger:    logger.WithCodeNamespace(fmt.Sprintf("%T", h)),
 		tracer:    tracer,
 		service:   service,
 		validator: validator,

@@ -33,7 +33,7 @@ func NewProjectHandler(
 	service *services.ProjectService,
 ) (h *ProjectHandler) {
 	return &ProjectHandler{
-		logger:    logger.WithService(fmt.Sprintf("%T", h)),
+		logger:    logger.WithCodeNamespace(fmt.Sprintf("%T", h)),
 		tracer:    tracer,
 		validator: validator,
 		service:   service,

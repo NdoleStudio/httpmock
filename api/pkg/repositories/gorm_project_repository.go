@@ -26,7 +26,7 @@ func NewGormProjectRepository(
 	db *gorm.DB,
 ) ProjectRepository {
 	return &gormProjectRepository{
-		logger: logger.WithService(fmt.Sprintf("%T", &gormProjectRepository{})),
+		logger: logger.WithCodeNamespace(fmt.Sprintf("%T", &gormProjectRepository{})),
 		tracer: tracer,
 		db:     db,
 	}

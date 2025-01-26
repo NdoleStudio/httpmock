@@ -24,7 +24,7 @@ func NewLemonsqueezyHandlerValidator(
 	client *lemonsqueezy.Client,
 ) (v *LemonsqueezyHandlerValidator) {
 	return &LemonsqueezyHandlerValidator{
-		logger: logger.WithService(fmt.Sprintf("%T", v)),
+		logger: logger.WithCodeNamespace(fmt.Sprintf("%T", v)),
 		tracer: tracer,
 		client: client,
 	}

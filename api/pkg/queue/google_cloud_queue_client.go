@@ -38,10 +38,8 @@ func NewGooglePushQueue(
 
 // Enqueue a task to the queue
 func (queue *googlePushQueue) Enqueue(ctx context.Context, task *Task) (queueID string, err error) {
-	ctx, span := queue.tracer.Start(ctx)
+	ctx, span, ctxLogger := queue.tracer.StartWithLogger(ctx, queue.logger)
 	defer span.End()
-
-	ctxLogger := queue.tracer.CtxLogger(queue.logger, span)
 
 	req := &cloudtaskspb.CreateTaskRequest{
 		Parent: queue.queueName,

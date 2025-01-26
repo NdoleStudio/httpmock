@@ -30,7 +30,7 @@ func NewProjectService(
 	repository repositories.ProjectRepository,
 ) (s *ProjectService) {
 	return &ProjectService{
-		logger:          logger.WithService(fmt.Sprintf("%T", s)),
+		logger:          logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
 		tracer:          tracer,
 		eventDispatcher: eventDispatcher,
 		repository:      repository,

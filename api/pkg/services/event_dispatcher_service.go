@@ -48,10 +48,8 @@ func NewEventDispatcher(
 
 // Dispatch a new event by adding it to the queue to be processed async
 func (dispatcher *EventDispatcher) Dispatch(ctx context.Context, event *cloudevents.Event) error {
-	ctx, span := dispatcher.tracer.Start(ctx)
+	ctx, span, ctxLogger := dispatcher.tracer.StartWithLogger(ctx, dispatcher.logger)
 	defer span.End()
-
-	ctxLogger := dispatcher.tracer.CtxLogger(dispatcher.logger, span)
 
 	if err := event.Validate(); err != nil {
 		msg := fmt.Sprintf("cannot dispatch event with ID [%s] and type [%s] because it is invalid", event.ID(), event.Type())
@@ -85,13 +83,10 @@ func (dispatcher *EventDispatcher) Subscribe(eventType string, listener events.E
 
 // Publish an event to subscribers
 func (dispatcher *EventDispatcher) Publish(ctx context.Context, event cloudevents.Event) {
-	ctx, span := dispatcher.tracer.Start(ctx)
+	ctx, span, ctxLogger := dispatcher.tracer.StartWithLogger(ctx, dispatcher.logger)
 	defer span.End()
 
 	start := time.Now()
-
-	ctxLogger := dispatcher.tracer.CtxLogger(dispatcher.logger, span)
-
 	subscribers, ok := dispatcher.listeners[event.Type()]
 	if !ok {
 		ctxLogger.Info(fmt.Sprintf("no listener is configured for event type [%s] with id [%s]", event.Type(), event.ID()))

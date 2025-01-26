@@ -31,7 +31,7 @@ func NewLemonsqueezyService(
 	eventDispatcher *EventDispatcher,
 ) (s *LemonsqueezyService) {
 	return &LemonsqueezyService{
-		logger:          logger.WithService(fmt.Sprintf("%T", s)),
+		logger:          logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
 		tracer:          tracer,
 		userRepository:  repository,
 		eventDispatcher: eventDispatcher,

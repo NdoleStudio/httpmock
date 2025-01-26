@@ -26,7 +26,7 @@ func NewEventsHandler(
 	service *services.EventDispatcher,
 ) (h *EventsHandler) {
 	return &EventsHandler{
-		logger:  logger.WithService(fmt.Sprintf("%T", h)),
+		logger:  logger.WithCodeNamespace(fmt.Sprintf("%T", h)),
 		tracer:  tracer,
 		service: service,
 	}
@@ -39,10 +39,8 @@ func (h *EventsHandler) RegisterRoutes(app *fiber.App, middlewares []fiber.Handl
 }
 
 func (h *EventsHandler) consume(c *fiber.Ctx) error {
-	ctx, span := h.tracer.StartFromFiberCtx(c)
+	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
-
-	ctxLogger := h.tracer.CtxLogger(h.logger, span)
 
 	var request cloudevents.Event
 	if err := c.BodyParser(&request); err != nil {
