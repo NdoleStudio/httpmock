@@ -2,7 +2,14 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Header, Button, ActionMenu, ActionList, Avatar } from "@primer/react";
+import {
+  Header,
+  Button,
+  ActionMenu,
+  ActionList,
+  Avatar,
+  Box,
+} from "@primer/react";
 import { Heading } from "@primer/react";
 import Logo from "@/app/logo.svg";
 import {
@@ -22,20 +29,13 @@ export function AppBar() {
   return (
     <Header>
       <Header.Item onClick={() => router.push("/")}>
-        <Header.Link
-          href="#"
-          sx={{
-            fontSize: 2,
-          }}
-        >
+        <Header.Link href="/">
           <Image src={Logo} height={40} alt={"httpmock.dev logo"} />
-          <Heading sx={{ ml: 2 }} as={"h1"}>
-            httpmock
-          </Heading>
+          <Heading as={"h1"}>httpmock</Heading>
         </Header.Link>
       </Header.Item>
-      <Header.Item full></Header.Item>
-      <Header.Item sx={{ mr: 0 }}>
+      <Box sx={{ flex: "auto" }}></Box>
+      <Header.Item>
         {pathname === "/sign-up" && (
           <Button
             leadingVisual={SignInIcon}

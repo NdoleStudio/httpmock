@@ -23,58 +23,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/lemonsqueezy/event": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Publish a lemonsqueezy event to the registered listeners",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Lemonsqueezy"
-                ],
-                "summary": "Consume a lemonsqueezy event",
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/responses.NoContent"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/responses.BadRequest"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Unauthorized"
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "schema": {
-                            "$ref": "#/definitions/responses.UnprocessableEntity"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/responses.InternalServerError"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/projects": {
             "get": {
                 "security": [
@@ -236,22 +184,22 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "This endpoint creates a new project endpoint for a user",
+                "description": "This endpoint stores a new project endpoint for a user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProjectEndpoints"
                 ],
-                "summary": "Store a project endpoint",
+                "summary": "store a new project endpoint",
                 "parameters": [
                     {
-                        "description": "project endpoint create payload",
+                        "description": "project endpoint store payload",
                         "name": "payload",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.ProjectEndpointCreateRequest"
+                            "$ref": "#/definitions/requests.ProjectEndpointStoreRequest"
                         }
                     }
                 ],
@@ -308,7 +256,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Project ID",
-                        "name": "projectID",
+                        "name": "projectId",
                         "in": "path",
                         "required": true
                     }
@@ -364,7 +312,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Project ID",
-                        "name": "projectID",
+                        "name": "projectId",
                         "in": "path",
                         "required": true
                     },
@@ -429,7 +377,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Project ID",
-                        "name": "projectID",
+                        "name": "projectId",
                         "in": "path",
                         "required": true
                     }
@@ -810,7 +758,7 @@ const docTemplate = `{
                 }
             }
         },
-        "requests.ProjectEndpointCreateRequest": {
+        "requests.ProjectEndpointStoreRequest": {
             "type": "object",
             "required": [
                 "delay_in_milliseconds",
@@ -1124,11 +1072,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8000",
+	Host:             "api.httpmock.dev",
 	BasePath:         "",
-	Schemes:          []string{"http", "https"},
-	Title:            "HTTP Mock API",
-	Description:      "Backend HTTP Mock API server.",
+	Schemes:          []string{"https"},
+	Title:            "HTTP Mock API Reference",
+	Description:      "Reference for the httpmock.dev API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

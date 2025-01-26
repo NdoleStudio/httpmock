@@ -14,9 +14,9 @@ import (
 // Version is the version of the API
 var Version string
 
-// @title       HTTP Mock API
+// @title       HTTP Mock API Reference
 // @version     1.0
-// @description Backend HTTP Mock API server.
+// @description Reference for the httpmock.dev API.
 //
 // @contact.name  Acho Arnold
 // @contact.email arnold@httpmock.dev

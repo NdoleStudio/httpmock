@@ -34,7 +34,7 @@ export default function ProjectIndex() {
 
   useEffect(() => {
     loadProjects();
-  });
+  }, []);
 
   return (
     <Box
@@ -94,7 +94,7 @@ export default function ProjectIndex() {
               borderRadius: 2,
               borderStyle: "solid",
               borderColor: "border.default",
-              ":hover": {
+              "&:hover": {
                 bg: "neutral.muted",
               },
             }}

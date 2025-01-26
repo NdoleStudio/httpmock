@@ -62,7 +62,7 @@ export default function ProjectShow() {
 
   useEffect(() => {
     loadProject();
-  });
+  }, []);
 
   const loadProjectEndpoints = () => {
     setLoadingEndpoints(true);
@@ -77,7 +77,7 @@ export default function ProjectShow() {
 
   useEffect(() => {
     loadProjectEndpoints();
-  });
+  }, []);
 
   const onDeleteProject = async (event: MouseEvent) => {
     event.preventDefault();
@@ -248,16 +248,16 @@ export default function ProjectShow() {
               borderStyle: "solid",
               borderBottomWidth: 0,
               padding: 4,
-              ":first-child": {
+              "&:first-child": {
                 borderTopLeftRadius: 2,
                 borderTopRightRadius: 2,
               },
-              ":last-child": {
+              "&:last-child": {
                 borderBottomLeftRadius: 2,
                 borderBottomRightRadius: 2,
                 borderBottomWidth: 1,
               },
-              ":hover": {
+              "&:hover": {
                 bg: "canvas.inset",
               },
             },

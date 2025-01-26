@@ -1,9 +1,9 @@
 {
-  "schemes": ["http", "https"],
+  "schemes": ["https"],
   "swagger": "2.0",
   "info": {
-    "description": "Backend HTTP Mock API server.",
-    "title": "HTTP Mock API",
+    "description": "Reference for the httpmock.dev API.",
+    "title": "HTTP Mock API Reference",
     "contact": {
       "name": "Acho Arnold",
       "email": "arnold@httpmock.dev"
@@ -14,54 +14,8 @@
     },
     "version": "1.0"
   },
-  "host": "localhost:8000",
+  "host": "api.httpmock.dev",
   "paths": {
-    "/v1/lemonsqueezy/event": {
-      "post": {
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "description": "Publish a lemonsqueezy event to the registered listeners",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "tags": ["Lemonsqueezy"],
-        "summary": "Consume a lemonsqueezy event",
-        "responses": {
-          "204": {
-            "description": "No Content",
-            "schema": {
-              "$ref": "#/definitions/responses.NoContent"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/responses.BadRequest"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/responses.Unauthorized"
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/responses.UnprocessableEntity"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/responses.InternalServerError"
-            }
-          }
-        }
-      }
-    },
     "/v1/projects": {
       "get": {
         "security": [
@@ -115,7 +69,7 @@
         "description": "This endpoint creates a new project for a user",
         "produces": ["application/json"],
         "tags": ["Projects"],
-        "summary": "Create a project",
+        "summary": "Store a project",
         "parameters": [
           {
             "description": "project create payload",
@@ -211,18 +165,18 @@
             "BearerAuth": []
           }
         ],
-        "description": "This endpoint creates a new project endpoint for a user",
+        "description": "This endpoint stores a new project endpoint for a user",
         "produces": ["application/json"],
         "tags": ["ProjectEndpoints"],
-        "summary": "Create a project endpoint",
+        "summary": "store a new project endpoint",
         "parameters": [
           {
-            "description": "project endpoint create payload",
+            "description": "project endpoint store payload",
             "name": "payload",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/requests.ProjectEndpointCreateRequest"
+              "$ref": "#/definitions/requests.ProjectEndpointStoreRequest"
             }
           }
         ],
@@ -275,7 +229,7 @@
           {
             "type": "string",
             "description": "Project ID",
-            "name": "projectID",
+            "name": "projectId",
             "in": "path",
             "required": true
           }
@@ -327,7 +281,7 @@
           {
             "type": "string",
             "description": "Project ID",
-            "name": "projectID",
+            "name": "projectId",
             "in": "path",
             "required": true
           },
@@ -388,7 +342,7 @@
           {
             "type": "string",
             "description": "Project ID",
-            "name": "projectID",
+            "name": "projectId",
             "in": "path",
             "required": true
           }
@@ -753,7 +707,7 @@
         }
       }
     },
-    "requests.ProjectEndpointCreateRequest": {
+    "requests.ProjectEndpointStoreRequest": {
       "type": "object",
       "required": [
         "delay_in_milliseconds",

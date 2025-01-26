@@ -96,7 +96,7 @@ definitions:
       - name
       - subdomain
     type: object
-  requests.ProjectEndpointCreateRequest:
+  requests.ProjectEndpointStoreRequest:
     properties:
       delay_in_milliseconds:
         type: integer
@@ -312,51 +312,18 @@ definitions:
       - message
       - status
     type: object
-host: localhost:8000
+host: api.httpmock.dev
 info:
   contact:
     email: arnold@httpmock.dev
     name: Acho Arnold
-  description: Backend HTTP Mock API server.
+  description: Reference for the httpmock.dev API.
   license:
     name: AGPL-3.0
     url: https://raw.githubusercontent.com/NdoleStudio/httpmock/main/LICENSE
-  title: HTTP Mock API
+  title: HTTP Mock API Reference
   version: "1.0"
 paths:
-  /v1/lemonsqueezy/event:
-    post:
-      consumes:
-        - application/json
-      description: Publish a lemonsqueezy event to the registered listeners
-      produces:
-        - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: "#/definitions/responses.NoContent"
-        "400":
-          description: Bad Request
-          schema:
-            $ref: "#/definitions/responses.BadRequest"
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: "#/definitions/responses.Unauthorized"
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: "#/definitions/responses.UnprocessableEntity"
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: "#/definitions/responses.InternalServerError"
-      security:
-        - BearerAuth: []
-      summary: Consume a lemonsqueezy event
-      tags:
-        - Lemonsqueezy
   /v1/projects:
     get:
       description:
@@ -424,7 +391,7 @@ paths:
             $ref: "#/definitions/responses.InternalServerError"
       security:
         - BearerAuth: []
-      summary: Create a project
+      summary: Store a project
       tags:
         - Projects
   /v1/projects/:projectId/endpoints:
@@ -461,14 +428,14 @@ paths:
       tags:
         - ProjectEndpoints
     post:
-      description: This endpoint creates a new project endpoint for a user
+      description: This endpoint stores a new project endpoint for a user
       parameters:
-        - description: project endpoint create payload
+        - description: project endpoint store payload
           in: body
           name: payload
           required: true
           schema:
-            $ref: "#/definitions/requests.ProjectEndpointCreateRequest"
+            $ref: "#/definitions/requests.ProjectEndpointStoreRequest"
       produces:
         - application/json
       responses:
@@ -494,7 +461,7 @@ paths:
             $ref: "#/definitions/responses.InternalServerError"
       security:
         - BearerAuth: []
-      summary: Create a project endpoint
+      summary: store a new project endpoint
       tags:
         - ProjectEndpoints
   /v1/projects/{projectId}:
@@ -503,7 +470,7 @@ paths:
       parameters:
         - description: Project ID
           in: path
-          name: projectID
+          name: projectId
           required: true
           type: string
       produces:
@@ -543,7 +510,7 @@ paths:
       parameters:
         - description: Project ID
           in: path
-          name: projectID
+          name: projectId
           required: true
           type: string
       produces:
@@ -579,7 +546,7 @@ paths:
       parameters:
         - description: Project ID
           in: path
-          name: projectID
+          name: projectId
           required: true
           type: string
         - description: project update payload
@@ -751,7 +718,6 @@ paths:
       tags:
         - ProjectEndpoints
 schemes:
-  - http
   - https
 securityDefinitions:
   BearerAuth:

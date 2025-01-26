@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/NdoleStudio/httpmock/docs"
+
 	"github.com/caarlos0/env/v11"
 	"github.com/lmittmann/tint"
 	"go.opentelemetry.io/contrib/bridges/otelslog"
@@ -524,7 +526,16 @@ func (container *Container) RegisterEventRoutes() {
 // RegisterSwaggerRoutes registers routes for swagger
 func (container *Container) RegisterSwaggerRoutes() {
 	container.logger.Debug(fmt.Sprintf("registering %T routes", swagger.HandlerDefault))
-	container.App().Get("/*", swagger.HandlerDefault)
+	container.App().Get("/*", swagger.New(swagger.Config{
+		Title: docs.SwaggerInfo.Title,
+		CustomScript: `
+		document.addEventListener("DOMContentLoaded", function(event) {
+			var links = document.querySelectorAll("link[rel~='icon']");
+			links.forEach(function (link) {
+				link.href = 'https://cloud.httpmock.dev/favicon.ico';
+			});
+		});`,
+	}))
 }
 
 // InitializeTraceProvider initializes the open telemetry trace provider
@@ -650,9 +661,9 @@ func logger(skipFrameCount int) telemetry.Logger {
 func getSlogHandler() slog.Handler {
 	// Create a new Slog handler
 	if Config().UseOtelLogger {
-		return tint.NewHandler(os.Stderr, nil)
+		return otelslog.NewHandler(os.Getenv("GCP_PROJECT_ID"))
 	}
-	return otelslog.NewHandler(os.Getenv("GCP_PROJECT_ID"))
+	return tint.NewHandler(os.Stderr, nil)
 }
 
 func initializeZerologLogger(skipFrameCount int) telemetry.Logger {
