@@ -557,6 +557,7 @@ func Config() *Configuration {
 		return configuration
 	}
 
+	configuration = new(Configuration)
 	if err := env.Parse(configuration); err != nil {
 		panic(stacktrace.Propagate(err, fmt.Sprintf("cannot parse [%T]", configuration)))
 	}
