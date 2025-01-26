@@ -31,7 +31,7 @@ export default function ProjectEdit() {
 
   const projectId = pathName.split("/")[2];
 
-  const loadProject = () => {
+  useEffect(() => {
     showProject(projectId)
       .then((project: EntitiesProject) => {
         setProjectName(project.name);
@@ -42,11 +42,7 @@ export default function ProjectEdit() {
       .catch((errorMessages: ErrorMessages) => {
         setErrorMessages(errorMessages);
       });
-  };
-
-  useEffect(() => {
-    loadProject();
-  });
+  }, [projectId, showProject]);
 
   const onUpdateProject = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

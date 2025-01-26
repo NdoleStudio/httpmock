@@ -28,11 +28,11 @@ export function AppBar() {
 
   return (
     <Header>
-      <Header.Item onClick={() => router.push("/")}>
-        <Header.Link href="/">
-          <Image src={Logo} height={40} alt={"httpmock.dev logo"} />
-          <Heading as={"h1"}>httpmock</Heading>
-        </Header.Link>
+      <Header.Item sx={{ cursor: "pointer" }} onClick={() => router.push("/")}>
+        <Image src={Logo} height={40} alt={"httpmock.dev logo"} />
+        <Heading sx={{ fontWeight: "lighter" }} as={"h1"}>
+          httpmock
+        </Heading>
       </Header.Item>
       <Box sx={{ flex: "auto" }}></Box>
       <Header.Item>

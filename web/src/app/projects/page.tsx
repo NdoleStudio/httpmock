@@ -21,7 +21,7 @@ export default function ProjectIndex() {
   const [projects, setProjects] = useState<Array<EntitiesProject>>([]);
   const { indexProjects } = useAppStore((state) => state);
 
-  const loadProjects = () => {
+  useEffect(() => {
     indexProjects().then((projects: Array<EntitiesProject>) => {
       if (projects.length === 0) {
         toast.info("You don't have any projects yet. Let's create one.");
@@ -30,11 +30,7 @@ export default function ProjectIndex() {
         setProjects(projects);
       }
     });
-  };
-
-  useEffect(() => {
-    loadProjects();
-  }, []);
+  }, [indexProjects]);
 
   return (
     <Box

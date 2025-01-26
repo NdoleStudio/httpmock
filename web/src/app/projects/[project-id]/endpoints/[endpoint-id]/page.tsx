@@ -39,7 +39,7 @@ export default function EndpointShow() {
   const projectId = pathName.split("/")[2];
   const projectEndpointId = pathName.split("/")[4];
 
-  const loadProjectEndpoint = () => {
+  useEffect(() => {
     setLoadingEndpoint(true);
     showProjectEndpoint(projectId, projectEndpointId)
       .then((endpoint: EntitiesProjectEndpoint) => {
@@ -48,19 +48,13 @@ export default function EndpointShow() {
       .finally(() => {
         setLoadingEndpoint(false);
       });
-  };
-  useEffect(() => {
-    loadProjectEndpoint();
-  });
+  }, [projectId, projectEndpointId, showProjectEndpoint]);
 
-  const loadProject = () => {
+  useEffect(() => {
     showProject(projectId).then((project: EntitiesProject) => {
       setProject(project);
     });
-  };
-  useEffect(() => {
-    loadProject();
-  });
+  }, [showProject, projectId]);
 
   return (
     <Box

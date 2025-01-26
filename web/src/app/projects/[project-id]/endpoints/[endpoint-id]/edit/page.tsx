@@ -78,7 +78,7 @@ export default function EndpointsEdit() {
       });
   };
 
-  const loadProjectEndpoint = () => {
+  useEffect(() => {
     setLoading(true);
     showProjectEndpoint(projectId, projectEndpointId)
       .then((endpoint: EntitiesProjectEndpoint) => {
@@ -97,19 +97,13 @@ export default function EndpointsEdit() {
       .finally(() => {
         setLoading(false);
       });
-  };
-  useEffect(() => {
-    loadProjectEndpoint();
-  });
+  }, [showProjectEndpoint, projectEndpointId, projectId]);
 
-  const loadProject = () => {
+  useEffect(() => {
     showProject(projectId).then((project: EntitiesProject) => {
       setProject(project);
     });
-  };
-  useEffect(() => {
-    loadProject();
-  });
+  }, [projectId, showProject]);
 
   const onDeleteDialogClose = useCallback(
     () => setIsDeleteDialogOpen(false),

@@ -49,7 +49,7 @@ export default function ProjectShow() {
 
   const projectId = pathName.split("/")[2];
 
-  const loadProject = () => {
+  useEffect(() => {
     setLoading(true);
     showProject(projectId)
       .then((project: EntitiesProject) => {
@@ -58,13 +58,9 @@ export default function ProjectShow() {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [showProject, projectId]);
 
   useEffect(() => {
-    loadProject();
-  }, []);
-
-  const loadProjectEndpoints = () => {
     setLoadingEndpoints(true);
     indexProjectEndpoint(projectId)
       .then((endpoints: EntitiesProjectEndpoint[]) => {
@@ -73,11 +69,7 @@ export default function ProjectShow() {
       .finally(() => {
         setLoadingEndpoints(false);
       });
-  };
-
-  useEffect(() => {
-    loadProjectEndpoints();
-  }, []);
+  }, [indexProjectEndpoint, projectId]);
 
   const onDeleteProject = async (event: MouseEvent) => {
     event.preventDefault();

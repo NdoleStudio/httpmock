@@ -36,7 +36,7 @@ export function ThemeProvider({
 
   return (
     <AppStoreProvider>
-      <PrimerThemeProvider {...props} colorMode={"night"}>
+      <PrimerThemeProvider {...props} colorMode={"dark"}>
         <BaseStyles>
           <Toaster closeButton={true} richColors={true} />
           {!loading && children}
