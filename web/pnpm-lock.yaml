@@ -18,8 +18,8 @@ importers:
         specifier: ^19.14.0
         version: 19.14.0(react@19.0.0)
       '@primer/primitives':
-        specifier: ^9.1.2
-        version: 9.1.2
+        specifier: ^10.3.4
+        version: 10.3.4
       '@primer/react':
         specifier: ^37.3.0
         version: 37.3.0(@types/react-dom@19.0.1)(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))
@@ -489,11 +489,6 @@ packages:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@prettier/sync@0.5.2':
-    resolution: {integrity: sha512-Yb569su456XNx5BsH/Vyem7xD6g/y9iLmLUzRKM1a/dhU/D7HqqvkAG72znulXlMXztbV0iiu9O5AL8K98TzZQ==}
-    peerDependencies:
-      prettier: '*'
-
   '@primer/behaviors@1.8.0':
     resolution: {integrity: sha512-ZUfhWVY4ZBKc2Fh3fIa2Qwwa3SnOi914lY5wcmN+UNtsBxeXsjWNwpohJbwRwWZm+nJ3C1n9qJFWpHuBlDVU1A==}
 
@@ -506,8 +501,8 @@ packages:
     peerDependencies:
       react: '>=16.3'
 
-  '@primer/primitives@9.1.2':
-    resolution: {integrity: sha512-KecRJpUdIf14J3gVpoyMMJeQD6Sh5kcHk93N5bYch4XGB0GOZP3ypxz+NByMjr/2HHPsRfCCO5EEgNjmeWYUGQ==}
+  '@primer/primitives@10.3.4':
+    resolution: {integrity: sha512-f4tudg+MFpU4sH73Ha9wFOBwyN2b2WI7BkqMThqRIWQ/LFUturYkgt78YByJ6PJw8ZY0poPiefvBCdduyd20vA==}
 
   '@primer/react@37.3.0':
     resolution: {integrity: sha512-mXtcghyLabCyq/H1KDeLjl/S6fnVQWmJW6Pjcw4YuK/EqS1HUpbY3JOyGMYkdD1FMi8MGnpZOUfN03eU7QFomA==}
@@ -1630,9 +1625,6 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  make-synchronized@0.2.9:
-    resolution: {integrity: sha512-4wczOs8SLuEdpEvp3vGo83wh8rjJ78UsIk7DIX5fxdfmfMJGog4bQzxfvOwq7Q3yCHLC4jp1urPHIxRS/A93gA==}
-
   map-obj@4.3.0:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
@@ -1797,11 +1789,6 @@ packages:
   prettier-linter-helpers@1.0.0:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
     engines: {node: '>=6.0.0'}
-
-  prettier@3.3.3:
-    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
-    engines: {node: '>=14'}
-    hasBin: true
 
   prettier@3.4.2:
     resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
@@ -2600,11 +2587,6 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
-  '@prettier/sync@0.5.2(prettier@3.3.3)':
-    dependencies:
-      make-synchronized: 0.2.9
-      prettier: 3.3.3
-
   '@primer/behaviors@1.8.0': {}
 
   '@primer/live-region-element@0.7.2':
@@ -2615,10 +2597,7 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  '@primer/primitives@9.1.2':
-    dependencies:
-      '@prettier/sync': 0.5.2(prettier@3.3.3)
-      prettier: 3.3.3
+  '@primer/primitives@10.3.4': {}
 
   '@primer/react@37.3.0(@types/react-dom@19.0.1)(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))':
     dependencies:
@@ -2629,7 +2608,7 @@ snapshots:
       '@primer/behaviors': 1.8.0
       '@primer/live-region-element': 0.7.2
       '@primer/octicons-react': 19.14.0(react@19.0.0)
-      '@primer/primitives': 9.1.2
+      '@primer/primitives': 10.3.4
       '@styled-system/css': 5.1.5
       '@styled-system/props': 5.1.5
       '@styled-system/theme-get': 5.1.2
@@ -4042,8 +4021,6 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  make-synchronized@0.2.9: {}
-
   map-obj@4.3.0: {}
 
   math-intrinsics@1.1.0: {}
@@ -4204,8 +4181,6 @@ snapshots:
   prettier-linter-helpers@1.0.0:
     dependencies:
       fast-diff: 1.3.0
-
-  prettier@3.3.3: {}
 
   prettier@3.4.2: {}
 
