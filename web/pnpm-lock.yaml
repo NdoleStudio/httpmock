@@ -12,8 +12,8 @@ importers:
         specifier: ^6.10.6
         version: 6.10.6(next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@clerk/themes':
-        specifier: ^2.2.12
-        version: 2.2.12
+        specifier: ^2.2.16
+        version: 2.2.16
       '@primer/octicons-react':
         specifier: ^19.14.0
         version: 19.14.0(react@19.0.0)
@@ -188,12 +188,8 @@ packages:
       react-dom:
         optional: true
 
-  '@clerk/themes@2.2.12':
-    resolution: {integrity: sha512-2KLihkWClEUc5ZkIzNU9cTcpWtzxAm2GZRCSI0KUKZA/0V6glhmnxSSk+AQXzO9GpbyQm+UDIOQQSvQ10hnnFQ==}
-    engines: {node: '>=18.17.0'}
-
-  '@clerk/types@4.44.0':
-    resolution: {integrity: sha512-L9UNS21sQ7OAgXKUWSMaZWayI/qmVM4DGvGCAlL0tpzbzdFU1nkxRaMOT3FkmWKSahIq4BI+vJHfMC1ki9uuGg==}
+  '@clerk/themes@2.2.16':
+    resolution: {integrity: sha512-6CZwBl5VSTkAOo3OSyDZhefMDM8KXHoMcMYfbu+PdAvtl4C48bCkFNSWLsxVsR4H96TdpLL/k0zemao6YJhAjA==}
     engines: {node: '>=18.17.0'}
 
   '@clerk/types@4.45.0':
@@ -2321,14 +2317,10 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@clerk/themes@2.2.12':
+  '@clerk/themes@2.2.16':
     dependencies:
-      '@clerk/types': 4.44.0
+      '@clerk/types': 4.45.0
       tslib: 2.4.1
-
-  '@clerk/types@4.44.0':
-    dependencies:
-      csstype: 3.1.1
 
   '@clerk/types@4.45.0':
     dependencies:
