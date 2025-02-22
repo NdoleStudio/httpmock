@@ -39,7 +39,7 @@ func main() {
 		docs.SwaggerInfo.Version = Version
 	}
 
-	container := di.NewContainer(Version, os.Getenv("GCP_PROJECT_ID"))
+	container := di.NewContainer(os.Getenv("GCP_PROJECT_ID"), Version)
 
 	app := container.App()
 	err := make(chan error, 1)
