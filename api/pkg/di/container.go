@@ -140,7 +140,6 @@ func (container *Container) App() (app *fiber.App) {
 	))
 	app.Use(cors.New())
 	app.Use(middlewares.RequestRouter(container.Tracer(), container.Logger(), os.Getenv("APP_HOSTNAME"), container.ProjectEndpointRequestService()))
-	app.Use(middlewares.ClerkBearerAuth(container.Logger(), container.Tracer()))
 	app.Use(healthcheck.New())
 
 	container.app = app
