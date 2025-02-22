@@ -69,9 +69,12 @@ export default function EndpointShow() {
         <PageHeader.TitleArea aria-label={"Project endpoint"} variant={"large"}>
           {project && projectEndpoint && (
             <PageHeader.Title>
-              <Box sx={{ display: "flex", alignItems: "baseline" }}>
+              <Box sx={{ display: "flex", alignItems: "flexStart" }}>
                 <Label
-                  sx={{ color: labelColor(projectEndpoint.request_method) }}
+                  sx={{
+                    mt: 3,
+                    color: labelColor(projectEndpoint.request_method),
+                  }}
                 >
                   {projectEndpoint.request_method}
                 </Label>
@@ -79,6 +82,8 @@ export default function EndpointShow() {
                   {getEndpointURL(project, projectEndpoint.request_path)}
                 </Text>
                 <CopyButton
+                  size={"medium"}
+                  sx={{ mt: 2 }}
                   data={getEndpointURL(project, projectEndpoint.request_path)}
                 />
               </Box>

@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
@@ -126,7 +127,17 @@ func (container *Container) App() (app *fiber.App) {
 	app = fiber.New()
 
 	app.Use(otelfiber.Middleware())
-	app.Use(fiberLogger.New(fiberLogger.Config{Output: container.Logger(), Format: "${ip} | ${method} | ${path} | ${status} | ${latency}"}))
+
+	ctxLogger := logger(2).WithCodeNamespace(fmt.Sprintf("%T", container))
+	app.Use(fiberLogger.New(
+		fiberLogger.Config{
+			Output: io.Discard,
+			Done: func(c *fiber.Ctx, logString []byte) {
+				ctxLogger.WithContext(c.UserContext()).Debug(string(logString))
+			},
+			Format: "${ip} | ${method} | ${path} | ${status} | ${latency}",
+		},
+	))
 	app.Use(cors.New())
 	app.Use(middlewares.RequestRouter(container.Tracer(), container.Logger(), os.Getenv("APP_HOSTNAME"), container.ProjectEndpointRequestService()))
 	app.Use(middlewares.ClerkBearerAuth(container.Logger(), container.Tracer()))
