@@ -221,6 +221,9 @@ func (container *Container) DB() (db *gorm.DB) {
 	if err = db.AutoMigrate(&entities.ProjectEndpoint{}); err != nil {
 		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.ProjectEndpoint{})))
 	}
+	if err = db.AutoMigrate(&entities.ProjectEndpointRequest{}); err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.ProjectEndpointRequest{})))
+	}
 	if err = db.AutoMigrate(&entities.User{}); err != nil {
 		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.User{})))
 	}
