@@ -69,4 +69,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
-          script: httpmock.restart
+          script: cd /app/httpmock/api && docker pull ndolestudio/httpmock:latest && docker compose up --force-recreate -d
