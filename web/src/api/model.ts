@@ -64,12 +64,12 @@ export interface RequestsProjectCreateRequest {
 }
 
 export interface RequestsProjectEndpointStoreRequest {
-  delay_in_milliseconds: number;
   description: string;
   request_method: string;
   request_path: string;
   response_body: string;
   response_code: number;
+  response_delay_in_milliseconds: number;
   response_headers: string;
 }
 

@@ -771,18 +771,15 @@ const docTemplate = `{
         "requests.ProjectEndpointStoreRequest": {
             "type": "object",
             "required": [
-                "delay_in_milliseconds",
                 "description",
                 "request_method",
                 "request_path",
                 "response_body",
                 "response_code",
+                "response_delay_in_milliseconds",
                 "response_headers"
             ],
             "properties": {
-                "delay_in_milliseconds": {
-                    "type": "integer"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -796,6 +793,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "response_code": {
+                    "type": "integer"
+                },
+                "response_delay_in_milliseconds": {
                     "type": "integer"
                 },
                 "response_headers": {

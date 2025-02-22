@@ -106,8 +106,6 @@ definitions:
     type: object
   requests.ProjectEndpointStoreRequest:
     properties:
-      delay_in_milliseconds:
-        type: integer
       description:
         type: string
       request_method:
@@ -118,15 +116,17 @@ definitions:
         type: string
       response_code:
         type: integer
+      response_delay_in_milliseconds:
+        type: integer
       response_headers:
         type: string
     required:
-      - delay_in_milliseconds
       - description
       - request_method
       - request_path
       - response_body
       - response_code
+      - response_delay_in_milliseconds
       - response_headers
     type: object
   requests.ProjectEndpointUpdateRequest:
