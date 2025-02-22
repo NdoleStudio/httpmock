@@ -117,13 +117,14 @@ func (h *ProjectEndpointHandler) store(c *fiber.Ctx) error {
 		return h.responseUnprocessableEntity(c, errors, "validation errors while storing mock endpoint")
 	}
 
-	if _, err := h.projectService.Load(ctx, authUser.ID, uuid.MustParse(request.ProjectID)); err != nil {
+	project, err := h.projectService.Load(ctx, authUser.ID, uuid.MustParse(request.ProjectID))
+	if err != nil {
 		msg := fmt.Sprintf("cannot find project with id [%s] for user [%s]", request.ProjectID, authUser.ID)
 		ctxLogger.Warn(stacktrace.Propagate(err, msg))
 		return h.responseNotFound(c, msg)
 	}
 
-	endpoint, err := h.service.Store(ctx, request.ToProjectEndpointStorePrams(authUser.ID))
+	endpoint, err := h.service.Store(ctx, project, request.ToProjectEndpointStorePrams(authUser.ID))
 	if err != nil {
 		ctxLogger.Error(stacktrace.Propagate(err, fmt.Sprintf("cannot store project endpoint for project ID [%s] for user ID [%s]", request.ProjectID, authUser.ID)))
 		return h.responseInternalServerError(c)

@@ -37,6 +37,8 @@ export interface EntitiesProjectEndpoint {
   id: string;
   /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
   project_id: string;
+  /** @example 100 */
+  request_count: number;
   /** @example "GET" */
   request_method: string;
   /** @example "/v1/products" */
@@ -47,6 +49,8 @@ export interface EntitiesProjectEndpoint {
   response_code: number;
   /** @example "[{"Content-Type":"application/json"}]" */
   response_headers: string;
+  /** @example "stripe-mock-api" */
+  subdomain: string;
   /** @example "2022-06-05T14:26:10.303278+03:00" */
   updated_at: string;
   /** @example "user_2oeyIzOf9xxxxxxxxxxxxxx" */
@@ -59,7 +63,7 @@ export interface RequestsProjectCreateRequest {
   subdomain: string;
 }
 
-export interface RequestsProjectEndpointCreateRequest {
+export interface RequestsProjectEndpointStoreRequest {
   delay_in_milliseconds: number;
   description: string;
   request_method: string;

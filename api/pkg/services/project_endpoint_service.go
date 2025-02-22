@@ -76,7 +76,7 @@ type ProjectEndpointStoreParams struct {
 }
 
 // Store a new entities.Project
-func (service *ProjectEndpointService) Store(ctx context.Context, params *ProjectEndpointStoreParams) (*entities.ProjectEndpoint, error) {
+func (service *ProjectEndpointService) Store(ctx context.Context, project *entities.Project, params *ProjectEndpointStoreParams) (*entities.ProjectEndpoint, error) {
 	ctx, span, _ := service.tracer.StartWithLogger(ctx, service.logger)
 	defer span.End()
 
@@ -89,6 +89,7 @@ func (service *ProjectEndpointService) Store(ctx context.Context, params *Projec
 		ResponseCode:    params.ResponseCode,
 		ResponseBody:    params.ResponseBody,
 		ResponseHeaders: params.ResponseHeaders,
+		Subdomain:       project.Subdomain,
 		Description:     params.Description,
 		CreatedAt:       time.Now().UTC(),
 		UpdatedAt:       time.Now().UTC(),

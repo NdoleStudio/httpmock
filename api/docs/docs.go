@@ -680,11 +680,13 @@ const docTemplate = `{
                 "description",
                 "id",
                 "project_id",
+                "request_count",
                 "request_method",
                 "request_path",
                 "response_body",
                 "response_code",
                 "response_headers",
+                "subdomain",
                 "updated_at",
                 "user_id"
             ],
@@ -709,6 +711,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
                 },
+                "request_count": {
+                    "type": "integer",
+                    "example": 100
+                },
                 "request_method": {
                     "type": "string",
                     "example": "GET"
@@ -728,6 +734,10 @@ const docTemplate = `{
                 "response_headers": {
                     "type": "string",
                     "example": "[{\"Content-Type\":\"application/json\"}]"
+                },
+                "subdomain": {
+                    "type": "string",
+                    "example": "stripe-mock-api"
                 },
                 "updated_at": {
                     "type": "string",

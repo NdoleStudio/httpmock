@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/NdoleStudio/httpmock/pkg/listeners"
+
 	"github.com/NdoleStudio/httpmock/docs"
 
 	"github.com/caarlos0/env/v11"
@@ -112,16 +114,6 @@ func NewContainer(projectID string, version string) (container *Container) {
 
 	container.InitializeTraceProvider()
 
-	container.RegisterEventRoutes()
-	container.RegisterProjectRoutes()
-	container.RegisterProjectEndpointRoutes()
-
-	// UnAuthenticated routes
-	container.RegisterLemonsqueezyRoutes()
-
-	// this has to be last since it registers the /* route
-	container.RegisterSwaggerRoutes()
-
 	return container
 }
 
@@ -136,16 +128,40 @@ func (container *Container) App() (app *fiber.App) {
 	app = fiber.New()
 
 	if os.Getenv("USE_HTTP_LOGGER") == "true" {
-		app.Use(fiberLogger.New())
+		app.Use(fiberLogger.New(fiberLogger.Config{
+			Next:          nil,
+			Done:          nil,
+			CustomTags:    nil,
+			Format:        "",
+			TimeFormat:    "",
+			TimeZone:      "",
+			TimeInterval:  0,
+			Output:        nil,
+			DisableColors: false,
+		}))
 	}
 
 	app.Use(otelfiber.Middleware())
 	app.Use(cors.New())
+	app.Use(middlewares.RequestRouter(container.Tracer(), container.Logger(), os.Getenv("APP_HOSTNAME"), container.ProjectEndpointRequestService()))
 	app.Use(middlewares.HTTPRequestLogger(container.Tracer(), container.Logger()))
-	app.Use(middlewares.ClerkBearerAuth(container.Logger().WithCodeNamespace("middlewares.ClerkBearerAuth"), container.Tracer()))
+	app.Use(middlewares.ClerkBearerAuth(container.Logger(), container.Tracer()))
 	app.Use(healthcheck.New())
 
 	container.app = app
+
+	container.RegisterEventRoutes()
+	container.RegisterProjectRoutes()
+	container.RegisterProjectEndpointRoutes()
+
+	container.RegisterProjectEndpointRequestListeners()
+
+	// UnAuthenticated routes
+	container.RegisterLemonsqueezyRoutes()
+
+	// this has to be last since it registers the /* route
+	container.RegisterSwaggerRoutes()
+
 	return app
 }
 
@@ -293,6 +309,22 @@ func (container *Container) ProjectEndpointHandler() (handler *handlers.ProjectE
 	)
 }
 
+// RegisterProjectEndpointRequestListeners registers event listeners
+func (container *Container) RegisterProjectEndpointRequestListeners() {
+	container.logger.Debug(fmt.Sprintf("registering %T", &listeners.ProjectEndpointRequestListener{}))
+	container.ProjectEndpointRequestListener().Register(container.EventDispatcher())
+}
+
+// ProjectEndpointRequestListener creates a new instance of listeners.ProjectEndpointRequestListener
+func (container *Container) ProjectEndpointRequestListener() (handler *listeners.ProjectEndpointRequestListener) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return listeners.NewProjectEndpointRequestListener(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectEndpointRequestService(),
+	)
+}
+
 // ProjectHandlerValidator creates a new instance of validators.ProjectHandlerValidator
 func (container *Container) ProjectHandlerValidator() (validator *validators.ProjectHandlerValidator) {
 	container.logger.Debug(fmt.Sprintf("creating %T", validator))
@@ -334,6 +366,18 @@ func (container *Container) ProjectEndpointService() (service *services.ProjectE
 	)
 }
 
+// ProjectEndpointRequestService creates a new instance of services.ProjectEndpointRequestService
+func (container *Container) ProjectEndpointRequestService() (service *services.ProjectEndpointRequestService) {
+	container.logger.Debug(fmt.Sprintf("creating %T", service))
+	return services.NewProjectEndpointRequestService(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectEndpointRepository(),
+		container.ProjectEndpointRequestRepository(),
+		container.EventDispatcher(),
+	)
+}
+
 // ProjectRepository registers a new instance of repositories.ProjectRepository
 func (container *Container) ProjectRepository() repositories.ProjectRepository {
 	container.logger.Debug("creating GORM repositories.ProjectRepository")
@@ -348,6 +392,16 @@ func (container *Container) ProjectRepository() repositories.ProjectRepository {
 func (container *Container) ProjectEndpointRepository() repositories.ProjectEndpointRepository {
 	container.logger.Debug("creating GORM repositories.ProjectEndpointRepository")
 	return repositories.NewGormProjectEndpointRepository(
+		container.Logger(),
+		container.Tracer(),
+		container.DB(),
+	)
+}
+
+// ProjectEndpointRequestRepository registers a new instance of repositories.ProjectEndpointRequestRepository
+func (container *Container) ProjectEndpointRequestRepository() repositories.ProjectEndpointRequestRepository {
+	container.logger.Debug("creating GORM repositories.ProjectEndpointRequestRepository")
+	return repositories.NewGormProjectEndpointRequestRepository(
 		container.Logger(),
 		container.Tracer(),
 		container.DB(),

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/NdoleStudio/httpmock/pkg/entities"
 	"github.com/NdoleStudio/httpmock/pkg/telemetry"
@@ -32,7 +33,48 @@ func NewGormProjectEndpointRepository(
 	}
 }
 
-func (repository *gormProjectEndpointRepository) LoadByRequest(ctx context.Context, userID entities.UserID, projectID uuid.UUID, requestMethod, requestPath string) (*entities.ProjectEndpoint, error) {
+func (repository *gormProjectEndpointRepository) RegisterRequest(ctx context.Context, projectEndpointID uuid.UUID) error {
+	ctx, span := repository.tracer.Start(ctx)
+	defer span.End()
+
+	err := repository.db.WithContext(ctx).
+		Model(&entities.ProjectEndpoint{}).
+		Where("id = ?", projectEndpointID).
+		UpdateColumn("request_count", gorm.Expr("request_count + ?", 1)).Error
+	if err != nil {
+		msg := fmt.Sprintf("cannot update request_count [%T] with ID [%s]", &entities.ProjectEndpoint{}, projectEndpointID)
+		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
+	}
+
+	return nil
+}
+
+func (repository *gormProjectEndpointRepository) LoadByRequest(ctx context.Context, subdomain, requestMethod, requestPath string) (*entities.ProjectEndpoint, error) {
+	ctx, span := repository.tracer.Start(ctx)
+	defer span.End()
+
+	endpoint := new(entities.ProjectEndpoint)
+
+	err := repository.db.WithContext(ctx).
+		Model(endpoint).
+		Where("subdomain = ?", subdomain).
+		Where("request_path = ?", requestPath).
+		Where(repository.db.Where("request_method = ?", strings.ToUpper(requestMethod)).Or("request_method = ?", "ANY")).
+		First(endpoint).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		msg := fmt.Sprintf("endpoint not found with request method [%s] and request path [%s]", requestMethod, requestPath)
+		return nil, repository.tracer.WrapErrorSpan(span, stacktrace.PropagateWithCode(err, ErrCodeNotFound, msg))
+	}
+
+	if err != nil {
+		msg := fmt.Sprintf("endpoint not found with request method [%s] and request path [%s]", requestMethod, requestPath)
+		return endpoint, repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
+	}
+
+	return endpoint, nil
+}
+
+func (repository *gormProjectEndpointRepository) LoadByRequestForUser(ctx context.Context, userID entities.UserID, projectID uuid.UUID, requestMethod, requestPath string) (*entities.ProjectEndpoint, error) {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
 

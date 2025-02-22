@@ -91,7 +91,7 @@ func (validator *ProjectEndpointHandlerValidator) ValidateUpdate(ctx context.Con
 		return result
 	}
 
-	endpoint, err := validator.repository.LoadByRequest(ctx, userID, uuid.MustParse(request.ProjectID), request.RequestMethod, request.RequestPath)
+	endpoint, err := validator.repository.LoadByRequestForUser(ctx, userID, uuid.MustParse(request.ProjectID), request.RequestMethod, request.RequestPath)
 	if err != nil && stacktrace.GetCode(err) != repositories.ErrCodeNotFound {
 		msg := fmt.Sprintf("cannot check if the [%s %s] request path has already been taken.", request.RequestMethod, request.RequestPath)
 		ctxLogger.Error(validator.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))
@@ -157,7 +157,7 @@ func (validator *ProjectEndpointHandlerValidator) ValidateStore(ctx context.Cont
 		return result
 	}
 
-	endpoint, err := validator.repository.LoadByRequest(ctx, userID, uuid.MustParse(request.ProjectID), request.RequestMethod, request.RequestPath)
+	endpoint, err := validator.repository.LoadByRequestForUser(ctx, userID, uuid.MustParse(request.ProjectID), request.RequestMethod, request.RequestPath)
 	if err != nil && stacktrace.GetCode(err) != repositories.ErrCodeNotFound {
 		msg := fmt.Sprintf("cannot check if the [%s %s] request path has already been taken.", request.RequestMethod, request.RequestPath)
 		ctxLogger.Error(validator.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))

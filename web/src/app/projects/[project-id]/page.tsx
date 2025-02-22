@@ -274,10 +274,11 @@ export default function ProjectShow() {
                     )
                   }
                   size={"small"}
+                  count={endpoint.request_count}
                   variant="default"
                   sx={{ mr: 2 }}
                 >
-                  View Requests
+                  HTTP Requests
                 </Button>
                 <Button
                   onClick={() =>

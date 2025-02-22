@@ -16,6 +16,9 @@ type ProjectEndpointRepository interface {
 	// Update a new entities.ProjectEndpoint
 	Update(ctx context.Context, user *entities.ProjectEndpoint) error
 
+	// RegisterRequest register a request for an entities.ProjectEndpoint
+	RegisterRequest(ctx context.Context, projectEndpointID uuid.UUID) error
+
 	// Fetch all entities.ProjectEndpoint for a user
 	Fetch(ctx context.Context, userID entities.UserID, projectID uuid.UUID) ([]*entities.ProjectEndpoint, error)
 
@@ -25,6 +28,9 @@ type ProjectEndpointRepository interface {
 	// Delete an entities.ProjectEndpoint by entities.UserID and projectEndpointID
 	Delete(ctx context.Context, userID entities.UserID, projectID uuid.UUID, projectEndpointID uuid.UUID) error
 
-	// LoadByRequest load an entities.ProjectEndpoint by a request path and method.
-	LoadByRequest(ctx context.Context, userID entities.UserID, projectID uuid.UUID, requestMethod, requestPath string) (*entities.ProjectEndpoint, error)
+	// LoadByRequestForUser load an entities.ProjectEndpoint by a request path and method.
+	LoadByRequestForUser(ctx context.Context, userID entities.UserID, projectID uuid.UUID, requestMethod, requestPath string) (*entities.ProjectEndpoint, error)
+
+	// LoadByRequest load an entities.ProjectEndpoint by a http path and method.
+	LoadByRequest(ctx context.Context, subdomain, requestMethod, requestPath string) (*entities.ProjectEndpoint, error)
 }
