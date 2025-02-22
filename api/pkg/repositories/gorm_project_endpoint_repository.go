@@ -24,6 +24,21 @@ type gormProjectEndpointRepository struct {
 	db     *gorm.DB
 }
 
+// NewGormProjectEndpointRepository creates the GORM version of the ProjectEndpointRepository
+func NewGormProjectEndpointRepository(
+	logger telemetry.Logger,
+	tracer telemetry.Tracer,
+	db *gorm.DB,
+	cache *ristretto.Cache[string, *entities.ProjectEndpoint],
+) ProjectEndpointRepository {
+	return &gormProjectEndpointRepository{
+		logger: logger.WithCodeNamespace(fmt.Sprintf("%T", &gormProjectEndpointRepository{})),
+		tracer: tracer,
+		cache:  cache,
+		db:     db,
+	}
+}
+
 func (repository *gormProjectEndpointRepository) UpdateSubdomain(ctx context.Context, subdomain string, projectID uuid.UUID) error {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
@@ -39,19 +54,6 @@ func (repository *gormProjectEndpointRepository) UpdateSubdomain(ctx context.Con
 	}
 
 	return nil
-}
-
-// NewGormProjectEndpointRepository creates the GORM version of the ProjectEndpointRepository
-func NewGormProjectEndpointRepository(
-	logger telemetry.Logger,
-	tracer telemetry.Tracer,
-	db *gorm.DB,
-) ProjectEndpointRepository {
-	return &gormProjectEndpointRepository{
-		logger: logger.WithCodeNamespace(fmt.Sprintf("%T", &gormProjectEndpointRepository{})),
-		tracer: tracer,
-		db:     db,
-	}
 }
 
 func (repository *gormProjectEndpointRepository) RegisterRequest(ctx context.Context, projectEndpointID uuid.UUID) error {

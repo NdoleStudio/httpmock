@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/dgraph-io/ristretto/v2"
+
 	"github.com/NdoleStudio/httpmock/pkg/listeners"
 
 	"github.com/NdoleStudio/httpmock/docs"
@@ -409,7 +411,22 @@ func (container *Container) ProjectEndpointRepository() repositories.ProjectEndp
 		container.Logger(),
 		container.Tracer(),
 		container.DB(),
+		container.ProjectEndpointRistrettoCache(),
 	)
+}
+
+// ProjectEndpointRistrettoCache creates an in-memory *ristretto.Cache[string, entities.AuthUser]
+func (container *Container) ProjectEndpointRistrettoCache() (cache *ristretto.Cache[string, *entities.ProjectEndpoint]) {
+	container.logger.Debug(fmt.Sprintf("creating %T", cache))
+	ristrettoCache, err := ristretto.NewCache[string, *entities.ProjectEndpoint](&ristretto.Config[string, *entities.ProjectEndpoint]{
+		MaxCost:     5000,
+		NumCounters: 5000 * 10,
+		BufferItems: 64,
+	})
+	if err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create %T cache", cache)))
+	}
+	return ristrettoCache
 }
 
 // ProjectEndpointRequestRepository registers a new instance of repositories.ProjectEndpointRequestRepository
