@@ -24,6 +24,23 @@ type gormProjectEndpointRepository struct {
 	db     *gorm.DB
 }
 
+func (repository *gormProjectEndpointRepository) UpdateSubdomain(ctx context.Context, subdomain string, projectID uuid.UUID) error {
+	ctx, span := repository.tracer.Start(ctx)
+	defer span.End()
+
+	repository.cache.Clear()
+	err := repository.db.WithContext(ctx).
+		Model(&entities.ProjectEndpoint{}).
+		Where("project_id = ?", projectID).
+		UpdateColumn("project_subdomain", subdomain).Error
+	if err != nil {
+		msg := fmt.Sprintf("cannot update [project_subdomain] for [%T] with project ID [%s]", &entities.ProjectEndpoint{}, projectID)
+		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
+	}
+
+	return nil
+}
+
 // NewGormProjectEndpointRepository creates the GORM version of the ProjectEndpointRepository
 func NewGormProjectEndpointRepository(
 	logger telemetry.Logger,
@@ -199,7 +216,7 @@ func (repository *gormProjectEndpointRepository) Load(ctx context.Context, userI
 }
 
 func (repository *gormProjectEndpointRepository) cacheKeyFromEndpoint(endpoint *entities.ProjectEndpoint) string {
-	return repository.cacheKey(endpoint.Subdomain, endpoint.RequestMethod, endpoint.RequestPath)
+	return repository.cacheKey(endpoint.ProjectSubdomain, endpoint.RequestMethod, endpoint.RequestPath)
 }
 
 func (repository *gormProjectEndpointRepository) cacheKey(subdomain, method, path string) string {

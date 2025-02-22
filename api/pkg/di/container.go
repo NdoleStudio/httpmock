@@ -148,13 +148,14 @@ func (container *Container) App() (app *fiber.App) {
 	container.RegisterProjectRoutes()
 	container.RegisterProjectEndpointRoutes()
 
-	container.RegisterProjectEndpointRequestListeners()
-
 	// UnAuthenticated routes
 	container.RegisterLemonsqueezyRoutes()
 
 	// this has to be last since it registers the /* route
 	container.RegisterSwaggerRoutes()
+
+	container.RegisterProjectEndpointRequestListeners()
+	container.RegisterProjectEndpointListeners()
 
 	return app
 }
@@ -312,6 +313,12 @@ func (container *Container) RegisterProjectEndpointRequestListeners() {
 	container.ProjectEndpointRequestListener().Register(container.EventDispatcher())
 }
 
+// RegisterProjectEndpointListeners registers event listeners
+func (container *Container) RegisterProjectEndpointListeners() {
+	container.logger.Debug(fmt.Sprintf("registering %T", &listeners.ProjectEndpointListener{}))
+	container.ProjectEndpointListener().Register(container.EventDispatcher())
+}
+
 // ProjectEndpointRequestListener creates a new instance of listeners.ProjectEndpointRequestListener
 func (container *Container) ProjectEndpointRequestListener() (handler *listeners.ProjectEndpointRequestListener) {
 	container.logger.Debug(fmt.Sprintf("creating %T", handler))
@@ -319,6 +326,16 @@ func (container *Container) ProjectEndpointRequestListener() (handler *listeners
 		container.Logger(),
 		container.Tracer(),
 		container.ProjectEndpointRequestService(),
+	)
+}
+
+// ProjectEndpointListener creates a new instance of listeners.ProjectEndpointListener
+func (container *Container) ProjectEndpointListener() (handler *listeners.ProjectEndpointListener) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return listeners.NewProjectEndpointListener(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectEndpointService(),
 	)
 }
 

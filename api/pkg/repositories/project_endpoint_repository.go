@@ -19,6 +19,9 @@ type ProjectEndpointRepository interface {
 	// RegisterRequest register a request for an entities.ProjectEndpoint
 	RegisterRequest(ctx context.Context, projectEndpointID uuid.UUID) error
 
+	// UpdateSubdomain for an entities.ProjectEndpoint after the project was updated
+	UpdateSubdomain(ctx context.Context, subdomain string, projectEndpointID uuid.UUID) error
+
 	// Fetch all entities.ProjectEndpoint for a user
 	Fetch(ctx context.Context, userID entities.UserID, projectID uuid.UUID) ([]*entities.ProjectEndpoint, error)
 

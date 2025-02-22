@@ -90,7 +90,7 @@ func (service *ProjectEndpointService) Store(ctx context.Context, project *entit
 		ResponseBody:                params.ResponseBody,
 		ResponseDelayInMilliseconds: params.ResponseDelayInMilliseconds,
 		ResponseHeaders:             params.ResponseHeaders,
-		Subdomain:                   project.Subdomain,
+		ProjectSubdomain:            project.Subdomain,
 		Description:                 params.Description,
 		RequestCount:                0,
 		CreatedAt:                   time.Now().UTC(),
@@ -162,6 +162,19 @@ func (service *ProjectEndpointService) Delete(ctx context.Context, userID entiti
 	if err = service.repository.Delete(ctx, endpoint); err != nil {
 		msg := fmt.Sprintf("cannot delete endpoint with ID [%s] and project ID [%s] for user ID [%s]", projectEndpoint, projectID, userID)
 		return stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg)
+	}
+
+	return nil
+}
+
+// UpdateProjectSubdomain a project endpoint
+func (service *ProjectEndpointService) UpdateProjectSubdomain(ctx context.Context, projectID uuid.UUID, subdomain string) error {
+	ctx, span := service.tracer.Start(ctx)
+	defer span.End()
+
+	if err := service.repository.UpdateSubdomain(ctx, subdomain, projectID); err != nil {
+		msg := fmt.Sprintf("cannot update subdomains for [%T] with project ID [%s] and subdomain [%s]", &entities.ProjectEndpoint{}, projectID, subdomain)
+		return service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 
 	return nil
