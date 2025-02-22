@@ -45,7 +45,8 @@ export default function EndpointsEdit() {
   const [requestPath, setRequestPath] = useState<string>("");
   const [responseBody, setResponseBody] = useState<string>("");
   const [responseHeaders, setResponseHeaders] = useState<string>("");
-  const [delayInMilliseconds, setDelayInMilliseconds] = useState<number>(0);
+  const [responseDelayInMilliseconds, setResponseDelayInMilliseconds] =
+    useState<number>(0);
   const [description, setDescription] = useState<string>("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -64,7 +65,7 @@ export default function EndpointsEdit() {
       response_code: responseCode,
       response_body: responseBody,
       response_headers: responseHeaders,
-      delay_in_milliseconds: delayInMilliseconds,
+      response_delay_in_milliseconds: responseDelayInMilliseconds,
       description: description,
     })
       .then((projectEndpoint: EntitiesProjectEndpoint) => {
@@ -87,7 +88,7 @@ export default function EndpointsEdit() {
         setResponseCode(endpoint.response_code);
         setResponseBody(endpoint.response_body);
         setResponseHeaders(endpoint.response_headers);
-        setDelayInMilliseconds(endpoint.delay_in_milliseconds);
+        setResponseDelayInMilliseconds(endpoint.response_delay_in_milliseconds);
         setDescription(endpoint.description);
         setEndpoint(endpoint);
       })
@@ -292,10 +293,12 @@ export default function EndpointsEdit() {
               validationStatus={
                 errorMessages.has("delay_in_milliseconds") ? "error" : undefined
               }
-              value={delayInMilliseconds}
+              value={responseDelayInMilliseconds}
               type={"number"}
               onChange={(event) => {
-                setDelayInMilliseconds(Number.parseInt(event.target.value));
+                setResponseDelayInMilliseconds(
+                  Number.parseInt(event.target.value),
+                );
               }}
               block={true}
               size={"large"}

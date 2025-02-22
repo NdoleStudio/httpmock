@@ -34,7 +34,8 @@ export default function EndpointsCreate() {
   const [requestPath, setRequestPath] = useState<string>("");
   const [responseBody, setResponseBody] = useState<string>("");
   const [responseHeaders, setResponseHeaders] = useState<string>("");
-  const [delayInMilliseconds, setDelayInMilliseconds] = useState<number>(0);
+  const [responseDelayInMilliseconds, setResponseDelayInMilliseconds] =
+    useState<number>(0);
   const [description, setDescription] = useState<string>("");
 
   const projectId = pathName.split("/")[2];
@@ -51,7 +52,7 @@ export default function EndpointsCreate() {
       response_code: responseCode,
       response_body: responseBody,
       response_headers: responseHeaders,
-      delay_in_milliseconds: delayInMilliseconds,
+      response_delay_in_milliseconds: responseDelayInMilliseconds,
       description: description,
     })
       .then((projectEndpoint: EntitiesProjectEndpoint) => {
@@ -234,19 +235,25 @@ export default function EndpointsCreate() {
             )}
           </FormControl>
           <FormControl sx={{ mt: 4 }} disabled={loading}>
-            <FormControl.Label>Delay in Milliseconds</FormControl.Label>
+            <FormControl.Label>
+              Response Delay in Milliseconds
+            </FormControl.Label>
             <FormControl.Caption>
               The time in milliseconds to wait before sending the HTTP response
             </FormControl.Caption>
             <TextInput
               placeholder={"e.g. 1000"}
               validationStatus={
-                errorMessages.has("delay_in_milliseconds") ? "error" : undefined
+                errorMessages.has("response_delay_in_milliseconds")
+                  ? "error"
+                  : undefined
               }
-              value={delayInMilliseconds}
+              value={responseDelayInMilliseconds}
               type={"number"}
               onChange={(event) => {
-                setDelayInMilliseconds(Number.parseInt(event.target.value));
+                setResponseDelayInMilliseconds(
+                  Number.parseInt(event.target.value),
+                );
               }}
               block={true}
               size={"large"}

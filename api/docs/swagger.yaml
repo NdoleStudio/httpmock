@@ -36,9 +36,6 @@ definitions:
       created_at:
         example: "2022-06-05T14:26:02.302718+03:00"
         type: string
-      delay_in_milliseconds:
-        example: 1000
-        type: integer
       description:
         example: Mock API for an online store for the /v1/products endpoint
         type: string
@@ -63,6 +60,9 @@ definitions:
       response_code:
         example: 200
         type: integer
+      response_delay_in_milliseconds:
+        example: 100
+        type: integer
       response_headers:
         example: '[{"Content-Type":"application/json"}]'
         type: string
@@ -77,7 +77,6 @@ definitions:
         type: string
     required:
       - created_at
-      - delay_in_milliseconds
       - description
       - id
       - project_id
@@ -86,6 +85,7 @@ definitions:
       - request_path
       - response_body
       - response_code
+      - response_delay_in_milliseconds
       - response_headers
       - subdomain
       - updated_at
@@ -131,8 +131,6 @@ definitions:
     type: object
   requests.ProjectEndpointUpdateRequest:
     properties:
-      delay_in_milliseconds:
-        type: integer
       description:
         type: string
       request_method:
@@ -143,15 +141,17 @@ definitions:
         type: string
       response_code:
         type: integer
+      response_delay_in_milliseconds:
+        type: integer
       response_headers:
         type: string
     required:
-      - delay_in_milliseconds
       - description
       - request_method
       - request_path
       - response_body
       - response_code
+      - response_delay_in_milliseconds
       - response_headers
     type: object
   requests.ProjectUpdateRequest:

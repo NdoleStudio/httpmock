@@ -13,13 +13,13 @@ type ProjectEndpointStoreRequest struct {
 	request
 	ProjectID string `json:"projectId" swaggerignore:"true"`
 
-	RequestMethod       string `json:"request_method"`
-	RequestPath         string `json:"request_path"`
-	ResponseCode        uint   `json:"response_code"`
-	ResponseBody        string `json:"response_body"`
-	ResponseHeaders     string `json:"response_headers"`
-	DelayInMilliseconds uint   `json:"delay_in_milliseconds"`
-	Description         string `json:"description"`
+	RequestMethod               string `json:"request_method"`
+	RequestPath                 string `json:"request_path"`
+	ResponseCode                uint   `json:"response_code"`
+	ResponseBody                string `json:"response_body"`
+	ResponseHeaders             string `json:"response_headers"`
+	ResponseDelayInMilliseconds uint   `json:"response_delay_in_milliseconds"`
+	Description                 string `json:"description"`
 }
 
 // Sanitize the request by stripping whitespaces
@@ -36,14 +36,14 @@ func (request *ProjectEndpointStoreRequest) Sanitize() *ProjectEndpointStoreRequ
 // ToProjectEndpointStorePrams creates services.ProjectEndpointStoreParams from ProjectEndpointStoreRequest
 func (request *ProjectEndpointStoreRequest) ToProjectEndpointStorePrams(userID entities.UserID) *services.ProjectEndpointStoreParams {
 	return &services.ProjectEndpointStoreParams{
-		RequestMethod:       request.RequestMethod,
-		RequestPath:         request.RequestPath,
-		ResponseCode:        request.ResponseCode,
-		ResponseBody:        &request.ResponseBody,
-		ResponseHeaders:     &request.ResponseHeaders,
-		DelayInMilliseconds: request.DelayInMilliseconds,
-		Description:         &request.Description,
-		ProjectID:           uuid.MustParse(request.ProjectID),
-		UserID:              userID,
+		RequestMethod:               request.RequestMethod,
+		RequestPath:                 request.RequestPath,
+		ResponseCode:                request.ResponseCode,
+		ResponseBody:                &request.ResponseBody,
+		ResponseHeaders:             &request.ResponseHeaders,
+		ResponseDelayInMilliseconds: request.ResponseDelayInMilliseconds,
+		Description:                 &request.Description,
+		ProjectID:                   uuid.MustParse(request.ProjectID),
+		UserID:                      userID,
 	}
 }

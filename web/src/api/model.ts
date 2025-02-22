@@ -29,8 +29,6 @@ export interface EntitiesProject {
 export interface EntitiesProjectEndpoint {
   /** @example "2022-06-05T14:26:02.302718+03:00" */
   created_at: string;
-  /** @example 1000 */
-  delay_in_milliseconds: number;
   /** @example "Mock API for an online store for the /v1/products endpoint" */
   description: string;
   /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
@@ -47,6 +45,8 @@ export interface EntitiesProjectEndpoint {
   response_body: string;
   /** @example 200 */
   response_code: number;
+  /** @example 100 */
+  response_delay_in_milliseconds: number;
   /** @example "[{"Content-Type":"application/json"}]" */
   response_headers: string;
   /** @example "stripe-mock-api" */
@@ -74,12 +74,12 @@ export interface RequestsProjectEndpointStoreRequest {
 }
 
 export interface RequestsProjectEndpointUpdateRequest {
-  delay_in_milliseconds: number;
   description: string;
   request_method: string;
   request_path: string;
   response_body: string;
   response_code: number;
+  response_delay_in_milliseconds: number;
   response_headers: string;
 }
 

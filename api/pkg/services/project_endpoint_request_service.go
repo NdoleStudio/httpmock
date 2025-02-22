@@ -52,8 +52,8 @@ func (service *ProjectEndpointRequestService) HandleHTTPRequest(ctx context.Cont
 	service.storeProjectEndpointRequestEvent(ctx, requestID, stopwatch, c, endpoint)
 	headers := service.getHTTPHeaders(ctxLogger, c, endpoint)
 
-	delay := endpoint.DelayInMilliseconds - uint(time.Since(stopwatch).Milliseconds())
-	if endpoint.DelayInMilliseconds > 0 && delay > 0 {
+	delay := endpoint.ResponseDelayInMilliseconds - uint(time.Since(stopwatch).Milliseconds())
+	if endpoint.ResponseDelayInMilliseconds > 0 && delay > 0 {
 		time.Sleep(time.Duration(delay) * time.Millisecond)
 	}
 
@@ -140,7 +140,7 @@ func (service *ProjectEndpointRequestService) storeProjectEndpointRequestEvent(
 		ResponseCode:                endpoint.ResponseCode,
 		ResponseBody:                endpoint.ResponseBody,
 		ResponseHeaders:             endpoint.ResponseHeaders,
-		ResponseDelayInMilliseconds: endpoint.DelayInMilliseconds,
+		ResponseDelayInMilliseconds: endpoint.ResponseDelayInMilliseconds,
 		IPAddress:                   c.IP(),
 		Timestamp:                   stopwatch,
 	})

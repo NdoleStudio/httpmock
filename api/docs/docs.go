@@ -676,7 +676,6 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "created_at",
-                "delay_in_milliseconds",
                 "description",
                 "id",
                 "project_id",
@@ -685,6 +684,7 @@ const docTemplate = `{
                 "request_path",
                 "response_body",
                 "response_code",
+                "response_delay_in_milliseconds",
                 "response_headers",
                 "subdomain",
                 "updated_at",
@@ -694,10 +694,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string",
                     "example": "2022-06-05T14:26:02.302718+03:00"
-                },
-                "delay_in_milliseconds": {
-                    "type": "integer",
-                    "example": 1000
                 },
                 "description": {
                     "type": "string",
@@ -730,6 +726,10 @@ const docTemplate = `{
                 "response_code": {
                     "type": "integer",
                     "example": 200
+                },
+                "response_delay_in_milliseconds": {
+                    "type": "integer",
+                    "example": 100
                 },
                 "response_headers": {
                     "type": "string",
@@ -806,18 +806,15 @@ const docTemplate = `{
         "requests.ProjectEndpointUpdateRequest": {
             "type": "object",
             "required": [
-                "delay_in_milliseconds",
                 "description",
                 "request_method",
                 "request_path",
                 "response_body",
                 "response_code",
+                "response_delay_in_milliseconds",
                 "response_headers"
             ],
             "properties": {
-                "delay_in_milliseconds": {
-                    "type": "integer"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -831,6 +828,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "response_code": {
+                    "type": "integer"
+                },
+                "response_delay_in_milliseconds": {
                     "type": "integer"
                 },
                 "response_headers": {

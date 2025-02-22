@@ -63,13 +63,13 @@ func (service *ProjectEndpointService) Index(ctx context.Context, userID entitie
 
 // ProjectEndpointStoreParams are the parameters for creating a new entities.ProjectEndpoint.
 type ProjectEndpointStoreParams struct {
-	RequestMethod       string
-	RequestPath         string
-	ResponseCode        uint
-	ResponseBody        *string
-	ResponseHeaders     *string
-	DelayInMilliseconds uint
-	Description         *string
+	RequestMethod               string
+	RequestPath                 string
+	ResponseCode                uint
+	ResponseBody                *string
+	ResponseHeaders             *string
+	ResponseDelayInMilliseconds uint
+	Description                 *string
 
 	ProjectID uuid.UUID
 	UserID    entities.UserID
@@ -81,18 +81,20 @@ func (service *ProjectEndpointService) Store(ctx context.Context, project *entit
 	defer span.End()
 
 	endpoint := &entities.ProjectEndpoint{
-		ID:              uuid.New(),
-		UserID:          params.UserID,
-		ProjectID:       params.ProjectID,
-		RequestMethod:   params.RequestMethod,
-		RequestPath:     params.RequestPath,
-		ResponseCode:    params.ResponseCode,
-		ResponseBody:    params.ResponseBody,
-		ResponseHeaders: params.ResponseHeaders,
-		Subdomain:       project.Subdomain,
-		Description:     params.Description,
-		CreatedAt:       time.Now().UTC(),
-		UpdatedAt:       time.Now().UTC(),
+		ID:                          uuid.New(),
+		UserID:                      params.UserID,
+		ProjectID:                   params.ProjectID,
+		RequestMethod:               params.RequestMethod,
+		RequestPath:                 params.RequestPath,
+		ResponseCode:                params.ResponseCode,
+		ResponseBody:                params.ResponseBody,
+		ResponseDelayInMilliseconds: params.ResponseDelayInMilliseconds,
+		ResponseHeaders:             params.ResponseHeaders,
+		Subdomain:                   project.Subdomain,
+		Description:                 params.Description,
+		RequestCount:                0,
+		CreatedAt:                   time.Now().UTC(),
+		UpdatedAt:                   time.Now().UTC(),
 	}
 
 	if err := service.repository.Store(ctx, endpoint); err != nil {
@@ -105,13 +107,13 @@ func (service *ProjectEndpointService) Store(ctx context.Context, project *entit
 
 // ProjectEndpointUpdateParams are the parameters for updating a project endpoint.
 type ProjectEndpointUpdateParams struct {
-	RequestMethod       string
-	RequestPath         string
-	ResponseCode        uint
-	ResponseBody        *string
-	ResponseHeaders     *string
-	DelayInMilliseconds uint
-	Description         *string
+	RequestMethod               string
+	RequestPath                 string
+	ResponseCode                uint
+	ResponseBody                *string
+	ResponseHeaders             *string
+	ResponseDelayInMilliseconds uint
+	Description                 *string
 
 	ProjectEndpointID uuid.UUID
 	ProjectID         uuid.UUID
@@ -134,9 +136,8 @@ func (service *ProjectEndpointService) Update(ctx context.Context, params *Proje
 	endpoint.ResponseCode = params.ResponseCode
 	endpoint.ResponseBody = params.ResponseBody
 	endpoint.ResponseHeaders = params.ResponseHeaders
-	endpoint.DelayInMilliseconds = params.DelayInMilliseconds
+	endpoint.ResponseDelayInMilliseconds = params.ResponseDelayInMilliseconds
 	endpoint.Description = params.Description
-
 	endpoint.UpdatedAt = time.Now().UTC()
 
 	if err = service.repository.Update(ctx, endpoint); err != nil {

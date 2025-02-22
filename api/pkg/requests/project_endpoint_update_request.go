@@ -14,13 +14,13 @@ type ProjectEndpointUpdateRequest struct {
 	ProjectID         string `json:"projectId" swaggerignore:"true"`
 	ProjectEndpointID string `json:"projectEndpointId" swaggerignore:"true"`
 
-	RequestMethod       string `json:"request_method"`
-	RequestPath         string `json:"request_path"`
-	ResponseCode        uint   `json:"response_code"`
-	ResponseBody        string `json:"response_body"`
-	ResponseHeaders     string `json:"response_headers"`
-	DelayInMilliseconds uint   `json:"delay_in_milliseconds"`
-	Description         string `json:"description"`
+	RequestMethod               string `json:"request_method"`
+	RequestPath                 string `json:"request_path"`
+	ResponseCode                uint   `json:"response_code"`
+	ResponseBody                string `json:"response_body"`
+	ResponseHeaders             string `json:"response_headers"`
+	ResponseDelayInMilliseconds uint   `json:"response_delay_in_milliseconds"`
+	Description                 string `json:"description"`
 }
 
 // Sanitize the request by stripping whitespaces
@@ -37,15 +37,15 @@ func (request *ProjectEndpointUpdateRequest) Sanitize() *ProjectEndpointUpdateRe
 // ToProjectEndpointUpdatePrams creates services.ProjectEndpointUpdateParams from ProjectEndpointUpdateRequest
 func (request *ProjectEndpointUpdateRequest) ToProjectEndpointUpdatePrams(userID entities.UserID) *services.ProjectEndpointUpdateParams {
 	return &services.ProjectEndpointUpdateParams{
-		RequestMethod:       request.RequestMethod,
-		RequestPath:         request.RequestPath,
-		ResponseCode:        request.ResponseCode,
-		ResponseBody:        &request.ResponseBody,
-		ResponseHeaders:     &request.ResponseHeaders,
-		DelayInMilliseconds: request.DelayInMilliseconds,
-		Description:         &request.Description,
-		ProjectEndpointID:   uuid.MustParse(request.ProjectEndpointID),
-		ProjectID:           uuid.MustParse(request.ProjectID),
-		UserID:              userID,
+		RequestMethod:               request.RequestMethod,
+		RequestPath:                 request.RequestPath,
+		ResponseCode:                request.ResponseCode,
+		ResponseBody:                &request.ResponseBody,
+		ResponseHeaders:             &request.ResponseHeaders,
+		ResponseDelayInMilliseconds: request.ResponseDelayInMilliseconds,
+		Description:                 &request.Description,
+		ProjectEndpointID:           uuid.MustParse(request.ProjectEndpointID),
+		ProjectID:                   uuid.MustParse(request.ProjectID),
+		UserID:                      userID,
 	}
 }
