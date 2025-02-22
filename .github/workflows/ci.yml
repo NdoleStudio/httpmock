@@ -62,3 +62,11 @@ jobs:
           repository: ndolestudio/httpmock
           readme-filepath: ./README.md
         if: github.event_name != 'pull_request'
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: httpmock.restart
