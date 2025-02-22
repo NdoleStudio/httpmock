@@ -25,8 +25,8 @@ type ProjectEndpointRepository interface {
 	// Load an entities.ProjectEndpoint by entities.UserID
 	Load(ctx context.Context, userID entities.UserID, projectID uuid.UUID, projectEndpointID uuid.UUID) (*entities.ProjectEndpoint, error)
 
-	// Delete an entities.ProjectEndpoint by entities.UserID and projectEndpointID
-	Delete(ctx context.Context, userID entities.UserID, projectID uuid.UUID, projectEndpointID uuid.UUID) error
+	// Delete an entities.ProjectEndpoint
+	Delete(ctx context.Context, endpoint *entities.ProjectEndpoint) error
 
 	// LoadByRequestForUser load an entities.ProjectEndpoint by a request path and method.
 	LoadByRequestForUser(ctx context.Context, userID entities.UserID, projectID uuid.UUID, requestMethod, requestPath string) (*entities.ProjectEndpoint, error)

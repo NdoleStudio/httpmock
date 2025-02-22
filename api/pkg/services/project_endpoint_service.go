@@ -152,12 +152,13 @@ func (service *ProjectEndpointService) Delete(ctx context.Context, userID entiti
 	ctx, span, _ := service.tracer.StartWithLogger(ctx, service.logger)
 	defer span.End()
 
-	if _, err := service.repository.Load(ctx, userID, projectID, projectEndpoint); err != nil {
+	endpoint, err := service.repository.Load(ctx, userID, projectID, projectEndpoint)
+	if err != nil {
 		msg := fmt.Sprintf("cannot load endpoint with ID [%s] and project ID [%s] for user ID [%s]", projectEndpoint, projectID, userID)
 		return stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg)
 	}
 
-	if err := service.repository.Delete(ctx, userID, projectID, projectEndpoint); err != nil {
+	if err = service.repository.Delete(ctx, endpoint); err != nil {
 		msg := fmt.Sprintf("cannot delete endpoint with ID [%s] and project ID [%s] for user ID [%s]", projectEndpoint, projectID, userID)
 		return stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg)
 	}

@@ -74,11 +74,8 @@ func (service *ProjectEndpointRequestService) HandleHTTPRequest(ctx context.Cont
 	}
 }
 
-// FetchEndpoint a project endpoint by request method and path
-func (service *ProjectEndpointRequestService) FetchEndpoint(ctx context.Context, subdomain string, requestMethod, requestPath string) (*entities.ProjectEndpoint, error) {
-	ctx, span, _ := service.tracer.StartWithLogger(ctx, service.logger)
-	defer span.End()
-
+// LoadByRequest a project endpoint by request method and path
+func (service *ProjectEndpointRequestService) LoadByRequest(ctx context.Context, subdomain string, requestMethod, requestPath string) (*entities.ProjectEndpoint, error) {
 	return service.projectEndpointRepository.LoadByRequest(ctx, subdomain, requestMethod, requestPath)
 }
 

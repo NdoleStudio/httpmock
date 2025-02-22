@@ -5,6 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
+
+	"github.com/dgraph-io/ristretto/v2"
 
 	"github.com/NdoleStudio/httpmock/pkg/entities"
 	"github.com/NdoleStudio/httpmock/pkg/telemetry"
@@ -17,6 +20,7 @@ import (
 type gormProjectEndpointRepository struct {
 	logger telemetry.Logger
 	tracer telemetry.Tracer
+	cache  *ristretto.Cache[string, *entities.ProjectEndpoint]
 	db     *gorm.DB
 }
 
@@ -50,11 +54,16 @@ func (repository *gormProjectEndpointRepository) RegisterRequest(ctx context.Con
 }
 
 func (repository *gormProjectEndpointRepository) LoadByRequest(ctx context.Context, subdomain, requestMethod, requestPath string) (*entities.ProjectEndpoint, error) {
-	ctx, span := repository.tracer.Start(ctx)
+	ctx, span, ctxLogger := repository.tracer.StartWithLogger(ctx, repository.logger)
 	defer span.End()
 
-	endpoint := new(entities.ProjectEndpoint)
+	key := repository.cacheKey(subdomain, requestMethod, requestPath)
+	if endpoint, ok := repository.cache.Get(key); ok {
+		ctxLogger.Info(fmt.Sprintf("[%T] found in cache with ID [%s] for request with key [%s]", endpoint, endpoint.ID, key))
+		return endpoint, nil
+	}
 
+	endpoint := new(entities.ProjectEndpoint)
 	err := repository.db.WithContext(ctx).
 		Model(endpoint).
 		Where("subdomain = ?", subdomain).
@@ -71,6 +80,11 @@ func (repository *gormProjectEndpointRepository) LoadByRequest(ctx context.Conte
 		return endpoint, repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 
+	if ok := repository.cache.SetWithTTL(key, endpoint, 1, 2*time.Hour); !ok {
+		msg := fmt.Sprintf("cannot cache [%T] with ID [%s]", endpoint, endpoint.ID)
+		ctxLogger.Error(repository.tracer.WrapErrorSpan(span, stacktrace.NewError(msg)))
+	}
+
 	return endpoint, nil
 }
 
@@ -79,7 +93,6 @@ func (repository *gormProjectEndpointRepository) LoadByRequestForUser(ctx contex
 	defer span.End()
 
 	endpoint := new(entities.ProjectEndpoint)
-
 	query := repository.db.WithContext(ctx).
 		Model(endpoint).
 		Where("user_id = ?", userID).
@@ -104,20 +117,16 @@ func (repository *gormProjectEndpointRepository) LoadByRequestForUser(ctx contex
 	return endpoint, nil
 }
 
-func (repository *gormProjectEndpointRepository) Delete(ctx context.Context, userID entities.UserID, projectID uuid.UUID, projectEndpointID uuid.UUID) error {
+func (repository *gormProjectEndpointRepository) Delete(ctx context.Context, endpoint *entities.ProjectEndpoint) error {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
 
-	err := repository.db.WithContext(ctx).
-		Where("user_id = ?", userID).
-		Where("project_id = ?", projectID).
-		Where("id = ?", projectEndpointID).
-		Delete(&entities.ProjectEndpoint{}).
-		Error
-	if err != nil {
-		msg := fmt.Sprintf("cannot save project endpoint with ID [%s] for user [%s]", projectEndpointID, userID)
+	repository.cache.Del(repository.cacheKeyFromEndpoint(endpoint))
+	if err := repository.db.WithContext(ctx).Delete(endpoint).Error; err != nil {
+		msg := fmt.Sprintf("cannot delete [%T] with ID [%s] for user [%s]", endpoint, endpoint.ID, endpoint.UserID)
 		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
+
 	return nil
 }
 
@@ -125,6 +134,7 @@ func (repository *gormProjectEndpointRepository) Store(ctx context.Context, endp
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
 
+	repository.cache.Del(repository.cacheKeyFromEndpoint(endpoint))
 	if err := repository.db.WithContext(ctx).Create(endpoint).Error; err != nil {
 		msg := fmt.Sprintf("cannot save project endpoint with ID [%s]", endpoint.ID)
 		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
@@ -137,6 +147,7 @@ func (repository *gormProjectEndpointRepository) Update(ctx context.Context, end
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
 
+	repository.cache.Del(repository.cacheKeyFromEndpoint(endpoint))
 	if err := repository.db.WithContext(ctx).Save(endpoint).Error; err != nil {
 		msg := fmt.Sprintf("cannot update project endpoint with ID [%s]", endpoint.ID)
 		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
@@ -185,4 +196,12 @@ func (repository *gormProjectEndpointRepository) Load(ctx context.Context, userI
 	}
 
 	return endpoint, nil
+}
+
+func (repository *gormProjectEndpointRepository) cacheKeyFromEndpoint(endpoint *entities.ProjectEndpoint) string {
+	return repository.cacheKey(endpoint.Subdomain, endpoint.RequestMethod, endpoint.RequestPath)
+}
+
+func (repository *gormProjectEndpointRepository) cacheKey(subdomain, method, path string) string {
+	return fmt.Sprintf("[%s] [%s] [%s]", subdomain, method, path)
 }

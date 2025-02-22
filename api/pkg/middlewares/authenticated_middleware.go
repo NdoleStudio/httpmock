@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"github.com/NdoleStudio/httpmock/pkg/entities"
-	"github.com/NdoleStudio/httpmock/pkg/telemetry"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,11 +16,8 @@ const (
 )
 
 // Authenticated checks if the request is authenticated
-func Authenticated(tracer telemetry.Tracer) fiber.Handler {
+func Authenticated() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		_, span := tracer.StartFromFiberCtx(c, "middlewares.Authenticated")
-		defer span.End()
-
 		if _, ok := c.Locals(ContextKeyAuthUserID).(*entities.AuthUser); !ok {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"status":  "error",
@@ -29,7 +25,6 @@ func Authenticated(tracer telemetry.Tracer) fiber.Handler {
 				"data":    "Make sure your Bearer token key is set in the [Authorization] header in the request",
 			})
 		}
-
 		return c.Next()
 	}
 }

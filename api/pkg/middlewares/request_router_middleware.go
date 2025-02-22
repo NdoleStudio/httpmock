@@ -29,7 +29,7 @@ func RequestRouter(tracer telemetry.Tracer, logger telemetry.Logger, hostname st
 			return c.Next()
 		}
 
-		endpoint, err := requestService.FetchEndpoint(ctx, c.Subdomains()[0], c.Method(), c.Path())
+		endpoint, err := requestService.LoadByRequest(ctx, c.Subdomains()[0], c.Method(), c.Path())
 		if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"status":  "error",

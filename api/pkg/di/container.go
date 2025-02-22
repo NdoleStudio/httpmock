@@ -171,7 +171,7 @@ func (container *Container) GoogleAuthMiddlewares(audience string, subject strin
 // AuthenticatedMiddleware creates a new instance of middlewares.Authenticated
 func (container *Container) AuthenticatedMiddleware() fiber.Handler {
 	container.logger.Debug("creating middlewares.Authenticated")
-	return middlewares.Authenticated(container.Tracer())
+	return middlewares.Authenticated()
 }
 
 // Logger creates a new instance of telemetry.Logger
