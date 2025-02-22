@@ -153,7 +153,7 @@ export const createStore = (initState: State = defaultInitState) => {
     },
     storeProjectEndpoint: (
       projectId: string,
-      request: RequestsProjectEndpointCreateRequest,
+      request: RequestsProjectEndpointStoreRequest,
     ): Promise<EntitiesProjectEndpoint> => {
       return new Promise<EntitiesProjectEndpoint>((resolve, reject) => {
         axios
