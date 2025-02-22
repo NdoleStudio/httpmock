@@ -103,7 +103,7 @@ func (service *ProjectEndpointRequestService) Store(ctx context.Context, request
 func (service *ProjectEndpointRequestService) getHTTPHeaders(ctxLogger telemetry.Logger, c *fiber.Ctx, endpoint *entities.ProjectEndpoint) []map[string]string {
 	var headers []map[string]string
 
-	if endpoint.ResponseHeaders == nil {
+	if endpoint.ResponseHeaders == nil || *endpoint.ResponseHeaders == "" {
 		return headers
 	}
 

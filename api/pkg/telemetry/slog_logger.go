@@ -84,7 +84,7 @@ func (logger *slogLogger) Fatal(err error) {
 
 // Error logs an error
 func (logger *slogLogger) Error(err error) {
-	logger.slog.WarnContext(logger.ctx, err.Error(), logger.attributesWithCaller()...)
+	logger.slog.ErrorContext(logger.ctx, err.Error(), logger.attributesWithCaller()...)
 }
 
 // WithContext adds a context.Context to a logger
