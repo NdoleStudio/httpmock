@@ -55,8 +55,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 
-	"github.com/hirosassa/zerodriver"
-	"github.com/rs/zerolog"
 	"google.golang.org/api/option"
 
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -708,57 +706,10 @@ func logger(skipFrameCount int) telemetry.Logger {
 
 func getSlogHandler() slog.Handler {
 	// Create a new Slog handler
-	if Config().UseOtelLogger {
+	if Config().UseOpenTelemetryLogger {
 		return otelslog.NewHandler(os.Getenv("GCP_PROJECT_ID"))
 	}
 	return tint.NewHandler(os.Stderr, &tint.Options{Level: slog.LevelDebug})
-}
-
-func initializeZerologLogger(skipFrameCount int) telemetry.Logger {
-	fields := map[string]any{
-		string(semconv.ProcessPIDKey): os.Getpid(),
-		string(semconv.HostNameKey):   hostName(),
-	}
-
-	return telemetry.NewZerologLogger(
-		os.Getenv("GCP_PROJECT_ID"),
-		fields,
-		logDriver(skipFrameCount),
-		nil,
-	)
-}
-
-func logDriver(skipFrameCount int) *zerodriver.Logger {
-	if isLocal() {
-		return consoleLogger(skipFrameCount)
-	}
-	return jsonLogger(skipFrameCount)
-}
-
-func jsonLogger(skipFrameCount int) *zerodriver.Logger {
-	logLevel := zerolog.DebugLevel
-	zerolog.SetGlobalLevel(logLevel)
-
-	// See: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity
-	logLevelSeverity := map[zerolog.Level]string{
-		zerolog.TraceLevel: "DEFAULT",
-		zerolog.DebugLevel: "DEBUG",
-		zerolog.InfoLevel:  "INFO",
-		zerolog.WarnLevel:  "WARNING",
-		zerolog.ErrorLevel: "ERROR",
-		zerolog.PanicLevel: "CRITICAL",
-		zerolog.FatalLevel: "CRITICAL",
-	}
-
-	zerolog.LevelFieldName = "severity"
-	zerolog.LevelFieldMarshalFunc = func(l zerolog.Level) string {
-		return logLevelSeverity[l]
-	}
-	zerolog.TimestampFieldName = "time"
-	zerolog.TimeFieldFormat = time.RFC3339Nano
-
-	zl := zerolog.New(os.Stderr).With().Timestamp().CallerWithSkipFrameCount(skipFrameCount).Logger()
-	return &zerodriver.Logger{Logger: &zl}
 }
 
 func hostName() string {
@@ -767,16 +718,6 @@ func hostName() string {
 		h = strconv.Itoa(os.Getpid())
 	}
 	return h
-}
-
-func consoleLogger(skipFrameCount int) *zerodriver.Logger {
-	l := zerolog.New(
-		zerolog.ConsoleWriter{
-			Out: os.Stderr,
-		}).With().Timestamp().CallerWithSkipFrameCount(skipFrameCount).Logger()
-	return &zerodriver.Logger{
-		Logger: &l,
-	}
 }
 
 func isLocal() bool {

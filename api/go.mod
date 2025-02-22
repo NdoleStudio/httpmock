@@ -15,12 +15,10 @@ require (
 	github.com/gofiber/swagger v1.1.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-retryablehttp v0.7.7
-	github.com/hirosassa/zerodriver v0.1.4
 	github.com/jinzhu/now v1.1.5
 	github.com/joho/godotenv v1.5.1
 	github.com/lmittmann/tint v1.0.6
 	github.com/palantir/stacktrace v0.0.0-20161112013806-78658fd2d177
-	github.com/rs/zerolog v1.33.0
 	github.com/swaggo/swag v1.16.4
 	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/uptrace/uptrace-go v1.34.0
