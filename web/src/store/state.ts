@@ -5,8 +5,8 @@ import {
   EntitiesProject,
   EntitiesProjectEndpoint,
   RequestsProjectCreateRequest,
-  RequestsProjectEndpointCreateRequest,
   RequestsProjectEndpointUpdateRequest,
+  RequestsProjectEndpointStoreRequest,
   RequestsProjectUpdateRequest,
   ResponsesNoContent,
   ResponsesOkArrayEntitiesProject,
@@ -37,7 +37,7 @@ export type Actions = {
   indexProjects: () => Promise<Array<EntitiesProject>>;
   storeProjectEndpoint: (
     projectId: string,
-    request: RequestsProjectEndpointCreateRequest,
+    request: RequestsProjectEndpointStoreRequest,
   ) => Promise<EntitiesProjectEndpoint>;
   updateProjectEndpoint: (
     projectId: string,
