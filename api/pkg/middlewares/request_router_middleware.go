@@ -19,7 +19,10 @@ func RequestRouter(tracer telemetry.Tracer, logger telemetry.Logger, hostname st
 		ctx, span, ctxLogger := tracer.StartFromFiberCtxWithLogger(c, logger.WithCodeNamespace("middlewares.RequestRouter"), "middlewares.RequestRouter")
 		defer span.End()
 
-		ctxLogger.Info(fmt.Sprintf("handling request with hostname [%#+v]", c.Subdomains()))
+		if len(c.Subdomains()) > 1 {
+			ctxLogger.Info(fmt.Sprintf("redirecting HTTP request [%s] -> [%s://%s] since it has more than 1 subdomains [%#+v]", c.BaseURL()+c.OriginalURL(), c.Protocol(), hostname, c.Subdomains()))
+			return c.Redirect(fmt.Sprintf("%s://%s", c.Protocol(), hostname), fiber.StatusMovedPermanently)
+		}
 
 		if c.Hostname() == hostname || len(c.Subdomains()) == 0 {
 			ctxLogger.Info(fmt.Sprintf("handling request with hostname [%s] using the default router", c.Hostname()))

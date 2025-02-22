@@ -31,6 +31,9 @@ type Logger interface {
 	// Printf makes the logger compatible with retryablehttp.Logger
 	Printf(string, ...any)
 
+	// Write makes the logger compatible with io.Writer
+	Write([]byte) (int, error)
+
 	// WithContext adds a context.Context to a logger
 	WithContext(ctx context.Context) Logger
 }

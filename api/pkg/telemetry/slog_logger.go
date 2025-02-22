@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"runtime"
+	"strings"
 
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 )
@@ -39,6 +40,11 @@ func (logger *slogLogger) WithCodeNamespace(codeNamespace string) Logger {
 		logger.slog.Handler(),
 		logger.addAttribute(string(semconv.CodeNamespaceKey), codeNamespace),
 	)
+}
+
+func (logger *slogLogger) Write(bytes []byte) (int, error) {
+	logger.slog.InfoContext(logger.ctx, strings.TrimSpace(string(bytes)), logger.attributes...)
+	return len(bytes), nil
 }
 
 func (logger *slogLogger) Printf(s string, i ...any) {

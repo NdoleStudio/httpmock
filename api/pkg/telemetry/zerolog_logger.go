@@ -41,6 +41,11 @@ func (logger *zerologLogger) WithCodeNamespace(service string) Logger {
 	)
 }
 
+func (logger *zerologLogger) Write(bytes []byte) (int, error) {
+	logger.decorateEvent(logger.zerolog.Info()).Msg(string(bytes))
+	return len(bytes), nil
+}
+
 func (logger *zerologLogger) Printf(s string, i ...interface{}) {
 	logger.decorateEvent(logger.zerolog.Info()).Msg(fmt.Sprintf(s, i...))
 }

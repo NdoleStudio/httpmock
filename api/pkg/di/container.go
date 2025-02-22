@@ -127,24 +127,10 @@ func (container *Container) App() (app *fiber.App) {
 
 	app = fiber.New()
 
-	if os.Getenv("USE_HTTP_LOGGER") == "true" {
-		app.Use(fiberLogger.New(fiberLogger.Config{
-			Next:          nil,
-			Done:          nil,
-			CustomTags:    nil,
-			Format:        "",
-			TimeFormat:    "",
-			TimeZone:      "",
-			TimeInterval:  0,
-			Output:        nil,
-			DisableColors: false,
-		}))
-	}
-
 	app.Use(otelfiber.Middleware())
+	app.Use(fiberLogger.New(fiberLogger.Config{Output: container.Logger(), Format: "${ip} | ${method} | ${path} | ${status} | ${latency}"}))
 	app.Use(cors.New())
 	app.Use(middlewares.RequestRouter(container.Tracer(), container.Logger(), os.Getenv("APP_HOSTNAME"), container.ProjectEndpointRequestService()))
-	app.Use(middlewares.HTTPRequestLogger(container.Tracer(), container.Logger()))
 	app.Use(middlewares.ClerkBearerAuth(container.Logger(), container.Tracer()))
 	app.Use(healthcheck.New())
 
@@ -725,7 +711,7 @@ func getSlogHandler() slog.Handler {
 	if Config().UseOtelLogger {
 		return otelslog.NewHandler(os.Getenv("GCP_PROJECT_ID"))
 	}
-	return tint.NewHandler(os.Stderr, nil)
+	return tint.NewHandler(os.Stderr, &tint.Options{Level: slog.LevelDebug})
 }
 
 func initializeZerologLogger(skipFrameCount int) telemetry.Logger {
