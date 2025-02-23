@@ -57,7 +57,7 @@ func (h *ProjectEndpointRequestHandler) RegisterRoutes(app *fiber.App, middlewar
 // @Security	 BearerAuth
 // @Tags         ProjectEndpointRequests
 // @Produce      json
-// @Param        prev		query  string  	false	"ID of the last request to filter out"
+// @Param        prev		query  string  	false	"ID of the last request returned in the previous page"
 // @Param        limit		query  int  	false	"number of messages to return"			minimum(1)	maximum(100)
 // @Success      200 		{object}	responses.Ok[[]entities.ProjectEndpointRequest]
 // @Failure      400		{object}	responses.BadRequest

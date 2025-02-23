@@ -35,6 +35,8 @@ export interface EntitiesProjectEndpoint {
   id: string;
   /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
   project_id: string;
+  /** @example "stripe-mock-api" */
+  project_subdomain: string;
   /** @example 100 */
   request_count: number;
   /** @example "GET" */
@@ -49,10 +51,37 @@ export interface EntitiesProjectEndpoint {
   response_delay_in_milliseconds: number;
   /** @example "[{"Content-Type":"application/json"}]" */
   response_headers: string;
-  /** @example "stripe-mock-api" */
-  subdomain: string;
   /** @example "2022-06-05T14:26:10.303278+03:00" */
   updated_at: string;
+  /** @example "user_2oeyIzOf9xxxxxxxxxxxxxx" */
+  user_id: string;
+}
+
+export interface EntitiesProjectEndpointRequest {
+  /** @example "2022-06-05T14:26:02.302718+03:00" */
+  created_at: string;
+  /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
+  id: string;
+  /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
+  project_endpoint_id: string;
+  /** @example "8f9c71b8-b84e-4417-8408-a62274f65a08" */
+  project_id: string;
+  /** @example "{"name": "Product 1"}" */
+  request_body: string;
+  /** @example "[{"Authorization":"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc"}]" */
+  request_headers: string;
+  /** @example "GET" */
+  request_method: string;
+  /** @example "https://stripe-mock-api.httpmock.dev/v1/products" */
+  request_url: string;
+  /** @example "{"message": "Hello World","status": 200}" */
+  response_body: string;
+  /** @example 200 */
+  response_code: number;
+  /** @example 1000 */
+  response_delay_in_milliseconds: number;
+  /** @example "[{"Content-Type":"application/json"}]" */
+  response_headers: string;
   /** @example "user_2oeyIzOf9xxxxxxxxxxxxxx" */
   user_id: string;
 }
@@ -129,6 +158,14 @@ export interface ResponsesOkArrayEntitiesProject {
 
 export interface ResponsesOkArrayEntitiesProjectEndpoint {
   data: EntitiesProjectEndpoint[];
+  /** @example "Request handled successfully" */
+  message: string;
+  /** @example "success" */
+  status: string;
+}
+
+export interface ResponsesOkArrayEntitiesProjectEndpointRequest {
+  data: EntitiesProjectEndpointRequest[];
   /** @example "Request handled successfully" */
   message: string;
   /** @example "success" */

@@ -627,6 +627,149 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/projects/{projectId}/endpoints/{projectEndpointId}/requests": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Fetches the list of all projects endpoint requests available to the currently authenticated user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProjectEndpointRequests"
+                ],
+                "summary": "List of project endpoint requests",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the last request returned in the previous page",
+                        "name": "prev",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "number of messages to return",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Ok-array_entities_ProjectEndpointRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Unauthorized"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnprocessableEntity"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/projects/{projectId}/endpoints/{projectEndpointId}/requests/{projectEndpointRequestId}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "This API deletes a project endpoint request for a user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProjectEndpointRequests"
+                ],
+                "summary": "Delete a project endpoint request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "projectId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Project Endpoint ID",
+                        "name": "projectEndpointId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Project Endpoint Request ID",
+                        "name": "projectEndpointRequestId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoContent"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Unauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NotFound"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnprocessableEntity"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -679,6 +822,7 @@ const docTemplate = `{
                 "description",
                 "id",
                 "project_id",
+                "project_subdomain",
                 "request_count",
                 "request_method",
                 "request_path",
@@ -686,7 +830,6 @@ const docTemplate = `{
                 "response_code",
                 "response_delay_in_milliseconds",
                 "response_headers",
-                "subdomain",
                 "updated_at",
                 "user_id"
             ],
@@ -706,6 +849,10 @@ const docTemplate = `{
                 "project_id": {
                     "type": "string",
                     "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
+                },
+                "project_subdomain": {
+                    "type": "string",
+                    "example": "stripe-mock-api"
                 },
                 "request_count": {
                     "type": "integer",
@@ -735,13 +882,81 @@ const docTemplate = `{
                     "type": "string",
                     "example": "[{\"Content-Type\":\"application/json\"}]"
                 },
-                "subdomain": {
-                    "type": "string",
-                    "example": "stripe-mock-api"
-                },
                 "updated_at": {
                     "type": "string",
                     "example": "2022-06-05T14:26:10.303278+03:00"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "user_2oeyIzOf9xxxxxxxxxxxxxx"
+                }
+            }
+        },
+        "entities.ProjectEndpointRequest": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "id",
+                "project_endpoint_id",
+                "project_id",
+                "request_body",
+                "request_headers",
+                "request_method",
+                "request_url",
+                "response_body",
+                "response_code",
+                "response_delay_in_milliseconds",
+                "response_headers",
+                "user_id"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-06-05T14:26:02.302718+03:00"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
+                },
+                "project_endpoint_id": {
+                    "type": "string",
+                    "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
+                },
+                "project_id": {
+                    "type": "string",
+                    "example": "8f9c71b8-b84e-4417-8408-a62274f65a08"
+                },
+                "request_body": {
+                    "type": "string",
+                    "example": "{\"name\": \"Product 1\"}"
+                },
+                "request_headers": {
+                    "type": "string",
+                    "example": "[{\"Authorization\":\"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc\"}]"
+                },
+                "request_method": {
+                    "type": "string",
+                    "example": "GET"
+                },
+                "request_url": {
+                    "type": "string",
+                    "example": "https://stripe-mock-api.httpmock.dev/v1/products"
+                },
+                "response_body": {
+                    "type": "string",
+                    "example": "{\"message\": \"Hello World\",\"status\": 200}"
+                },
+                "response_code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "response_delay_in_milliseconds": {
+                    "type": "integer",
+                    "example": 1000
+                },
+                "response_headers": {
+                    "type": "string",
+                    "example": "[{\"Content-Type\":\"application/json\"}]"
                 },
                 "user_id": {
                     "type": "string",
@@ -966,6 +1181,30 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/entities.ProjectEndpoint"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Request handled successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "responses.Ok-array_entities_ProjectEndpointRequest": {
+            "type": "object",
+            "required": [
+                "data",
+                "message",
+                "status"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.ProjectEndpointRequest"
                     }
                 },
                 "message": {
