@@ -3,12 +3,14 @@ package entities
 import (
 	"time"
 
+	"github.com/oklog/ulid/v2"
+
 	"github.com/google/uuid"
 )
 
-// ProjectEndpointRequest is an request belonging to an entities.ProjectEndpoint
+// ProjectEndpointRequest is the model for a project endpoint request
 type ProjectEndpointRequest struct {
-	ID                          uuid.UUID `json:"id" gorm:"primaryKey;type:uuid;" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
+	ID                          ulid.ULID `json:"id" gorm:"primaryKey;type:uuid;" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
 	ProjectID                   uuid.UUID `json:"project_id" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
 	ProjectEndpointID           uuid.UUID `json:"project_endpoint_id" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
 	UserID                      UserID    `json:"user_id" example:"user_2oeyIzOf9xxxxxxxxxxxxxx"`

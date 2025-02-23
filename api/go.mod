@@ -19,6 +19,7 @@ require (
 	github.com/jinzhu/now v1.1.5
 	github.com/joho/godotenv v1.5.1
 	github.com/lmittmann/tint v1.0.6
+	github.com/oklog/ulid/v2 v2.1.0
 	github.com/palantir/stacktrace v0.0.0-20161112013806-78658fd2d177
 	github.com/swaggo/swag v1.16.4
 	github.com/thedevsaddam/govalidator v1.9.10

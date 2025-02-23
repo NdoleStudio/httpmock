@@ -149,6 +149,7 @@ func (container *Container) App() (app *fiber.App) {
 	container.RegisterEventRoutes()
 	container.RegisterProjectRoutes()
 	container.RegisterProjectEndpointRoutes()
+	container.RegisterProjectEndpointRequestRoutes()
 
 	// UnAuthenticated routes
 	container.RegisterLemonsqueezyRoutes()
@@ -286,6 +287,12 @@ func (container *Container) RegisterProjectEndpointRoutes() {
 	container.ProjectEndpointHandler().RegisterRoutes(container.App(), container.ClerkBearerAuthMiddlewares())
 }
 
+// RegisterProjectEndpointRequestRoutes registers routes for the /projects/:projectId/endpoints/:projectEndpointId/requests prefix
+func (container *Container) RegisterProjectEndpointRequestRoutes() {
+	container.logger.Debug(fmt.Sprintf("registering %T routes", &handlers.ProjectEndpointRequestHandler{}))
+	container.ProjectEndpointRequestHandler().RegisterRoutes(container.App(), container.ClerkBearerAuthMiddlewares())
+}
+
 // ProjectHandler creates a new instance of handlers.ProjectHandler
 func (container *Container) ProjectHandler() (handler *handlers.ProjectHandler) {
 	container.logger.Debug(fmt.Sprintf("creating %T", handler))
@@ -306,6 +313,18 @@ func (container *Container) ProjectEndpointHandler() (handler *handlers.ProjectE
 		container.ProjectHandlerEndpointValidator(),
 		container.ProjectEndpointService(),
 		container.ProjectService(),
+	)
+}
+
+// ProjectEndpointRequestHandler creates a new instance of handlers.ProjectEndpointRequestHandler
+func (container *Container) ProjectEndpointRequestHandler() (handler *handlers.ProjectEndpointRequestHandler) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return handlers.NewProjectEndpointRequestHandler(
+		container.Logger(),
+		container.Tracer(),
+		container.ProjectEndpointRequestHandlerValidator(),
+		container.ProjectEndpointRequestService(),
+		container.ProjectEndpointService(),
 	)
 }
 
@@ -358,6 +377,15 @@ func (container *Container) ProjectHandlerEndpointValidator() (validator *valida
 		container.Logger(),
 		container.Tracer(),
 		container.ProjectEndpointRepository(),
+	)
+}
+
+// ProjectEndpointRequestHandlerValidator creates a new instance of validators.ProjectEndpointHandlerValidator
+func (container *Container) ProjectEndpointRequestHandlerValidator() (validator *validators.ProjectEndpointRequestHandlerValidator) {
+	container.logger.Debug(fmt.Sprintf("creating %T", validator))
+	return validators.NewProjectEndpointRequestHandlerValidator(
+		container.Logger(),
+		container.Tracer(),
 	)
 }
 

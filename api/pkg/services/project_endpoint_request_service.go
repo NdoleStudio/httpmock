@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/oklog/ulid/v2"
+
 	"github.com/NdoleStudio/httpmock/pkg/entities"
 	"github.com/NdoleStudio/httpmock/pkg/events"
 	"github.com/NdoleStudio/httpmock/pkg/repositories"
 	"github.com/NdoleStudio/httpmock/pkg/telemetry"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/palantir/stacktrace"
 )
 
@@ -42,12 +44,45 @@ func NewProjectEndpointRequestService(
 	}
 }
 
+// Delete an entities.ProjectEndpointRequest
+func (service *ProjectEndpointRequestService) Delete(ctx context.Context, userID entities.UserID, requestID ulid.ULID) error {
+	ctx, span, _ := service.tracer.StartWithLogger(ctx, service.logger)
+	defer span.End()
+
+	request, err := service.projectEndpointRequestRepository.Load(ctx, userID, requestID)
+	if err != nil {
+		msg := fmt.Sprintf("cannot load endpoint request with ID [%s] for user ID [%s]", requestID, userID)
+		return stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg)
+	}
+
+	if err = service.projectEndpointRequestRepository.Delete(ctx, request); err != nil {
+		msg := fmt.Sprintf("cannot delete endpoint with ID [%s] and project ID [%s] for user ID [%s]", request.ID, request.ProjectID, userID)
+		return stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg)
+	}
+
+	return nil
+}
+
+// Index fetches the list of all project endpoint requests available to the currently authenticated user
+func (service *ProjectEndpointRequestService) Index(ctx context.Context, userID entities.UserID, endpointID uuid.UUID, limit uint, previousID *ulid.ULID) ([]*entities.ProjectEndpointRequest, error) {
+	ctx, span := service.tracer.Start(ctx)
+	defer span.End()
+
+	requests, err := service.projectEndpointRequestRepository.Index(ctx, userID, endpointID, limit, previousID)
+	if err != nil {
+		msg := fmt.Sprintf("cannot fetch project endpoint requests for user with ID [%s] and project endpoint ID [%s]", userID, endpointID)
+		return nil, service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
+	}
+
+	return requests, nil
+}
+
 // HandleHTTPRequest registers a new HTTP request for an endpoint
 func (service *ProjectEndpointRequestService) HandleHTTPRequest(ctx context.Context, c *fiber.Ctx, stopwatch time.Time, endpoint *entities.ProjectEndpoint) {
 	ctx, span, ctxLogger := service.tracer.StartWithLogger(ctx, service.logger)
 	defer span.End()
 
-	requestID := uuid.New()
+	requestID := ulid.Make()
 
 	service.storeProjectEndpointRequestEvent(ctx, requestID, stopwatch, c, endpoint)
 	headers := service.getHTTPHeaders(ctxLogger, c, endpoint)
@@ -114,7 +149,7 @@ func (service *ProjectEndpointRequestService) getHTTPHeaders(ctxLogger telemetry
 
 func (service *ProjectEndpointRequestService) storeProjectEndpointRequestEvent(
 	ctx context.Context,
-	requestID uuid.UUID,
+	requestID ulid.ULID,
 	stopwatch time.Time,
 	c *fiber.Ctx,
 	endpoint *entities.ProjectEndpoint,

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/oklog/ulid/v2"
+
 	"github.com/google/uuid"
 
 	"github.com/NdoleStudio/httpmock/pkg/entities"
@@ -97,6 +99,18 @@ func (h *handler) validateUUID(c *fiber.Ctx, param string) url.Values {
 		return url.Values{
 			param: []string{
 				fmt.Sprintf("%s is not a valid UUID string e.g [b05b8cc4-6e13-11ed-a1eb-0242ac120002]", param),
+			},
+		}
+	}
+	return nil
+}
+
+func (h *handler) validateULID(c *fiber.Ctx, param string) url.Values {
+	_, err := ulid.Parse(c.Params(param))
+	if err != nil {
+		return url.Values{
+			param: []string{
+				fmt.Sprintf("%s is not a valid ULID string e.g [b05b8cc4-6e13-11ed-a1eb-0242ac120002]", param),
 			},
 		}
 	}

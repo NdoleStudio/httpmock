@@ -3,6 +3,8 @@ package events
 import (
 	"time"
 
+	"github.com/oklog/ulid/v2"
+
 	"github.com/google/uuid"
 
 	"github.com/NdoleStudio/httpmock/pkg/entities"
@@ -16,7 +18,7 @@ type ProjectEndpointRequestPayload struct {
 	UserID                      entities.UserID `json:"user_id"`
 	ProjectID                   uuid.UUID       `json:"project_id"`
 	ProjectEndpointID           uuid.UUID       `json:"project_endpoint_id"`
-	ProjectEndpointRequestID    uuid.UUID       `json:"project_endpoint_request_id"`
+	ProjectEndpointRequestID    ulid.ULID       `json:"project_endpoint_request_id"`
 	RequestURL                  string          `json:"request_url"`
 	RequestMethod               string          `json:"request_method"`
 	RequestBody                 *string         `json:"request_body"`
