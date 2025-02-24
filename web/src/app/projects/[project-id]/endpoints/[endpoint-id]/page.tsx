@@ -22,7 +22,12 @@ import {
   EntitiesProjectEndpoint,
   EntitiesProjectEndpointRequest,
 } from "@/api/model";
-import { MirrorIcon, TrashIcon } from "@primer/octicons-react";
+import {
+  DotFillIcon,
+  DotIcon,
+  MirrorIcon,
+  TrashIcon,
+} from "@primer/octicons-react";
 import { CopyButton } from "@/components/copy-button";
 import { getEndpointURL, labelColor } from "@/utils/filters";
 import { BackButton } from "@/components/back-button";
@@ -64,6 +69,7 @@ export default function EndpointShow() {
     setCanLoadMoreProjectEndpointRequests,
   ] = useState<boolean>(false);
   const [streamingIsActive, setStreamingIsActive] = useState<boolean>(false);
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   const requestLimit: number = 20;
   const onDeleteDialogClose = useCallback(
@@ -119,13 +125,21 @@ export default function EndpointShow() {
         prev,
       )
         .then((requests: Array<EntitiesProjectEndpointRequest>) => {
+          console.log(requests);
           const values = new Map<string, EntitiesProjectEndpointRequest>(
             [...projectEndpointRequests, ...requests].map((request) => [
               request.id,
               request,
             ]),
           );
-          setProjectEndpointRequests(Array.from(values.values()));
+          setProjectEndpointRequests(
+            Array.from(values.values()).sort((a, b) => {
+              return (
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+              );
+            }),
+          );
           setCanLoadMoreProjectEndpointRequests(
             requests.length === requestLimit,
           );
@@ -152,6 +166,21 @@ export default function EndpointShow() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (streamingIsActive) {
+        loadProjectEndpointRequests(projectId, projectEndpointId);
+        setStreamingIsActive(false);
+      }
+    }, 5000);
+    return () => clearInterval(id);
+  }, [
+    projectId,
+    projectEndpointId,
+    streamingIsActive,
+    loadProjectEndpointRequests,
+  ]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -202,6 +231,10 @@ export default function EndpointShow() {
       return "";
     }
     return JSON.stringify(JSON.parse(body), null, 4);
+  };
+
+  const secondsSince = (date: string): number => {
+    return (new Date().getTime() - new Date(date).getTime()) / 1000;
   };
 
   return (
@@ -359,6 +392,14 @@ export default function EndpointShow() {
                   date={new Date(request.created_at)}
                   noTitle={true}
                 />
+                {secondsSince(request.created_at) < 120 && (
+                  <Label
+                    size={"small"}
+                    sx={{ color: "#4c8341", ml: 1, fontSize: "small" }}
+                  >
+                    NEW
+                  </Label>
+                )}
               </Text>
               <Box sx={{ mt: 2, display: "flex" }}>
                 <UnderlinePanels aria-label="HTTP request details">
@@ -484,7 +525,7 @@ export default function EndpointShow() {
                                 )}
                                 readOnly={true}
                                 block={true}
-                                rows={20}
+                                rows={10}
                               />
                             </td>
                             <td

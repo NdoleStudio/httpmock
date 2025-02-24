@@ -115,14 +115,13 @@ func (h *ProjectEndpointRequestHandler) delete(c *fiber.Ctx) error {
 	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
 
-	if validationErrors := h.mergeErrors(h.validateUUID(c, "projectEndpointRequestId")); len(validationErrors) != 0 {
+	if validationErrors := h.mergeErrors(h.validateULID(c, "projectEndpointRequestId")); len(validationErrors) != 0 {
 		msg := fmt.Sprintf("validation errors [%s], while deleting project with url [%s]", spew.Sdump(validationErrors), c.OriginalURL())
 		ctxLogger.Warn(stacktrace.NewError(msg))
 		return h.responseUnprocessableEntity(c, validationErrors, "validation errors while deleting project endpoint request")
 	}
 
 	requestID := ulid.MustParse(c.Params("projectEndpointRequestId"))
-
 	err := h.service.Delete(ctx, h.userIDFomContext(c), requestID)
 	if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {
 		msg := fmt.Sprintf("project endpoint request not found with ID [%s] and for user [%s]", requestID, h.userIDFomContext(c))

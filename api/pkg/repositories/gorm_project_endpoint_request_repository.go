@@ -76,7 +76,7 @@ func (repository *gormProjectEndpointRequestRepository) Load(ctx context.Context
 	request := new(entities.ProjectEndpointRequest)
 	err := repository.db.WithContext(ctx).
 		Where("user_id = ?", userID).
-		Where("id = ?", requestID).
+		Where("id = ?", requestID.String()).
 		First(request).
 		Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {

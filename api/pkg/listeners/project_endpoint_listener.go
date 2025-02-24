@@ -33,7 +33,7 @@ func NewProjectEndpointListener(
 
 // Register the listener to the dispatcher
 func (listener *ProjectEndpointListener) Register(dispatcher *services.EventDispatcher) {
-	dispatcher.Subscribe(events.ProjectEndpointRequest, listener.onProjectUpdatedRequest)
+	dispatcher.Subscribe(events.ProjectUpdated, listener.onProjectUpdatedRequest)
 }
 
 func (listener *ProjectEndpointListener) onProjectUpdatedRequest(ctx context.Context, event cloudevents.Event) error {
