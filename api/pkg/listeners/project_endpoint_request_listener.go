@@ -48,7 +48,7 @@ func (listener *ProjectEndpointRequestListener) onProjectEndpointRequest(ctx con
 	}
 
 	request := &entities.ProjectEndpointRequest{
-		ID:                          payload.ProjectEndpointRequestID,
+		ID:                          payload.ProjectEndpointRequestID.String(),
 		ProjectID:                   payload.ProjectID,
 		ProjectEndpointID:           payload.ProjectEndpointID,
 		UserID:                      payload.UserID,
