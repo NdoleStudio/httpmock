@@ -58,6 +58,7 @@ func (h *ProjectEndpointRequestHandler) RegisterRoutes(app *fiber.App, middlewar
 // @Tags         ProjectEndpointRequests
 // @Produce      json
 // @Param        prev		query  string  	false	"ID of the last request returned in the previous page"
+// @Param        next		query  string  	false	"ID of the first request returned in the current page"
 // @Param        limit		query  int  	false	"number of messages to return"			minimum(1)	maximum(100)
 // @Success      200 		{object}	responses.Ok[[]entities.ProjectEndpointRequest]
 // @Failure      400		{object}	responses.BadRequest
@@ -85,7 +86,7 @@ func (h *ProjectEndpointRequestHandler) index(c *fiber.Ctx) error {
 		return h.responseNotFound(c, fmt.Sprintf("cannot list requests for endpoint with ID [%s]", request.ProjectEndpointID))
 	}
 
-	endpointRequests, err := h.service.Index(ctx, h.userIDFomContext(c), uuid.MustParse(request.ProjectEndpointID), request.Limit, request.PrevID())
+	endpointRequests, err := h.service.Index(ctx, h.userIDFomContext(c), uuid.MustParse(request.ProjectEndpointID), request.Limit, request.PrevID(), request.NextID())
 	if err != nil {
 		msg := fmt.Sprintf("cannot fetch project endpoints for user with ID [%s] and projectID [%s]", h.userIDFomContext(c), request.ProjectID)
 		ctxLogger.Error(h.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg)))

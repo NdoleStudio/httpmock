@@ -56,8 +56,12 @@ func (validator *ProjectEndpointRequestHandlerValidator) ValidateIndex(request *
 		return validationErrors
 	}
 
-	if _, err := ulid.Parse(request.Prev); err == nil {
-		validationErrors["prev"] = []string{"The prev field must be a valid ULID https://github.com/ulid/spec"}
+	if _, err := ulid.Parse(request.Prev); request.Prev != "" && err != nil {
+		validationErrors["prev"] = []string{fmt.Sprintf("The prev query param [%s] must be a valid ULID https://github.com/ulid/spec", request.Prev)}
+	}
+
+	if _, err := ulid.Parse(request.Next); request.Next != "" && err != nil {
+		validationErrors["next"] = []string{fmt.Sprintf("The next query param [%s] must be a valid ULID https://github.com/ulid/spec", request.Next)}
 	}
 
 	return validationErrors

@@ -21,6 +21,7 @@ require (
 	github.com/lmittmann/tint v1.0.6
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/palantir/stacktrace v0.0.0-20161112013806-78658fd2d177
+	github.com/pusher/pusher-http-go/v5 v5.1.1
 	github.com/swaggo/swag v1.16.4
 	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/uptrace/uptrace-go v1.34.0

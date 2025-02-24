@@ -111,6 +111,9 @@ definitions:
       request_headers:
         example: '[{"Authorization":"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc"}]'
         type: string
+      request_ip_address:
+        example: 127.0.0.1
+        type: string
       request_method:
         example: GET
         type: string
@@ -139,6 +142,7 @@ definitions:
       - project_id
       - request_body
       - request_headers
+      - request_ip_address
       - request_method
       - request_url
       - response_body

@@ -55,6 +55,7 @@ func (listener *ProjectEndpointRequestListener) onProjectEndpointRequest(ctx con
 		RequestMethod:               payload.RequestMethod,
 		RequestURL:                  payload.RequestURL,
 		RequestHeaders:              payload.RequestHeaders,
+		RequestIPAddress:            payload.RequestIPAddress,
 		RequestBody:                 payload.RequestBody,
 		ResponseCode:                payload.ResponseCode,
 		ResponseBody:                payload.ResponseBody,

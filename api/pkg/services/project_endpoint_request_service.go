@@ -64,11 +64,11 @@ func (service *ProjectEndpointRequestService) Delete(ctx context.Context, userID
 }
 
 // Index fetches the list of all project endpoint requests available to the currently authenticated user
-func (service *ProjectEndpointRequestService) Index(ctx context.Context, userID entities.UserID, endpointID uuid.UUID, limit uint, previousID *ulid.ULID) ([]*entities.ProjectEndpointRequest, error) {
+func (service *ProjectEndpointRequestService) Index(ctx context.Context, userID entities.UserID, endpointID uuid.UUID, limit uint, previousID, nextID *ulid.ULID) ([]*entities.ProjectEndpointRequest, error) {
 	ctx, span := service.tracer.Start(ctx)
 	defer span.End()
 
-	requests, err := service.projectEndpointRequestRepository.Index(ctx, userID, endpointID, limit, previousID)
+	requests, err := service.projectEndpointRequestRepository.Index(ctx, userID, endpointID, limit, previousID, nextID)
 	if err != nil {
 		msg := fmt.Sprintf("cannot fetch project endpoint requests for user with ID [%s] and project endpoint ID [%s]", userID, endpointID)
 		return nil, service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
@@ -176,7 +176,7 @@ func (service *ProjectEndpointRequestService) storeProjectEndpointRequestEvent(
 		ResponseBody:                endpoint.ResponseBody,
 		ResponseHeaders:             endpoint.ResponseHeaders,
 		ResponseDelayInMilliseconds: endpoint.ResponseDelayInMilliseconds,
-		IPAddress:                   c.IP(),
+		RequestIPAddress:            c.IP(),
 		Timestamp:                   stopwatch,
 	})
 	if err != nil {

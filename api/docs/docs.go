@@ -901,6 +901,7 @@ const docTemplate = `{
                 "project_id",
                 "request_body",
                 "request_headers",
+                "request_ip_address",
                 "request_method",
                 "request_url",
                 "response_body",
@@ -933,6 +934,10 @@ const docTemplate = `{
                 "request_headers": {
                     "type": "string",
                     "example": "[{\"Authorization\":\"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc\"}]"
+                },
+                "request_ip_address": {
+                    "type": "string",
+                    "example": "127.0.0.1"
                 },
                 "request_method": {
                     "type": "string",

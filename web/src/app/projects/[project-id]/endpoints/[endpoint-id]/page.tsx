@@ -8,26 +8,41 @@ import {
   Dialog,
   BranchName,
   Heading,
+  Button,
   Label,
+  TextInput,
+  Textarea,
+  RelativeTime,
 } from "@primer/react";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import React, { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useAppStore } from "@/store/provider";
 import {
   EntitiesProject,
   EntitiesProjectEndpoint,
   EntitiesProjectEndpointRequest,
 } from "@/api/model";
-import { MirrorIcon } from "@primer/octicons-react";
+import { MirrorIcon, TrashIcon } from "@primer/octicons-react";
 import { CopyButton } from "@/components/copy-button";
 import { getEndpointURL, labelColor } from "@/utils/filters";
 import { BackButton } from "@/components/back-button";
+import { UnderlinePanels } from "@primer/react/experimental";
+import { toast } from "sonner";
+import { useInView } from "react-intersection-observer";
+import pusherClient from "@/utils/pusher";
+import { useUser } from "@clerk/nextjs";
 
 export default function EndpointShow() {
   const pathName = usePathname();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { showProject, showProjectEndpoint, indexProjectEndpointRequests } =
-    useAppStore((state) => state);
+  const { ref, inView } = useInView();
+  const user = useUser();
+
+  const {
+    showProject,
+    showProjectEndpoint,
+    deleteProjectEndpointRequest,
+    indexProjectEndpointRequests,
+  } = useAppStore((state) => state);
   const [loadingEndpoint, setLoadingEndpoint] = useState<boolean>(false);
   const [loadingProjectEndpointRequests, setLoadingProjectEndpointRequests] =
     useState<boolean>(false);
@@ -40,7 +55,17 @@ export default function EndpointShow() {
   const [projectEndpointRequests, setProjectEndpointRequests] = useState<
     Array<EntitiesProjectEndpointRequest>
   >([]);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteRequestId, setDeleteRequestId] = useState<string | undefined>(
+    undefined,
+  );
+  const [
+    canLoadMoreProjectEndpointRequests,
+    setCanLoadMoreProjectEndpointRequests,
+  ] = useState<boolean>(false);
+  const [streamingIsActive, setStreamingIsActive] = useState<boolean>(false);
 
+  const requestLimit: number = 20;
   const onDeleteDialogClose = useCallback(
     () => setIsDeleteDialogOpen(false),
     [],
@@ -48,6 +73,8 @@ export default function EndpointShow() {
 
   const projectId = pathName.split("/")[2];
   const projectEndpointId = pathName.split("/")[4];
+
+  const requestTabs = ["Request Summary", "Request Headers", "Request Body"];
 
   useEffect(() => {
     setLoadingEndpoint(true);
@@ -67,15 +94,115 @@ export default function EndpointShow() {
   }, [showProject, projectId]);
 
   useEffect(() => {
-    setLoadingProjectEndpointRequests(false);
-    indexProjectEndpointRequests(projectId, projectEndpointId)
-      .then((requests: Array<EntitiesProjectEndpointRequest>) => {
-        setProjectEndpointRequests(requests);
+    if (user.user?.id) {
+      const channel = pusherClient.subscribe(user.user?.id);
+      channel.bind("project.endpoint.request", () => {
+        loadProjectEndpointRequests(projectId, projectEndpointId);
+        setStreamingIsActive(true);
+      });
+    }
+    return () => {
+      if (user.user?.id) {
+        pusherClient.unsubscribe(user.user?.id);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, projectId, projectEndpointId]);
+
+  const loadProjectEndpointRequests = useCallback(
+    (projectId: string, projectEndpointId: string, prev?: string) => {
+      setLoadingProjectEndpointRequests(false);
+      indexProjectEndpointRequests(
+        projectId,
+        projectEndpointId,
+        requestLimit,
+        prev,
+      )
+        .then((requests: Array<EntitiesProjectEndpointRequest>) => {
+          const values = new Map<string, EntitiesProjectEndpointRequest>(
+            [...projectEndpointRequests, ...requests].map((request) => [
+              request.id,
+              request,
+            ]),
+          );
+          setProjectEndpointRequests(Array.from(values.values()));
+          setCanLoadMoreProjectEndpointRequests(
+            requests.length === requestLimit,
+          );
+        })
+        .finally(() => {
+          setLoadingProjectEndpointRequests(false);
+        });
+    },
+    [indexProjectEndpointRequests, projectEndpointRequests],
+  );
+
+  useEffect(() => {
+    loadProjectEndpointRequests(projectId, projectEndpointId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId, projectEndpointId]);
+
+  useEffect(() => {
+    if (inView && projectEndpointRequests.length > 0) {
+      loadProjectEndpointRequests(
+        projectId,
+        projectEndpointId,
+        projectEndpointRequests[projectEndpointRequests.length - 1].id,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (streamingIsActive) {
+        loadProjectEndpointRequests(projectId, projectEndpointId);
+        setStreamingIsActive(false);
+      }
+    }, 5000);
+    return () => clearInterval(id);
+  }, [
+    projectId,
+    projectEndpointId,
+    streamingIsActive,
+    loadProjectEndpointRequests,
+  ]);
+
+  const onDeleteProjectEndpointRequest = async (event: MouseEvent) => {
+    event.preventDefault();
+    setLoadingProjectEndpointRequests(true);
+    deleteProjectEndpointRequest(projectId, projectEndpointId, deleteRequestId!)
+      .then(() => {
+        setIsDeleteDialogOpen(false);
+        setDeleteRequestId(undefined);
+        setProjectEndpointRequests(
+          projectEndpointRequests.filter(
+            (request) => request.id !== deleteRequestId,
+          ),
+        );
+        toast.info("Request deleted successfully.");
       })
       .finally(() => {
         setLoadingProjectEndpointRequests(false);
       });
-  }, [indexProjectEndpointRequests, projectId, projectEndpointId]);
+  };
+
+  const getHeaders = (
+    headers: string | null,
+  ): Array<Record<string, string>> => {
+    const result = new Array<Record<string, string>>();
+    if (headers == null || headers == "") {
+      return result;
+    }
+    return JSON.parse(headers);
+  };
+
+  const getBodyIndentedJSON = (body: string | null): string => {
+    if (body == null || body == "") {
+      return "";
+    }
+    return JSON.stringify(JSON.parse(body), null, 4);
+  };
 
   return (
     <Box
@@ -172,18 +299,22 @@ export default function EndpointShow() {
 
       <Heading as="h2" sx={{ mt: 32 }} variant="medium">
         <MirrorIcon size={24} />
-        <Text sx={{ ml: 2 }}>HTTP Requests</Text>
+        <Text sx={{ ml: 2 }}>HTTP Request Stream</Text>
+        {streamingIsActive && (
+          <Spinner sx={{ ml: 2, color: "accent.emphasis" }} size="small" />
+        )}
       </Heading>
       {!loadingProjectEndpointRequests && (
         <Box
           sx={{
             mt: 2,
+            mb: 4,
             "> *": {
               borderWidth: 1,
               borderColor: "border.default",
               borderStyle: "solid",
               borderBottomWidth: 0,
-              padding: 4,
+              padding: 3,
               "&:first-child": {
                 borderTopLeftRadius: 2,
                 borderTopRightRadius: 2,
@@ -209,11 +340,211 @@ export default function EndpointShow() {
                   {request.request_url}
                 </Text>
                 <CopyButton data={request.request_url} />
+                <Button
+                  leadingVisual={TrashIcon}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setDeleteRequestId(request.id);
+                    setIsDeleteDialogOpen(true);
+                  }}
+                  sx={{ ml: "auto" }}
+                  variant={"danger"}
+                >
+                  Delete
+                </Button>
               </Box>
-              <Box sx={{ mt: 2, display: "flex" }}></Box>
+              <Text sx={{ color: "fg.muted", fontSize: "small" }}>
+                Received{" "}
+                <RelativeTime
+                  date={new Date(request.created_at)}
+                  noTitle={true}
+                />
+              </Text>
+              <Box sx={{ mt: 2, display: "flex" }}>
+                <UnderlinePanels aria-label="HTTP request details">
+                  {requestTabs.map((tab: string, index: number) => (
+                    <UnderlinePanels.Tab
+                      key={index}
+                      counter={undefined}
+                      aria-selected={index === 0 ? true : undefined}
+                    >
+                      {tab}
+                    </UnderlinePanels.Tab>
+                  ))}
+                  <UnderlinePanels.Panel key={0}>
+                    <Box sx={{ mt: 2 }}>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td style={{ paddingTop: 16, paddingRight: 16 }}>
+                              <Text weight={"semibold"} size={"medium"}>
+                                Request ID
+                              </Text>
+                            </td>
+                            <td style={{ minWidth: 400, paddingTop: 16 }}>
+                              <TextInput
+                                value={request.id}
+                                readOnly={true}
+                                block={true}
+                                size={"small"}
+                              />
+                            </td>
+                            <td style={{ paddingTop: 16, paddingLeft: 8 }}>
+                              <CopyButton data={request.id} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={{ paddingTop: 16, paddingRight: 16 }}>
+                              <Text weight={"semibold"} size={"medium"}>
+                                IP Address
+                              </Text>
+                            </td>
+                            <td style={{ paddingTop: 16 }}>
+                              <TextInput
+                                value={request.request_ip_address}
+                                readOnly={true}
+                                block={true}
+                                size={"small"}
+                              />
+                            </td>
+                            <td style={{ paddingTop: 16, paddingLeft: 8 }}>
+                              <CopyButton data={request.request_ip_address} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={{ paddingTop: 16, paddingRight: 16 }}>
+                              <Text weight={"semibold"} size={"medium"}>
+                                Received At
+                              </Text>
+                            </td>
+                            <td style={{ paddingTop: 16 }}>
+                              <TextInput
+                                value={request.created_at}
+                                readOnly={true}
+                                block={true}
+                                size={"small"}
+                              />
+                            </td>
+                            <td style={{ paddingTop: 16, paddingLeft: 8 }}>
+                              <CopyButton data={request.created_at} />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Box>
+                  </UnderlinePanels.Panel>
+                  <UnderlinePanels.Panel key={1}>
+                    <Box sx={{ mt: 2 }}>
+                      <table>
+                        <tbody>
+                          {getHeaders(request.request_headers).map(
+                            (header: Record<string, string>) => (
+                              <tr
+                                key={
+                                  Object.keys(header)[0] +
+                                  header[Object.keys(header)[0]]
+                                }
+                              >
+                                <td
+                                  style={{ paddingTop: 16, paddingRight: 16 }}
+                                >
+                                  <Text weight={"semibold"} size={"medium"}>
+                                    {Object.keys(header)[0]}
+                                  </Text>
+                                </td>
+                                <td style={{ paddingTop: 16, minWidth: 400 }}>
+                                  <TextInput
+                                    value={header[Object.keys(header)[0]]}
+                                    readOnly={true}
+                                    block={true}
+                                    size={"small"}
+                                  />
+                                </td>
+                                <td style={{ paddingTop: 16, paddingLeft: 8 }}>
+                                  <CopyButton
+                                    data={header[Object.keys(header)[0]]}
+                                  />
+                                </td>
+                              </tr>
+                            ),
+                          )}
+                        </tbody>
+                      </table>
+                    </Box>
+                  </UnderlinePanels.Panel>
+                  <UnderlinePanels.Panel key={2}>
+                    <Box sx={{ mt: 2 }}>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td style={{ paddingTop: 16, minWidth: 400 }}>
+                              <Textarea
+                                value={getBodyIndentedJSON(
+                                  request.request_body,
+                                )}
+                                readOnly={true}
+                                block={true}
+                                rows={20}
+                              />
+                            </td>
+                            <td
+                              style={{
+                                paddingTop: 16,
+                                paddingLeft: 8,
+                                verticalAlign: "top",
+                              }}
+                            >
+                              <CopyButton
+                                data={getBodyIndentedJSON(request.request_body)}
+                              />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Box>
+                  </UnderlinePanels.Panel>
+                </UnderlinePanels>
+              </Box>
             </div>
           ))}
         </Box>
+      )}
+      {canLoadMoreProjectEndpointRequests && (
+        <Box ref={ref} sx={{ mb: 2, color: "fg.muted" }}>
+          <Spinner size={"small"} /> Loading more requests...
+        </Box>
+      )}
+      {isDeleteDialogOpen && (
+        <Dialog
+          width={"large"}
+          onClose={onDeleteDialogClose}
+          title={`Delete HTTP Request`}
+          footerButtons={[
+            {
+              disabled: loadingProjectEndpointRequests,
+              content: "Close",
+              onClick: onDeleteDialogClose,
+            },
+            {
+              buttonType: "danger",
+              block: true,
+              loading: loadingProjectEndpointRequests,
+              disabled: loadingProjectEndpointRequests,
+              content: "Delete this Request",
+              onClick: onDeleteProjectEndpointRequest,
+            },
+          ]}
+        >
+          <div>
+            <p>
+              Confirm that you want to delete the HTTP request because this is a
+              permanent action and it cannot be reversed.
+            </p>
+          </div>
+          <Box sx={{ mt: 2 }}>
+            <Text sx={{ color: "fg.muted" }}>{deleteRequestId}</Text>
+          </Box>
+        </Dialog>
       )}
     </Box>
   );

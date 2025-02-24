@@ -34,7 +34,7 @@ func NewGormProjectEndpointRequestRepository(
 	}
 }
 
-func (repository *gormProjectEndpointRequestRepository) Index(ctx context.Context, userID entities.UserID, endpointID uuid.UUID, limit uint, previousID *ulid.ULID) ([]*entities.ProjectEndpointRequest, error) {
+func (repository *gormProjectEndpointRequestRepository) Index(ctx context.Context, userID entities.UserID, endpointID uuid.UUID, limit uint, previousID *ulid.ULID, nextID *ulid.ULID) ([]*entities.ProjectEndpointRequest, error) {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
 
@@ -42,10 +42,14 @@ func (repository *gormProjectEndpointRequestRepository) Index(ctx context.Contex
 
 	query := repository.db.WithContext(ctx).Where("user_id = ?", userID).Where("project_endpoint_id = ?", endpointID)
 	if previousID != nil {
-		query = query.Where("id < ?", previousID)
+		query = query.Where("id < ?", previousID.String()).Order("id DESC")
+	} else if nextID != nil {
+		query = query.Where("id > ?", nextID.String()).Order("id ASC")
+	} else {
+		query = query.Order("id DESC")
 	}
 
-	if err := query.Order("id DESC").Limit(int(limit)).Find(&endpoints).Error; err != nil {
+	if err := query.Limit(int(limit)).Find(&endpoints).Error; err != nil {
 		msg := fmt.Sprintf("cannot load project endpoint requests for user with ID [%s] and endpoint ID [%s]", userID, endpointID)
 		return nil, repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}

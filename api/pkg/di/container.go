@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/pusher/pusher-http-go/v5"
+
 	"github.com/dgraph-io/ristretto/v2"
 
 	"github.com/NdoleStudio/httpmock/pkg/listeners"
@@ -159,6 +161,7 @@ func (container *Container) App() (app *fiber.App) {
 
 	container.RegisterProjectEndpointRequestListeners()
 	container.RegisterProjectEndpointListeners()
+	container.RegisterNotificationListeners()
 
 	return app
 }
@@ -340,6 +343,12 @@ func (container *Container) RegisterProjectEndpointListeners() {
 	container.ProjectEndpointListener().Register(container.EventDispatcher())
 }
 
+// RegisterNotificationListeners registers event listeners
+func (container *Container) RegisterNotificationListeners() {
+	container.logger.Debug(fmt.Sprintf("registering %T", &listeners.NotificationListener{}))
+	container.NotificationListener().Register(container.EventDispatcher())
+}
+
 // ProjectEndpointRequestListener creates a new instance of listeners.ProjectEndpointRequestListener
 func (container *Container) ProjectEndpointRequestListener() (handler *listeners.ProjectEndpointRequestListener) {
 	container.logger.Debug(fmt.Sprintf("creating %T", handler))
@@ -347,6 +356,16 @@ func (container *Container) ProjectEndpointRequestListener() (handler *listeners
 		container.Logger(),
 		container.Tracer(),
 		container.ProjectEndpointRequestService(),
+	)
+}
+
+// NotificationListener creates a new instance of listeners.NotificationListener
+func (container *Container) NotificationListener() (handler *listeners.NotificationListener) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return listeners.NewNotificationListener(
+		container.Logger(),
+		container.Tracer(),
+		container.PusherClient(),
 	)
 }
 
@@ -624,6 +643,18 @@ func (container *Container) LemonsqueezyClient() (client *lemonsqueezy.Client) {
 		lemonsqueezy.WithAPIKey(os.Getenv("LEMONSQUEEZY_API_KEY")),
 		lemonsqueezy.WithSigningSecret(os.Getenv("LEMONSQUEEZY_SIGNING_SECRET")),
 	)
+}
+
+// PusherClient creates a new instance of *pusher.Client
+func (container *Container) PusherClient() (client *pusher.Client) {
+	container.logger.Debug(fmt.Sprintf("creating %T", client))
+	return &pusher.Client{
+		AppID:   os.Getenv("PUSHER_APP_ID"),
+		Key:     os.Getenv("PUSHER_KEY"),
+		Secret:  os.Getenv("PUSHER_SECRET"),
+		Cluster: os.Getenv("PUSHER_CLUSTER"),
+		Secure:  true,
+	}
 }
 
 // RegisterLemonsqueezyRoutes registers routes for the /lemonsqueezy prefix

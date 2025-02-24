@@ -27,6 +27,6 @@ type ProjectEndpointRequestPayload struct {
 	ResponseBody                *string         `json:"response_body"`
 	ResponseHeaders             *string         `json:"response_headers"`
 	ResponseDelayInMilliseconds uint            `json:"response_delay_in_milliseconds"`
-	IPAddress                   string          `json:"ip_address"`
+	RequestIPAddress            string          `json:"request_ip_address"`
 	Timestamp                   time.Time       `json:"timestamp"`
 }

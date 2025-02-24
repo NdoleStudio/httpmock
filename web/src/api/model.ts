@@ -70,6 +70,8 @@ export interface EntitiesProjectEndpointRequest {
   request_body: string;
   /** @example "[{"Authorization":"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc"}]" */
   request_headers: string;
+  /** @example "127.0.0.1" */
+  request_ip_address: string;
   /** @example "GET" */
   request_method: string;
   /** @example "https://stripe-mock-api.httpmock.dev/v1/products" */

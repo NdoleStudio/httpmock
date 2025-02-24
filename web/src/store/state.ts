@@ -60,7 +60,14 @@ export type Actions = {
   indexProjectEndpointRequests: (
     projectId: string,
     projectEndpointId: string,
+    limit: number,
+    prev?: string,
   ) => Promise<Array<EntitiesProjectEndpointRequest>>;
+  deleteProjectEndpointRequest: (
+    projectId: string,
+    projectEndpointId: string,
+    projectEndpointRequestId: string,
+  ) => Promise<void>;
 };
 
 export type Store = State & Actions;
@@ -269,12 +276,15 @@ export const createStore = (initState: State = defaultInitState) => {
     indexProjectEndpointRequests: (
       projectId: string,
       projectEndpointId: string,
+      limit: number,
+      prev?: string,
     ): Promise<Array<EntitiesProjectEndpointRequest>> => {
       return new Promise<Array<EntitiesProjectEndpointRequest>>(
         (resolve, reject) => {
           axios
             .get<ResponsesOkArrayEntitiesProjectEndpointRequest>(
               `/v1/projects/${projectId}/endpoints/${projectEndpointId}/requests`,
+              { params: { limit, prev } },
             )
             .then((response) => {
               resolve(response.data.data);
@@ -288,6 +298,28 @@ export const createStore = (initState: State = defaultInitState) => {
             });
         },
       );
+    },
+    deleteProjectEndpointRequest: (
+      projectId: string,
+      projectEndpointId: string,
+      projectEndpointRequestId: string,
+    ): Promise<void> => {
+      return new Promise<void>((resolve, reject) => {
+        axios
+          .delete<ResponsesNoContent>(
+            `/v1/projects/${projectId}/endpoints/${projectEndpointId}/requests/${projectEndpointRequestId}`,
+          )
+          .then(() => {
+            resolve();
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while deleting your request",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
     },
   }));
 };

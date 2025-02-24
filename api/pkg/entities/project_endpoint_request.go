@@ -16,6 +16,7 @@ type ProjectEndpointRequest struct {
 	RequestURL                  string    `json:"request_url" example:"https://stripe-mock-api.httpmock.dev/v1/products" gorm:"type:varchar(255)"`
 	RequestHeaders              *string   `json:"request_headers" example:"[{\"Authorization\":\"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc\"}]"`
 	RequestBody                 *string   `json:"request_body" example:"{\"name\": \"Product 1\"}"`
+	RequestIPAddress            string    `json:"request_ip_address" example:"127.0.0.1"`
 	ResponseCode                uint      `json:"response_code" example:"200"`
 	ResponseBody                *string   `json:"response_body" example:"{\"message\": \"Hello World\",\"status\": 200}"`
 	ResponseHeaders             *string   `json:"response_headers" example:"[{\"Content-Type\":\"application/json\"}]"`
