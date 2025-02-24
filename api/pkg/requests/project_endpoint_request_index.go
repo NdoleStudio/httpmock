@@ -1,6 +1,10 @@
 package requests
 
-import "github.com/oklog/ulid/v2"
+import (
+	"strings"
+
+	"github.com/oklog/ulid/v2"
+)
 
 // ProjectEndpointRequestIndexRequest is the payload fetching entities.ProjectEndpointRequest
 type ProjectEndpointRequestIndexRequest struct {
@@ -18,7 +22,7 @@ func (input *ProjectEndpointRequestIndexRequest) Sanitize() *ProjectEndpointRequ
 	if input.Limit == 0 {
 		input.Limit = 100
 	}
-	input.Prev = input.sanitizeString(input.Prev)
+	input.Prev = strings.ToUpper(input.sanitizeString(input.Prev))
 	return input
 }
 

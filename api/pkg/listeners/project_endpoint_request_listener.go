@@ -3,6 +3,7 @@ package listeners
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/NdoleStudio/httpmock/pkg/entities"
 	"github.com/NdoleStudio/httpmock/pkg/events"
@@ -48,7 +49,7 @@ func (listener *ProjectEndpointRequestListener) onProjectEndpointRequest(ctx con
 	}
 
 	request := &entities.ProjectEndpointRequest{
-		ID:                          payload.ProjectEndpointRequestID.String(),
+		ID:                          strings.ToLower(payload.ProjectEndpointRequestID.String()),
 		ProjectID:                   payload.ProjectID,
 		ProjectEndpointID:           payload.ProjectEndpointID,
 		UserID:                      payload.UserID,
