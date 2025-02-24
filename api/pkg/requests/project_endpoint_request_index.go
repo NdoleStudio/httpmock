@@ -1,8 +1,6 @@
 package requests
 
 import (
-	"strings"
-
 	"github.com/oklog/ulid/v2"
 )
 
@@ -22,7 +20,7 @@ func (input *ProjectEndpointRequestIndexRequest) Sanitize() *ProjectEndpointRequ
 	if input.Limit == 0 {
 		input.Limit = 100
 	}
-	input.Prev = strings.ToUpper(input.sanitizeString(input.Prev))
+	input.Prev = input.sanitizeString(input.Prev)
 	return input
 }
 
