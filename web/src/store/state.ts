@@ -14,6 +14,8 @@ import {
   ResponsesOkEntitiesProject,
   ResponsesOkEntitiesProjectEndpoint,
   ResponsesUnprocessableEntity,
+  EntitiesProjectEndpointRequest,
+  ResponsesOkArrayEntitiesProjectEndpointRequest,
 } from "@/api/model";
 import axios from "@/api/axios";
 import { AxiosError } from "axios";
@@ -55,6 +57,10 @@ export type Actions = {
     projectId: string,
     projectEndpointId: string,
   ) => Promise<void>;
+  indexProjectEndpointRequests: (
+    projectId: string,
+    projectEndpointId: string,
+  ) => Promise<Array<EntitiesProjectEndpointRequest>>;
 };
 
 export type Store = State & Actions;
@@ -259,6 +265,29 @@ export const createStore = (initState: State = defaultInitState) => {
             reject(getErrorMessages(error));
           });
       });
+    },
+    indexProjectEndpointRequests: (
+      projectId: string,
+      projectEndpointId: string,
+    ): Promise<Array<EntitiesProjectEndpointRequest>> => {
+      return new Promise<Array<EntitiesProjectEndpointRequest>>(
+        (resolve, reject) => {
+          axios
+            .get<ResponsesOkArrayEntitiesProjectEndpointRequest>(
+              `/v1/projects/${projectId}/endpoints/${projectEndpointId}/requests`,
+            )
+            .then((response) => {
+              resolve(response.data.data);
+            })
+            .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+              toast.error(
+                error.response?.data.message ??
+                  "Error while loading HTTP requests",
+              );
+              reject(getErrorMessages(error));
+            });
+        },
+      );
     },
   }));
 };

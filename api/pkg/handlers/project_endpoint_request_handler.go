@@ -76,10 +76,13 @@ func (h *ProjectEndpointRequestHandler) index(c *fiber.Ctx) error {
 		return h.responseBadRequest(c, err)
 	}
 
+	request.ProjectID = c.Params("projectId")
+	request.ProjectEndpointID = c.Params("projectEndpointId")
+
 	if errors := h.validator.ValidateIndex(request.Sanitize()); len(errors) != 0 {
 		msg := fmt.Sprintf("validation errors [%s], fetching project endpoint requests with url [%s]", spew.Sdump(errors), c.OriginalURL())
 		ctxLogger.Warn(stacktrace.NewError(msg))
-		return h.responseNotFound(c, fmt.Sprintf("cannot list requests project endpoint with ID [%s]", request.ProjectEndpointID))
+		return h.responseNotFound(c, fmt.Sprintf("cannot list requests for endpoint with ID [%s]", request.ProjectEndpointID))
 	}
 
 	endpointRequests, err := h.service.Index(ctx, h.userIDFomContext(c), uuid.MustParse(request.ProjectEndpointID), request.Limit, request.PrevID())

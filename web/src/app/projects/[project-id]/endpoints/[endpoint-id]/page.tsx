@@ -13,7 +13,11 @@ import {
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useAppStore } from "@/store/provider";
-import { EntitiesProject, EntitiesProjectEndpoint } from "@/api/model";
+import {
+  EntitiesProject,
+  EntitiesProjectEndpoint,
+  EntitiesProjectEndpointRequest,
+} from "@/api/model";
 import { MirrorIcon } from "@primer/octicons-react";
 import { CopyButton } from "@/components/copy-button";
 import { getEndpointURL, labelColor } from "@/utils/filters";
@@ -22,14 +26,20 @@ import { BackButton } from "@/components/back-button";
 export default function EndpointShow() {
   const pathName = usePathname();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { showProject, showProjectEndpoint } = useAppStore((state) => state);
+  const { showProject, showProjectEndpoint, indexProjectEndpointRequests } =
+    useAppStore((state) => state);
   const [loadingEndpoint, setLoadingEndpoint] = useState<boolean>(false);
+  const [loadingProjectEndpointRequests, setLoadingProjectEndpointRequests] =
+    useState<boolean>(false);
   const [project, setProject] = useState<EntitiesProject | undefined>(
     undefined,
   );
   const [projectEndpoint, setProjectEndpoint] = useState<
     EntitiesProjectEndpoint | undefined
   >(undefined);
+  const [projectEndpointRequests, setProjectEndpointRequests] = useState<
+    Array<EntitiesProjectEndpointRequest>
+  >([]);
 
   const onDeleteDialogClose = useCallback(
     () => setIsDeleteDialogOpen(false),
@@ -55,6 +65,17 @@ export default function EndpointShow() {
       setProject(project);
     });
   }, [showProject, projectId]);
+
+  useEffect(() => {
+    setLoadingProjectEndpointRequests(false);
+    indexProjectEndpointRequests(projectId, projectEndpointId)
+      .then((requests: Array<EntitiesProjectEndpointRequest>) => {
+        setProjectEndpointRequests(requests);
+      })
+      .finally(() => {
+        setLoadingProjectEndpointRequests(false);
+      });
+  }, [indexProjectEndpointRequests, projectId, projectEndpointId]);
 
   return (
     <Box
@@ -149,15 +170,51 @@ export default function EndpointShow() {
         </Dialog>
       )}
 
-      <div>
-        <Heading as="h2" sx={{ mt: 32 }} variant="medium">
-          <MirrorIcon size={24} />
-          <Text sx={{ ml: 2 }}>HTTP Requests</Text>
-        </Heading>
-      </div>
-      <div>
-        <Spinner size="large" />
-      </div>
+      <Heading as="h2" sx={{ mt: 32 }} variant="medium">
+        <MirrorIcon size={24} />
+        <Text sx={{ ml: 2 }}>HTTP Requests</Text>
+      </Heading>
+      {!loadingProjectEndpointRequests && (
+        <Box
+          sx={{
+            mt: 2,
+            "> *": {
+              borderWidth: 1,
+              borderColor: "border.default",
+              borderStyle: "solid",
+              borderBottomWidth: 0,
+              padding: 4,
+              "&:first-child": {
+                borderTopLeftRadius: 2,
+                borderTopRightRadius: 2,
+              },
+              "&:last-child": {
+                borderBottomLeftRadius: 2,
+                borderBottomRightRadius: 2,
+                borderBottomWidth: 1,
+              },
+              "&:hover": {
+                bg: "canvas.inset",
+              },
+            },
+          }}
+        >
+          {projectEndpointRequests.map((request) => (
+            <div key={request.id}>
+              <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                <Label sx={{ color: labelColor(request.request_method) }}>
+                  {request.request_method}
+                </Label>
+                <Text sx={{ ml: 1, mr: 1, fontWeight: "bold" }}>
+                  {request.request_url}
+                </Text>
+                <CopyButton data={request.request_url} />
+              </Box>
+              <Box sx={{ mt: 2, display: "flex" }}></Box>
+            </div>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }
