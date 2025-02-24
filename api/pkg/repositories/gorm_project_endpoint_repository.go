@@ -85,7 +85,7 @@ func (repository *gormProjectEndpointRepository) LoadByRequest(ctx context.Conte
 	endpoint := new(entities.ProjectEndpoint)
 	err := repository.db.WithContext(ctx).
 		Model(endpoint).
-		Where("subdomain = ?", subdomain).
+		Where("project_subdomain = ?", subdomain).
 		Where("request_path = ?", requestPath).
 		Where(repository.db.Where("request_method = ?", strings.ToUpper(requestMethod)).Or("request_method = ?", "ANY")).
 		First(endpoint).Error
