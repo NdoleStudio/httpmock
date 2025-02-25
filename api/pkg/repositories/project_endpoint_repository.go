@@ -16,8 +16,11 @@ type ProjectEndpointRepository interface {
 	// Update a new entities.ProjectEndpoint
 	Update(ctx context.Context, user *entities.ProjectEndpoint) error
 
-	// RegisterRequest register a request for an entities.ProjectEndpoint
-	RegisterRequest(ctx context.Context, projectEndpointID uuid.UUID) error
+	// IncreaseRequestCount increases the request count for an entities.ProjectEndpoint
+	IncreaseRequestCount(ctx context.Context, projectEndpointID uuid.UUID) error
+
+	// DecreaseRequestCount reduces a request count for an entities.ProjectEndpoint
+	DecreaseRequestCount(ctx context.Context, projectEndpointID uuid.UUID) error
 
 	// UpdateSubdomain for an entities.ProjectEndpoint after the project was updated
 	UpdateSubdomain(ctx context.Context, subdomain string, projectEndpointID uuid.UUID) error

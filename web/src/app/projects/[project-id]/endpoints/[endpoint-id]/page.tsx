@@ -46,7 +46,7 @@ export default function EndpointShow() {
   } = useAppStore((state) => state);
   const [loadingEndpoint, setLoadingEndpoint] = useState<boolean>(false);
   const [loadingProjectEndpointRequests, setLoadingProjectEndpointRequests] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const [project, setProject] = useState<EntitiesProject | undefined>(
     undefined,
   );
@@ -112,7 +112,7 @@ export default function EndpointShow() {
 
   const loadProjectEndpointRequests = useCallback(
     (projectId: string, projectEndpointId: string, prev?: string) => {
-      setLoadingProjectEndpointRequests(false);
+      setLoadingProjectEndpointRequests(true);
       indexProjectEndpointRequests(
         projectId,
         projectEndpointId,
@@ -224,11 +224,19 @@ export default function EndpointShow() {
     if (body == null || body == "") {
       return "";
     }
-    return JSON.stringify(JSON.parse(body), null, 4);
+    try {
+      return JSON.stringify(JSON.parse(body), null, 4);
+    } catch (e) {
+      return body;
+    }
   };
 
   const secondsSince = (date: string): number => {
     return (new Date().getTime() - new Date(date).getTime()) / 1000;
+  };
+
+  const getCurlCode = (endpoint: EntitiesProjectEndpoint) => {
+    return `curl --header \"Content-Type: application/json\" \\\n\t--request ${endpoint.request_method === "ANY" ? "POST" : endpoint.request_method} ${endpoint.request_method != "GET" ? "\\\n\t--data '{\"success\":true}' \\\n\t" : ""} \"${getEndpointURL(endpoint)}\"`;
   };
 
   return (
@@ -266,12 +274,12 @@ export default function EndpointShow() {
                     wordBreak: "break-all",
                   }}
                 >
-                  {getEndpointURL(project, projectEndpoint.request_path)}
+                  {getEndpointURL(projectEndpoint)}
                 </Text>
                 <CopyButton
                   size={"medium"}
                   sx={{ display: ["none", "block"], mt: 2 }}
-                  data={getEndpointURL(project, projectEndpoint.request_path)}
+                  data={getEndpointURL(projectEndpoint)}
                 />
               </Box>
             </PageHeader.Title>
@@ -343,6 +351,31 @@ export default function EndpointShow() {
           <Spinner sx={{ ml: 2, color: "accent.emphasis" }} size="small" />
         )}
       </Heading>
+      {loadingProjectEndpointRequests &&
+        projectEndpointRequests.length === 0 && (
+          <Spinner sx={{ ml: 2, color: "accent.emphasis" }} size="large" />
+        )}
+      {!loadingProjectEndpointRequests &&
+        projectEndpoint &&
+        projectEndpointRequests.length === 0 && (
+          <React.Fragment>
+            <Text as={"p"} sx={{ color: "fg.muted" }}>
+              The endpoint{" "}
+              <BranchName>{getEndpointURL(projectEndpoint)}</BranchName> does
+              not have any have any HTTP requests. You can make an http request
+              using the <BranchName>curl</BranchName> command below
+            </Text>
+            <Box sx={{ display: "flex", mt: 2 }}>
+              <Textarea
+                value={getCurlCode(projectEndpoint)}
+                readOnly={true}
+                block={true}
+                rows={4}
+              />
+              <CopyButton sx={{ ml: 2 }} data={getCurlCode(projectEndpoint)} />
+            </Box>
+          </React.Fragment>
+        )}
       {!loadingProjectEndpointRequests && (
         <Box
           sx={{

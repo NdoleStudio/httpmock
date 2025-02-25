@@ -39,6 +39,22 @@ func NewGormProjectEndpointRepository(
 	}
 }
 
+func (repository *gormProjectEndpointRepository) DecreaseRequestCount(ctx context.Context, projectEndpointID uuid.UUID) error {
+	ctx, span := repository.tracer.Start(ctx)
+	defer span.End()
+
+	err := repository.db.WithContext(ctx).
+		Model(&entities.ProjectEndpoint{}).
+		Where("id = ?", projectEndpointID).
+		UpdateColumn("request_count", gorm.Expr("request_count - ?", 1)).Error
+	if err != nil {
+		msg := fmt.Sprintf("cannot decrease request_count [%T] with ID [%s]", &entities.ProjectEndpoint{}, projectEndpointID)
+		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
+	}
+
+	return nil
+}
+
 func (repository *gormProjectEndpointRepository) UpdateSubdomain(ctx context.Context, subdomain string, projectID uuid.UUID) error {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
@@ -56,7 +72,7 @@ func (repository *gormProjectEndpointRepository) UpdateSubdomain(ctx context.Con
 	return nil
 }
 
-func (repository *gormProjectEndpointRepository) RegisterRequest(ctx context.Context, projectEndpointID uuid.UUID) error {
+func (repository *gormProjectEndpointRepository) IncreaseRequestCount(ctx context.Context, projectEndpointID uuid.UUID) error {
 	ctx, span := repository.tracer.Start(ctx)
 	defer span.End()
 
@@ -65,7 +81,7 @@ func (repository *gormProjectEndpointRepository) RegisterRequest(ctx context.Con
 		Where("id = ?", projectEndpointID).
 		UpdateColumn("request_count", gorm.Expr("request_count + ?", 1)).Error
 	if err != nil {
-		msg := fmt.Sprintf("cannot update request_count [%T] with ID [%s]", &entities.ProjectEndpoint{}, projectEndpointID)
+		msg := fmt.Sprintf("cannot increase request_count [%T] with ID [%s]", &entities.ProjectEndpoint{}, projectEndpointID)
 		return repository.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 

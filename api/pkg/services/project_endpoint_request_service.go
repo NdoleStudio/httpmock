@@ -44,7 +44,7 @@ func NewProjectEndpointRequestService(
 	}
 }
 
-// Delete an entities.ProjectEndpointRequest
+// Delete an entities.ProjectEndpointRequest and reduces the request count on the entities.ProjectEndpoint
 func (service *ProjectEndpointRequestService) Delete(ctx context.Context, userID entities.UserID, requestID ulid.ULID) error {
 	ctx, span, _ := service.tracer.StartWithLogger(ctx, service.logger)
 	defer span.End()
@@ -58,6 +58,11 @@ func (service *ProjectEndpointRequestService) Delete(ctx context.Context, userID
 	if err = service.projectEndpointRequestRepository.Delete(ctx, request); err != nil {
 		msg := fmt.Sprintf("cannot delete endpoint with ID [%s] and project ID [%s] for user ID [%s]", request.ID, request.ProjectID, userID)
 		return stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg)
+	}
+
+	if err = service.projectEndpointRepository.DecreaseRequestCount(ctx, request.ProjectEndpointID); err != nil {
+		msg := fmt.Sprintf("cannot decrease request for [%T] with ID [%s] for project with ID [%s] and user with ID [%s]", &entities.ProjectEndpoint{}, request.ProjectEndpointID, request.ProjectID, request.UserID)
+		return service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 
 	return nil
@@ -124,7 +129,7 @@ func (service *ProjectEndpointRequestService) Store(ctx context.Context, request
 		return service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}
 
-	if err := service.projectEndpointRepository.RegisterRequest(ctx, request.ProjectEndpointID); err != nil {
+	if err := service.projectEndpointRepository.IncreaseRequestCount(ctx, request.ProjectEndpointID); err != nil {
 		msg := fmt.Sprintf("cannot register request for [%T] with ID [%s] for project with ID [%s] and user with ID [%s]", &entities.ProjectEndpoint{}, request.ProjectEndpointID, request.ProjectID, request.UserID)
 		return service.tracer.WrapErrorSpan(span, stacktrace.Propagate(err, msg))
 	}

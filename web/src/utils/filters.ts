@@ -1,4 +1,4 @@
-import { EntitiesProject } from "@/api/model";
+import { EntitiesProjectEndpoint } from "@/api/model";
 
 export const capitalize = function (value: string | null) {
   if (!value) {
@@ -27,9 +27,6 @@ export const labelColor = (requestMethod: string): string => {
   }
 };
 
-export const getEndpointURL = (
-  project: EntitiesProject | undefined,
-  path: string,
-): string => {
-  return `https://${project?.subdomain}.httpmock.dev${path === "/" ? "" : path}`;
+export const getEndpointURL = (endpoint: EntitiesProjectEndpoint): string => {
+  return `https://${endpoint?.project_subdomain}.httpmock.dev${endpoint.request_path === "/" ? "" : endpoint.request_path}`;
 };

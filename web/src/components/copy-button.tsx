@@ -7,7 +7,11 @@ import { useState } from "react";
 
 type CopyButtonProps = {
   size?: "small" | "medium" | "large";
-  sx?: { mt?: number; display?: string | Array<string> };
+  sx?: {
+    mt?: number;
+    ml?: number;
+    display?: string | Array<string>;
+  };
   data: string;
 };
 
