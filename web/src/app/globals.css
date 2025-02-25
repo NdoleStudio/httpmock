@@ -73,3 +73,7 @@ a {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+
+tab-container {
+  max-width: 90vw;
+}

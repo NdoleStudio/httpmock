@@ -59,10 +59,21 @@ export function AppBar() {
   return (
     <Header>
       <Header.Item sx={{ cursor: "pointer" }} onClick={() => router.push("/")}>
-        <Image src={Logo} height={40} alt={"httpmock.dev logo"} />
-        <Heading sx={{ fontWeight: "lighter" }} as={"h1"}>
+        <Image src={Logo} height={48} alt={"httpmock.dev logo"} />
+        <Heading
+          sx={{ fontWeight: "lighter", display: ["none", "block"] }}
+          as={"h1"}
+        >
           httpmock
         </Heading>
+        {activeProject === null && (
+          <Heading
+            sx={{ fontWeight: "lighter", display: ["block", "none"] }}
+            as={"h1"}
+          >
+            httpmock
+          </Heading>
+        )}
       </Header.Item>
       {activeProject && (
         <ActionMenu>

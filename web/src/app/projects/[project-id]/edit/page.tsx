@@ -69,7 +69,8 @@ export default function ProjectEdit() {
   return (
     <Box
       sx={{
-        mt: 6,
+        mt: 4,
+        px: 2,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

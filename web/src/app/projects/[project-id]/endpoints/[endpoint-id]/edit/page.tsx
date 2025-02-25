@@ -132,7 +132,8 @@ export default function EndpointsEdit() {
   return (
     <Box
       sx={{
-        mt: 6,
+        mt: 4,
+        px: 2,
         display: "flex",
         justifyContent: "center",
         minHeight: "calc(100vh - 200px)",

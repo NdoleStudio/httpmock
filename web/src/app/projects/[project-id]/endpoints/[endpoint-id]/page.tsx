@@ -13,6 +13,7 @@ import {
   TextInput,
   Textarea,
   RelativeTime,
+  IconButton,
 } from "@primer/react";
 import { usePathname } from "next/navigation";
 import React, { MouseEvent, useCallback, useEffect, useState } from "react";
@@ -22,12 +23,7 @@ import {
   EntitiesProjectEndpoint,
   EntitiesProjectEndpointRequest,
 } from "@/api/model";
-import {
-  DotFillIcon,
-  DotIcon,
-  MirrorIcon,
-  TrashIcon,
-} from "@primer/octicons-react";
+import { MirrorIcon, TrashIcon } from "@primer/octicons-react";
 import { CopyButton } from "@/components/copy-button";
 import { getEndpointURL, labelColor } from "@/utils/filters";
 import { BackButton } from "@/components/back-button";
@@ -69,7 +65,6 @@ export default function EndpointShow() {
     setCanLoadMoreProjectEndpointRequests,
   ] = useState<boolean>(false);
   const [streamingIsActive, setStreamingIsActive] = useState<boolean>(false);
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   const requestLimit: number = 20;
   const onDeleteDialogClose = useCallback(
@@ -80,7 +75,7 @@ export default function EndpointShow() {
   const projectId = pathName.split("/")[2];
   const projectEndpointId = pathName.split("/")[4];
 
-  const requestTabs = ["Request Summary", "Request Headers", "Request Body"];
+  const requestTabs = ["Summary", "Headers", "Body"];
 
   useEffect(() => {
     setLoadingEndpoint(true);
@@ -125,7 +120,6 @@ export default function EndpointShow() {
         prev,
       )
         .then((requests: Array<EntitiesProjectEndpointRequest>) => {
-          console.log(requests);
           const values = new Map<string, EntitiesProjectEndpointRequest>(
             [...projectEndpointRequests, ...requests].map((request) => [
               request.id,
@@ -242,29 +236,41 @@ export default function EndpointShow() {
       sx={{
         maxWidth: "xlarge",
         mx: "auto",
-        mt: 6,
+        mt: 4,
+        px: 2,
         minHeight: "calc(100vh - 200px)",
       }}
     >
       <PageHeader role="banner" aria-label="Project details">
-        <PageHeader.TitleArea aria-label={"Project endpoint"} variant={"large"}>
+        <PageHeader.TitleArea
+          aria-label={"Project endpoint"}
+          variant={{ narrow: "medium", regular: "large" }}
+        >
           {project && projectEndpoint && (
             <PageHeader.Title>
               <Box sx={{ display: "flex", alignItems: "flexStart" }}>
                 <Label
                   sx={{
                     mt: 3,
+                    display: ["none", "flex"],
                     color: labelColor(projectEndpoint.request_method),
                   }}
                 >
                   {projectEndpoint.request_method}
                 </Label>
-                <Text sx={{ ml: 1, mr: 1, fontWeight: "bold" }}>
+                <Text
+                  sx={{
+                    ml: 1,
+                    mr: 1,
+                    fontWeight: "bold",
+                    wordBreak: "break-all",
+                  }}
+                >
                   {getEndpointURL(project, projectEndpoint.request_path)}
                 </Text>
                 <CopyButton
                   size={"medium"}
-                  sx={{ mt: 2 }}
+                  sx={{ display: ["none", "block"], mt: 2 }}
                   data={getEndpointURL(project, projectEndpoint.request_path)}
                 />
               </Box>
@@ -278,12 +284,12 @@ export default function EndpointShow() {
         </PageHeader.TitleArea>
         {project && (
           <PageHeader.Description>
-            <Text sx={{ fontSize: 1, color: "fg.muted" }}>
+            <Text as={"p"} sx={{ fontSize: 1, color: "fg.muted" }}>
               {project?.description}
             </Text>
           </PageHeader.Description>
         )}
-        <PageHeader.Actions>
+        <PageHeader.Actions sx={{ display: ["none", "flex"] }}>
           <BackButton href={`/projects/${projectId}/`} />
         </PageHeader.Actions>
       </PageHeader>
@@ -369,10 +375,31 @@ export default function EndpointShow() {
                 <Label sx={{ color: labelColor(request.request_method) }}>
                   {request.request_method}
                 </Label>
-                <Text sx={{ ml: 1, mr: 1, fontWeight: "bold" }}>
+                <Text
+                  sx={{
+                    ml: 1,
+                    mr: 1,
+                    fontWeight: "bold",
+                    wordBreak: "break-all",
+                  }}
+                >
                   {request.request_url}
                 </Text>
-                <CopyButton data={request.request_url} />
+                <CopyButton
+                  sx={{ display: ["none", "inline-block"] }}
+                  data={request.request_url}
+                />
+                <IconButton
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setDeleteRequestId(request.id);
+                    setIsDeleteDialogOpen(true);
+                  }}
+                  sx={{ ml: "auto", px: 2, display: ["inline-block", "none"] }}
+                  variant={"danger"}
+                  icon={TrashIcon}
+                  aria-label="Delete"
+                />
                 <Button
                   leadingVisual={TrashIcon}
                   onClick={(event) => {
@@ -380,7 +407,7 @@ export default function EndpointShow() {
                     setDeleteRequestId(request.id);
                     setIsDeleteDialogOpen(true);
                   }}
-                  sx={{ ml: "auto" }}
+                  sx={{ ml: "auto", display: ["none", "inline-block"] }}
                   variant={"danger"}
                 >
                   Delete
@@ -409,7 +436,12 @@ export default function EndpointShow() {
                       counter={undefined}
                       aria-selected={index === 0 ? true : undefined}
                     >
-                      {tab}
+                      <p>
+                        <Text sx={{ display: ["none", "inline-block"], mr: 1 }}>
+                          Request
+                        </Text>{" "}
+                        {tab}
+                      </p>
                     </UnderlinePanels.Tab>
                   ))}
                   <UnderlinePanels.Panel key={0}>
@@ -422,7 +454,7 @@ export default function EndpointShow() {
                                 Request ID
                               </Text>
                             </td>
-                            <td style={{ minWidth: 400, paddingTop: 16 }}>
+                            <td style={{ width: 400, paddingTop: 16 }}>
                               <TextInput
                                 value={request.id}
                                 readOnly={true}
@@ -493,7 +525,7 @@ export default function EndpointShow() {
                                     {Object.keys(header)[0]}
                                   </Text>
                                 </td>
-                                <td style={{ paddingTop: 16, minWidth: 400 }}>
+                                <td style={{ paddingTop: 16, width: 400 }}>
                                   <TextInput
                                     value={header[Object.keys(header)[0]]}
                                     readOnly={true}
@@ -518,7 +550,7 @@ export default function EndpointShow() {
                       <table>
                         <tbody>
                           <tr>
-                            <td style={{ paddingTop: 16, minWidth: 400 }}>
+                            <td style={{ paddingTop: 16, width: 400 }}>
                               <Textarea
                                 value={getBodyIndentedJSON(
                                   request.request_body,

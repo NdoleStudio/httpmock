@@ -8,6 +8,8 @@ export default function Page() {
   return (
     <Box
       sx={{
+        mt: 2,
+        px: 2,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

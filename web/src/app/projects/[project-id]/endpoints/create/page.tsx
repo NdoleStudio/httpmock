@@ -66,7 +66,7 @@ export default function EndpointsCreate() {
       });
   };
 
-  const loadProject = () => {
+  useEffect(() => {
     showProject(projectId)
       .then((project: EntitiesProject) => {
         setProject(project);
@@ -74,11 +74,7 @@ export default function EndpointsCreate() {
       .catch((errorMessages: ErrorMessages) => {
         setErrorMessages(errorMessages);
       });
-  };
-
-  useEffect(() => {
-    loadProject();
-  });
+  }, [showProject, projectId]);
 
   return (
     <Box

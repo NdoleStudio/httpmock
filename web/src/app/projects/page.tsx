@@ -37,6 +37,7 @@ export default function ProjectIndex() {
       sx={{
         maxWidth: "xlarge",
         mx: "auto",
+        px: 2,
         mt: 6,
         minHeight: "calc(100vh - 200px)",
       }}
@@ -71,11 +72,12 @@ export default function ProjectIndex() {
           <Spinner size="large" sx={{ color: "accent.emphasis" }} />
         </Box>
       )}
+
       <Box
         sx={{
           mt: 4,
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          gridTemplateColumns: ["1fr", "repeat(2, 1fr)", "repeat(4, 1fr)"],
           gap: 3,
         }}
       >

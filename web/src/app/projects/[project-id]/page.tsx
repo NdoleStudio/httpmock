@@ -13,6 +13,7 @@ import {
   Heading,
   Label,
   RelativeTime,
+  Link,
 } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, MouseEvent, useState } from "react";
@@ -113,15 +114,14 @@ export default function ProjectShow() {
       sx={{
         maxWidth: "xlarge",
         mx: "auto",
-        mt: 6,
+        mt: 4,
+        px: 2,
         minHeight: "calc(100vh - 200px)",
       }}
     >
       <PageHeader role="banner" aria-label="Project details">
         <PageHeader.TitleArea variant={"large"}>
-          {project && (
-            <PageHeader.Title>{project && project.name}</PageHeader.Title>
-          )}
+          {project && <PageHeader.Title>{project.name}</PageHeader.Title>}
           {!project && (
             <PageHeader.Title>
               <Spinner size="large" />
@@ -130,9 +130,16 @@ export default function ProjectShow() {
         </PageHeader.TitleArea>
         {project && (
           <PageHeader.Description>
-            <Text sx={{ fontSize: 1, color: "fg.muted" }}>
-              {project?.description}
-            </Text>
+            <div>
+              {project.description && (
+                <Text as={"p"} sx={{ color: "fg.muted", mb: 1 }}>
+                  {project.description}
+                </Text>
+              )}
+              <p>
+                <BranchName>{project?.subdomain}.httpmock.dev</BranchName>
+              </p>
+            </div>
           </PageHeader.Description>
         )}
         <PageHeader.Actions>
@@ -144,7 +151,8 @@ export default function ProjectShow() {
             }
             leadingVisual={PlusIcon}
           >
-            New Endpoint
+            <Text sx={{ display: ["none", "inline-block"] }}>New Endpoint</Text>
+            <Text sx={{ display: ["inline-block", "none"] }}>Endpoint</Text>
           </Button>
           <ActionMenu>
             <ActionMenu.Anchor aria-label={"Manage project"}>
@@ -230,6 +238,22 @@ export default function ProjectShow() {
           <Spinner size="large" />
         </div>
       )}
+      {!loadingEndpoints && endpoints.length === 0 && (
+        <p>
+          <Text sx={{ color: "fg.muted" }}>
+            This project does not have any have any mocked HTTP endpoints.{" "}
+          </Text>
+          <Link
+            sx={{ color: "accent.emphasis", cursor: "pointer" }}
+            onClick={() =>
+              router.push(`/projects/${projectId}/endpoints/create`)
+            }
+          >
+            Create a new endpoint
+          </Link>
+          <Text sx={{ color: "fg.muted" }}> to start mocking your APIs</Text>
+        </p>
+      )}
       {!loadingEndpoints && (
         <Box
           sx={{
@@ -239,7 +263,7 @@ export default function ProjectShow() {
               borderColor: "border.default",
               borderStyle: "solid",
               borderBottomWidth: 0,
-              padding: 4,
+              padding: [2, 4],
               "&:first-child": {
                 borderTopLeftRadius: 2,
                 borderTopRightRadius: 2,
@@ -258,7 +282,12 @@ export default function ProjectShow() {
           {endpoints.map((endpoint) => (
             <div key={endpoint.id}>
               <Box sx={{ display: "flex", alignItems: "baseline" }}>
-                <Label sx={{ color: getLabelColor(endpoint.request_method) }}>
+                <Label
+                  sx={{
+                    display: ["none", "flex"],
+                    color: getLabelColor(endpoint.request_method),
+                  }}
+                >
                   {endpoint.request_method}
                 </Label>
                 <Text sx={{ ml: 1, mr: 1, fontWeight: "bold" }}>
