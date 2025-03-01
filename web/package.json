@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.10.6",
+    "@clerk/nextjs": "^6.12.1",
     "@clerk/themes": "^2.2.16",
     "@primer/octicons-react": "^19.15.0",
     "@primer/primitives": "^9.1.2",
