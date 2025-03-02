@@ -15,7 +15,7 @@
     "@primer/octicons-react": "^19.15.0",
     "@primer/primitives": "^9.1.2",
     "@primer/react": "^37.3.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.1",
     "next": "15.1.6",
     "prettier": "^3.4.2",
     "pusher-js": "^8.4.0",
