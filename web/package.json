@@ -16,7 +16,7 @@
     "@primer/primitives": "^9.1.2",
     "@primer/react": "^37.3.0",
     "axios": "^1.8.1",
-    "next": "15.1.6",
+    "next": "15.2.0",
     "prettier": "^3.4.2",
     "pusher-js": "^8.4.0",
     "react": "19.0.0",
