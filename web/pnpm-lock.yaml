@@ -21,8 +21,8 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2
       '@primer/react':
-        specifier: ^37.3.0
-        version: 37.3.0(@types/react-dom@19.0.1)(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))
+        specifier: ^37.14.0
+        version: 37.14.0(@types/react-dom@19.0.1)(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))
       axios:
         specifier: ^1.8.1
         version: 1.8.1
@@ -156,8 +156,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime@7.26.7':
-    resolution: {integrity: sha512-AOPI3D+a8dXnja+iwsUqGRjr1BbZIe771sXdapOtYI531gSqpi92vXivKcq2asu/DFpdl1ceFAKZyRzK2PCVcQ==}
+  '@babel/runtime@7.26.9':
+    resolution: {integrity: sha512-aA63XwOkcl4xxQa3HjPMqOP6LiK0ZDv3mUPYEFXkpHbaFjtGggE1A61FjFzJnB+p7/oy2gA8E+rcBNl/zC1tMg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.25.9':
@@ -536,15 +536,15 @@ packages:
   '@primer/primitives@9.1.2':
     resolution: {integrity: sha512-KecRJpUdIf14J3gVpoyMMJeQD6Sh5kcHk93N5bYch4XGB0GOZP3ypxz+NByMjr/2HHPsRfCCO5EEgNjmeWYUGQ==}
 
-  '@primer/react@37.3.0':
-    resolution: {integrity: sha512-mXtcghyLabCyq/H1KDeLjl/S6fnVQWmJW6Pjcw4YuK/EqS1HUpbY3JOyGMYkdD1FMi8MGnpZOUfN03eU7QFomA==}
+  '@primer/react@37.14.0':
+    resolution: {integrity: sha512-c/YCh+26pIo12K02SfnahyJt8w54nG0qouVjpZpsC08fC+tTym+qw+nsT9bzPH5gwBD+FKb4yxXs5lEF0hBZ6w==}
     engines: {node: '>=12', npm: '>=7'}
     peerDependencies:
-      '@types/react': ^18.0.0
-      '@types/react-dom': ^18.0.0
+      '@types/react': 18.x || 19.x
+      '@types/react-dom': 18.x || 19.x
       '@types/styled-components': ^5.1.11
-      react: ^18.0.0
-      react-dom: ^18.0.0
+      react: 18.x || 19.x
+      react-dom: 18.x || 19.x
       styled-components: 5.x
     peerDependenciesMeta:
       '@types/react':
@@ -2353,7 +2353,7 @@ snapshots:
       '@babel/core': 7.26.7
       '@babel/helper-plugin-utils': 7.26.5
 
-  '@babel/runtime@7.26.7':
+  '@babel/runtime@7.26.9':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -2700,7 +2700,7 @@ snapshots:
       '@prettier/sync': 0.5.2(prettier@3.3.3)
       prettier: 3.3.3
 
-  '@primer/react@37.3.0(@types/react-dom@19.0.1)(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))':
+  '@primer/react@37.14.0(@types/react-dom@19.0.1)(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))':
     dependencies:
       '@github/relative-time-element': 4.4.5
       '@github/tab-container-element': 4.8.2
@@ -3904,7 +3904,7 @@ snapshots:
 
   history@5.3.0:
     dependencies:
-      '@babel/runtime': 7.26.7
+      '@babel/runtime': 7.26.9
 
   hoist-non-react-statics@3.3.2:
     dependencies:
