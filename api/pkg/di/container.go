@@ -143,7 +143,14 @@ func (container *Container) App() (app *fiber.App) {
 		},
 	))
 	app.Use(cors.New())
-	app.Use(middlewares.RequestRouter(container.Tracer(), container.Logger(), os.Getenv("APP_HOSTNAME"), container.ProjectEndpointRequestService()))
+	app.Use(middlewares.RequestRouter(
+		container.Tracer(),
+		container.Logger(),
+		os.Getenv("APP_HOSTNAME"),
+		container.ProjectEndpointRequestService(),
+		container.ServerHandler().Handle,
+		container.ReflectHandler().Handle,
+	))
 	app.Use(healthcheck.New())
 
 	container.app = app
@@ -152,6 +159,8 @@ func (container *Container) App() (app *fiber.App) {
 	container.RegisterProjectRoutes()
 	container.RegisterProjectEndpointRoutes()
 	container.RegisterProjectEndpointRequestRoutes()
+	container.RegisterReflectRoutes()
+	container.RegisterServerRoutes()
 
 	// UnAuthenticated routes
 	container.RegisterLemonsqueezyRoutes()
@@ -296,6 +305,18 @@ func (container *Container) RegisterProjectEndpointRequestRoutes() {
 	container.ProjectEndpointRequestHandler().RegisterRoutes(container.App(), container.ClerkBearerAuthMiddlewares())
 }
 
+// RegisterReflectRoutes registers routes for the /reflect
+func (container *Container) RegisterReflectRoutes() {
+	container.logger.Debug(fmt.Sprintf("registering %T routes", &handlers.ReflectHandler{}))
+	container.ReflectHandler().RegisterRoutes(container.App())
+}
+
+// RegisterServerRoutes registers routes for the /server
+func (container *Container) RegisterServerRoutes() {
+	container.logger.Debug(fmt.Sprintf("registering %T routes", &handlers.ServerHandler{}))
+	container.ServerHandler().RegisterRoutes(container.App())
+}
+
 // ProjectHandler creates a new instance of handlers.ProjectHandler
 func (container *Container) ProjectHandler() (handler *handlers.ProjectHandler) {
 	container.logger.Debug(fmt.Sprintf("creating %T", handler))
@@ -316,6 +337,24 @@ func (container *Container) ProjectEndpointHandler() (handler *handlers.ProjectE
 		container.ProjectHandlerEndpointValidator(),
 		container.ProjectEndpointService(),
 		container.ProjectService(),
+	)
+}
+
+// ReflectHandler creates a new instance of handlers.ReflectHandler
+func (container *Container) ReflectHandler() (handler *handlers.ReflectHandler) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return handlers.NewReflectHandler(
+		container.Logger(),
+		container.Tracer(),
+	)
+}
+
+// ServerHandler creates a new instance of handlers.ServerHandler
+func (container *Container) ServerHandler() (handler *handlers.ServerHandler) {
+	container.logger.Debug(fmt.Sprintf("creating %T", handler))
+	return handlers.NewServerHandler(
+		container.Logger(),
+		container.Tracer(),
 	)
 }
 

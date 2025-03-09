@@ -3,7 +3,7 @@
 [![Build](https://github.com/NdoleStudio/httpmock/actions/workflows/ci.yml/badge.svg)](https://github.com/NdoleStudio/httpmock/actions/workflows/ci.yml)
 [![GitHub contributors](https://img.shields.io/github/contributors/NdoleStudio/httpmock)](https://github.com/NdoleStudio/httpmock/graphs/contributors)
 [![GitHub license](https://img.shields.io/github/license/NdoleStudio/httpmock?color=brightgreen)](https://github.com/NdoleStudio/httpmock/blob/master/LICENSE)
-![Docker Pulls](https://img.shields.io/docker/pulls/ndolestudio/httpmock)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ndolestudio/httpmock)](https://hub.docker.com/r/ndolestudio/httpmock)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/6a751c80-ac38-4fa0-a470-3d2a69f98dfc/deploy-status)](https://app.netlify.com/sites/httpmock/deploys)
 
 This is a mock http server which can be used to test HTTP requests and responses when building an HTTP client.

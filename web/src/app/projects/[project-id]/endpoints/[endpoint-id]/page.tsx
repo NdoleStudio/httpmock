@@ -226,7 +226,7 @@ export default function EndpointShow() {
     }
     try {
       return JSON.stringify(JSON.parse(body), null, 4);
-    } catch (e) {
+    } catch (_) {
       return body;
     }
   };

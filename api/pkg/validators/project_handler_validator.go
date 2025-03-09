@@ -55,7 +55,7 @@ func (validator *ProjectHandlerValidator) ValidateUpdate(ctx context.Context, re
 			"subdomain": []string{
 				"required",
 				"alpha_dash",
-				"min:7",
+				"min:8",
 				"max:30",
 			},
 			"description": []string{
@@ -102,7 +102,7 @@ func (validator *ProjectHandlerValidator) ValidateCreate(ctx context.Context, re
 			"subdomain": []string{
 				"required",
 				"alpha_dash",
-				"min:7",
+				"min:8",
 				"max:30",
 			},
 			"description": []string{

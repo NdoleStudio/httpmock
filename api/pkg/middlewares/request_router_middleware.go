@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/NdoleStudio/httpmock/pkg/repositories"
@@ -12,7 +14,14 @@ import (
 )
 
 // RequestRouter handles requests to the server
-func RequestRouter(tracer telemetry.Tracer, logger telemetry.Logger, hostname string, requestService *services.ProjectEndpointRequestService) fiber.Handler {
+func RequestRouter(
+	tracer telemetry.Tracer,
+	logger telemetry.Logger,
+	hostname string,
+	requestService *services.ProjectEndpointRequestService,
+	serverHandler fiber.Handler,
+	reflectHandler fiber.Handler,
+) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		stopwatch := time.Now()
 
@@ -27,6 +36,10 @@ func RequestRouter(tracer telemetry.Tracer, logger telemetry.Logger, hostname st
 		if c.Hostname() == hostname || len(c.Subdomains()) == 0 {
 			ctxLogger.Info(fmt.Sprintf("handling request with hostname [%s] using the default router", c.Hostname()))
 			return c.Next()
+		}
+
+		if len(c.Subdomains()[0]) < 8 {
+			return handleNamedSubdomains(c, strings.TrimSpace(c.Subdomains()[0]), serverHandler, reflectHandler)
 		}
 
 		endpoint, err := requestService.LoadByRequest(ctx, c.Subdomains()[0], c.Method(), c.Path())
@@ -50,4 +63,23 @@ func RequestRouter(tracer telemetry.Tracer, logger telemetry.Logger, hostname st
 		requestService.HandleHTTPRequest(ctx, c, stopwatch, endpoint)
 		return nil
 	}
+}
+
+func handleNamedSubdomains(c *fiber.Ctx, subdomain string, serverHandler fiber.Handler, reflectHandler fiber.Handler) error {
+	switch subdomain {
+	case "reflect":
+		return reflectHandler(c)
+	case "server":
+		return serverHandler(c)
+	}
+
+	if status, err := strconv.Atoi(subdomain); err == nil && status >= 100 && status <= 599 {
+		c.Request().Header.Set("response-status", subdomain)
+		return serverHandler(c)
+	}
+
+	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		"status":  "error",
+		"message": fmt.Sprintf("We cannot find a registered mock for URL [%s] and HTTP method [%s]", c.BaseURL()+c.OriginalURL(), c.Method()),
+	})
 }
