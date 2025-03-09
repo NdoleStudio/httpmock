@@ -10,29 +10,29 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.10.6",
-    "@clerk/themes": "^2.2.16",
-    "@primer/octicons-react": "^19.14.0",
+    "@clerk/nextjs": "^6.12.4",
+    "@clerk/themes": "^2.2.20",
+    "@primer/octicons-react": "^19.15.1",
     "@primer/primitives": "^9.1.2",
-    "@primer/react": "^37.3.0",
-    "axios": "^1.7.9",
+    "@primer/react": "^37.14.0",
+    "axios": "^1.8.2",
     "next": "15.1.6",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.3",
     "pusher-js": "^8.4.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-intersection-observer": "^9.15.1",
+    "react-intersection-observer": "^9.16.0",
     "sonner": "^1.7.4",
     "styled-components": "^5.3.11",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.10",
     "@types/react": "^18.3.18",
-    "@types/react-dom": "^19.0.1",
-    "eslint": "^9.19.0",
+    "@types/react-dom": "^19.0.4",
+    "eslint": "^9.22.0",
     "eslint-config-next": "15.1.6",
     "eslint-plugin-primer-react": "^6.1.6",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
