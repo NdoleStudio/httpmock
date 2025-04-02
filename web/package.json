@@ -14,7 +14,7 @@
     "@clerk/themes": "^2.2.26",
     "@primer/octicons-react": "^19.15.1",
     "@primer/primitives": "^9.1.2",
-    "@primer/react": "^37.14.0",
+    "@primer/react": "^37.18.0",
     "axios": "^1.8.4",
     "next": "15.2.4",
     "prettier": "^3.5.3",
