@@ -21,8 +21,8 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2
       '@primer/react':
-        specifier: ^37.14.0
-        version: 37.14.0(@types/react-dom@19.0.4(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))
+        specifier: ^37.18.0
+        version: 37.18.0(@types/react-dom@19.0.4(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))
       axios:
         specifier: ^1.8.4
         version: 1.8.4
@@ -156,8 +156,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime@7.26.9':
-    resolution: {integrity: sha512-aA63XwOkcl4xxQa3HjPMqOP6LiK0ZDv3mUPYEFXkpHbaFjtGggE1A61FjFzJnB+p7/oy2gA8E+rcBNl/zC1tMg==}
+  '@babel/runtime@7.27.0':
+    resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.26.9':
@@ -557,8 +557,8 @@ packages:
   '@primer/primitives@9.1.2':
     resolution: {integrity: sha512-KecRJpUdIf14J3gVpoyMMJeQD6Sh5kcHk93N5bYch4XGB0GOZP3ypxz+NByMjr/2HHPsRfCCO5EEgNjmeWYUGQ==}
 
-  '@primer/react@37.14.0':
-    resolution: {integrity: sha512-c/YCh+26pIo12K02SfnahyJt8w54nG0qouVjpZpsC08fC+tTym+qw+nsT9bzPH5gwBD+FKb4yxXs5lEF0hBZ6w==}
+  '@primer/react@37.18.0':
+    resolution: {integrity: sha512-/5gHxqsh8u3QbrApYM0zWixTH/z6OXOYnBYsaK6pPvR1fweOWUftOt8ERo8rd6A7kN2o+kdKSJpBdf7tpPVMhg==}
     engines: {node: '>=12', npm: '>=7'}
     peerDependencies:
       '@types/react': 18.x || 19.x
@@ -1007,8 +1007,8 @@ packages:
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
 
-  clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
   color-convert@2.0.1:
@@ -2443,7 +2443,7 @@ snapshots:
       '@babel/core': 7.26.9
       '@babel/helper-plugin-utils': 7.26.5
 
-  '@babel/runtime@7.26.9':
+  '@babel/runtime@7.27.0':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -2818,7 +2818,7 @@ snapshots:
       '@prettier/sync': 0.5.2(prettier@3.3.3)
       prettier: 3.3.3
 
-  '@primer/react@37.14.0(@types/react-dom@19.0.4(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))':
+  '@primer/react@37.18.0(@types/react-dom@19.0.4(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@5.3.11(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0))':
     dependencies:
       '@github/relative-time-element': 4.4.5
       '@github/tab-container-element': 4.8.2
@@ -2835,7 +2835,7 @@ snapshots:
       '@types/styled-system': 5.1.23
       '@types/styled-system__css': 5.0.21
       '@types/styled-system__theme-get': 5.0.4
-      clsx: 1.2.1
+      clsx: 2.1.1
       color2k: 2.0.3
       deepmerge: 4.3.1
       focus-visible: 5.2.1
@@ -2849,6 +2849,7 @@ snapshots:
       react-is: 18.3.1
       styled-components: 5.3.11(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react-is@18.3.1)(react@19.0.0)
       styled-system: 5.1.5
+      type-check: 0.4.0
     optionalDependencies:
       '@types/react': 18.3.18
       '@types/react-dom': 19.0.4(@types/react@18.3.18)
@@ -3379,7 +3380,7 @@ snapshots:
 
   client-only@0.0.1: {}
 
-  clsx@1.2.1: {}
+  clsx@2.1.1: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -4065,7 +4066,7 @@ snapshots:
 
   history@5.3.0:
     dependencies:
-      '@babel/runtime': 7.26.9
+      '@babel/runtime': 7.27.0
 
   hoist-non-react-statics@3.3.2:
     dependencies:
