@@ -226,7 +226,6 @@ export default function EndpointShow() {
     setLoadingTraffic(true);
     getProjectEndpointTraffic(projectId, projectEndpointId)
       .then((timeSeries: RepositoriesTimeSeriesData[]) => {
-        console.log(timeSeries);
         setChartData({
           labels: [],
           datasets: [

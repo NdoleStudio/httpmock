@@ -107,7 +107,6 @@ export default function ProjectShow() {
     setLoadingTraffic(true);
     getProjectTraffic(projectId)
       .then((timeSeries: RepositoriesTimeSeriesData[]) => {
-        console.log(timeSeries);
         setChartData({
           labels: [],
           datasets: [
