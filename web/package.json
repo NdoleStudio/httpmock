@@ -10,13 +10,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.18.2",
-    "@clerk/themes": "^2.2.38",
-    "@primer/octicons-react": "^19.15.1",
+    "@clerk/nextjs": "^6.20.0",
+    "@clerk/themes": "^2.2.46",
+    "@primer/octicons-react": "^19.15.2",
     "@primer/primitives": "^10.7.0",
-    "@primer/react": "^37.21.0",
+    "@primer/react": "^37.24.0",
     "axios": "^1.9.0",
-    "next": "15.2.4",
+    "next": "15.3.2",
     "prettier": "^3.5.3",
     "pusher-js": "^8.4.0",
     "react": "19.0.0",
@@ -24,13 +24,13 @@
     "react-intersection-observer": "^9.16.0",
     "sonner": "^2.0.3",
     "styled-components": "^5.3.11",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
-    "@types/node": "^22.15.3",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^19.0.4",
-    "eslint": "^9.23.0",
+    "@types/node": "^22.15.21",
+    "@types/react": "^18.3.22",
+    "@types/react-dom": "^19.1.5",
+    "eslint": "^9.27.0",
     "eslint-config-next": "15.3.1",
     "eslint-plugin-primer-react": "^7.0.1",
     "typescript": "^5.8.3"
