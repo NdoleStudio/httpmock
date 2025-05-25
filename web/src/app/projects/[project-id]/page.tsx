@@ -96,6 +96,9 @@ export default function ProjectShow() {
     scales: {
       x: {
         type: "time",
+        time: {
+          tooltipFormat: "LLL Lo, yyyy",
+        },
       },
     },
   };

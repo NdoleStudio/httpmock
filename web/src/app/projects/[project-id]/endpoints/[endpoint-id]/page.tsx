@@ -45,6 +45,7 @@ import {
   Tooltip,
   TimeScale,
   Legend,
+  ChartOptions,
   ChartData,
   Point,
 } from "chart.js";
@@ -309,9 +310,12 @@ export default function EndpointShow() {
     scales: {
       x: {
         type: "time",
+        time: {
+          tooltipFormat: "LLL Lo, yyyy",
+        },
       },
     },
-  };
+  } as ChartOptions;
 
   return (
     <Box
