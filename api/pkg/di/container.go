@@ -454,6 +454,7 @@ func (container *Container) ProjectService() (service *services.ProjectService) 
 		container.Logger(),
 		container.Tracer(),
 		container.EventDispatcher(),
+		container.ProjectEndpointRequestRepository(),
 		container.ProjectRepository(),
 	)
 }
@@ -465,6 +466,7 @@ func (container *Container) ProjectEndpointService() (service *services.ProjectE
 		container.Logger(),
 		container.Tracer(),
 		container.ProjectEndpointRepository(),
+		container.ProjectEndpointRequestRepository(),
 	)
 }
 

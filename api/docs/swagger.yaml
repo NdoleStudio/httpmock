@@ -151,6 +151,16 @@ definitions:
       - response_headers
       - user_id
     type: object
+  repositories.TimeSeriesData:
+    properties:
+      count:
+        type: integer
+      timestamp:
+        type: string
+    required:
+      - count
+      - timestamp
+    type: object
   requests.ProjectCreateRequest:
     properties:
       description:
@@ -318,6 +328,23 @@ definitions:
       data:
         items:
           $ref: "#/definitions/entities.ProjectEndpointRequest"
+        type: array
+      message:
+        example: Request handled successfully
+        type: string
+      status:
+        example: success
+        type: string
+    required:
+      - data
+      - message
+      - status
+    type: object
+  responses.Ok-array_repositories_TimeSeriesData:
+    properties:
+      data:
+        items:
+          $ref: "#/definitions/repositories.TimeSeriesData"
         type: array
       message:
         example: Request handled successfully
@@ -812,6 +839,10 @@ paths:
           in: query
           name: prev
           type: string
+        - description: ID of the first request returned in the current page
+          in: query
+          name: next
+          type: string
         - description: number of messages to return
           in: query
           maximum: 100
@@ -897,6 +928,89 @@ paths:
       summary: Delete a project endpoint request
       tags:
         - ProjectEndpointRequests
+  /v1/projects/{projectId}/endpoints/{projectEndpointId}/traffic:
+    get:
+      description:
+        This endpoint returns the time series traffic for a endpoint in
+        the last 30 days.
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          type: string
+        - description: Project Endpoint ID
+          in: path
+          name: projectEndpointId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/responses.Ok-array_repositories_TimeSeriesData"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: Get project traffic
+      tags:
+        - ProjectEndpoints
+  /v1/projects/{projectId}/traffic:
+    get:
+      description:
+        This endpoint returns the time series traffic for all project endpoints
+        in the last 30 days.
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/responses.Ok-array_repositories_TimeSeriesData"
+        "400":
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/responses.BadRequest"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/responses.Unauthorized"
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/responses.UnprocessableEntity"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/responses.InternalServerError"
+      security:
+        - BearerAuth: []
+      summary: Get project traffic
+      tags:
+        - Projects
 schemes:
   - https
 securityDefinitions:

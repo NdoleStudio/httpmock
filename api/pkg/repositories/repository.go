@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+
 	"github.com/palantir/stacktrace"
 )
 
@@ -11,6 +13,12 @@ type IndexParams struct {
 	SortDescending bool   `json:"sort_descending"`
 	Query          string `json:"query"`
 	Limit          int    `json:"take"`
+}
+
+// TimeSeriesData represents a time series data point
+type TimeSeriesData struct {
+	Timestamp time.Time `json:"timestamp"`
+	Count     uint      `json:"count"`
 }
 
 const (

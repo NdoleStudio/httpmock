@@ -15,9 +15,10 @@ import (
 // ProjectEndpointService is responsible for managing entities.ProjectEndpoint
 type ProjectEndpointService struct {
 	service
-	logger     telemetry.Logger
-	tracer     telemetry.Tracer
-	repository repositories.ProjectEndpointRepository
+	logger                           telemetry.Logger
+	tracer                           telemetry.Tracer
+	repository                       repositories.ProjectEndpointRepository
+	projectEndpointRequestRepository repositories.ProjectEndpointRequestRepository
 }
 
 // NewProjectEndpointService creates a new ProjectEndpointService
@@ -25,12 +26,28 @@ func NewProjectEndpointService(
 	logger telemetry.Logger,
 	tracer telemetry.Tracer,
 	repository repositories.ProjectEndpointRepository,
+	projectEndpointRequestRepository repositories.ProjectEndpointRequestRepository,
 ) (s *ProjectEndpointService) {
 	return &ProjectEndpointService{
-		logger:     logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
-		tracer:     tracer,
-		repository: repository,
+		logger:                           logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
+		tracer:                           tracer,
+		projectEndpointRequestRepository: projectEndpointRequestRepository,
+		repository:                       repository,
 	}
+}
+
+// Traffic an entities.Project for an authenticated user
+func (service *ProjectEndpointService) Traffic(ctx context.Context, userID entities.UserID, projectEndpointID uuid.UUID) ([]*repositories.TimeSeriesData, error) {
+	ctx, span := service.tracer.Start(ctx)
+	defer span.End()
+
+	traffic, err := service.projectEndpointRequestRepository.GetEndpointTraffic(ctx, userID, projectEndpointID)
+	if err != nil {
+		msg := fmt.Sprintf("could load project traffic for user with ID [%s] and projectEndpointID [%s]", userID, projectEndpointID)
+		return nil, service.tracer.WrapErrorSpan(span, stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg))
+	}
+
+	return traffic, nil
 }
 
 // Load an entities.Project for an authenticated user

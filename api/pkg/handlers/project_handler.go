@@ -48,6 +48,7 @@ func (h *ProjectHandler) RegisterRoutes(app *fiber.App, middlewares []fiber.Hand
 	router.Get("/:projectId", h.computeRoute(h.show, middlewares)...)
 	router.Put("/:projectId", h.computeRoute(h.update, middlewares)...)
 	router.Delete("/:projectId", h.computeRoute(h.delete, middlewares)...)
+	router.Get("/:projectId/traffic", h.computeRoute(h.traffic, middlewares)...)
 }
 
 // @Summary      List of projects
@@ -246,4 +247,45 @@ func (h *ProjectHandler) delete(c *fiber.Ctx) error {
 	}
 
 	return h.responseNoContent(c, "project deleted successfully")
+}
+
+// @Summary      Get project traffic
+// @Description  This endpoint returns the time series traffic for all project endpoints in the last 30 days.
+// @Security	 BearerAuth
+// @Tags         Projects
+// @Produce      json
+// @Param 		 projectId	path 		string true "Project ID"
+// @Success      200 		{object}	responses.Ok[[]repositories.TimeSeriesData]
+// @Failure      400		{object}	responses.BadRequest
+// @Failure 	 401    	{object}	responses.Unauthorized
+// @Failure      422		{object}	responses.UnprocessableEntity
+// @Failure      500		{object}	responses.InternalServerError
+// @Router       /v1/projects/{projectId}/traffic 	[get]
+func (h *ProjectHandler) traffic(c *fiber.Ctx) error {
+	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
+	defer span.End()
+
+	if errors := h.validator.ValidateUUID(c, "projectId"); len(errors) != 0 {
+		msg := fmt.Sprintf("validation errors [%s], while creating project with request [%s]", spew.Sdump(errors), c.Body())
+		ctxLogger.Warn(stacktrace.NewError(msg))
+		return h.responseUnprocessableEntity(c, errors, "validation errors while creating project")
+	}
+
+	projectID := uuid.MustParse(c.Params("projectId"))
+	authUser := h.userFromContext(c)
+
+	timeSeries, err := h.service.Traffic(ctx, authUser.ID, projectID)
+	if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {
+		msg := fmt.Sprintf("cannot load traffic data for project with id [%s] for user [%s]", projectID, authUser.ID)
+		ctxLogger.Warn(stacktrace.Propagate(err, msg))
+		return h.responseNotFound(c, msg)
+	}
+
+	if err != nil {
+		msg := fmt.Sprintf("cannot load traffic data for project [%s] user with ID [%s]", projectID, authUser.ID)
+		ctxLogger.Error(stacktrace.Propagate(err, msg))
+		return h.responseInternalServerError(c)
+	}
+
+	return h.responseOK(c, "project traffic fetched successfully", timeSeries)
 }

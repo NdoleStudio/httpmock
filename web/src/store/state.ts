@@ -16,6 +16,8 @@ import {
   ResponsesUnprocessableEntity,
   EntitiesProjectEndpointRequest,
   ResponsesOkArrayEntitiesProjectEndpointRequest,
+  RepositoriesTimeSeriesData,
+  ResponsesOkArrayRepositoriesTimeSeriesData,
 } from "@/api/model";
 import axios from "@/api/axios";
 import { AxiosError } from "axios";
@@ -35,6 +37,9 @@ export type Actions = {
     request: RequestsProjectCreateRequest,
   ) => Promise<EntitiesProject>;
   showProject: (projectId: string) => Promise<EntitiesProject>;
+  getProjectTraffic: (
+    projectId: string,
+  ) => Promise<Array<RepositoriesTimeSeriesData>>;
   deleteProject: (projectId: string) => Promise<void>;
   indexProjects: () => Promise<Array<EntitiesProject>>;
   storeProjectEndpoint: (
@@ -53,6 +58,10 @@ export type Actions = {
     projectId: string,
     endpointId: string,
   ) => Promise<EntitiesProjectEndpoint>;
+  getProjectEndpointTraffic: (
+    projectId: string,
+    endpointId: string,
+  ) => Promise<Array<RepositoriesTimeSeriesData>>;
   deleteProjectEndpoint: (
     projectId: string,
     projectEndpointId: string,
@@ -128,6 +137,26 @@ export const createStore = (initState: State = defaultInitState) => {
           .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
             toast.error(
               error.response?.data.message ?? "Error while fetching project",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    getProjectTraffic: (
+      projectId: string,
+    ): Promise<RepositoriesTimeSeriesData[]> => {
+      return new Promise<RepositoriesTimeSeriesData[]>((resolve, reject) => {
+        axios
+          .get<ResponsesOkArrayRepositoriesTimeSeriesData>(
+            `/v1/projects/${projectId}/traffic`,
+          )
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while fetching project traffic",
             );
             reject(getErrorMessages(error));
           });
@@ -247,6 +276,27 @@ export const createStore = (initState: State = defaultInitState) => {
             toast.error(
               error.response?.data.message ??
                 "Error while fetching project endpoint",
+            );
+            reject(getErrorMessages(error));
+          });
+      });
+    },
+    getProjectEndpointTraffic: (
+      projectId: string,
+      projectEndpointId: string,
+    ): Promise<RepositoriesTimeSeriesData[]> => {
+      return new Promise<RepositoriesTimeSeriesData[]>((resolve, reject) => {
+        axios
+          .get<ResponsesOkArrayRepositoriesTimeSeriesData>(
+            `/v1/projects/${projectId}/endpoints/${projectEndpointId}/traffic`,
+          )
+          .then((response) => {
+            resolve(response.data.data);
+          })
+          .catch(async (error: AxiosError<ResponsesUnprocessableEntity>) => {
+            toast.error(
+              error.response?.data.message ??
+                "Error while fetching project endpoint traffic",
             );
             reject(getErrorMessages(error));
           });

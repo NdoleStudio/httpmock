@@ -22,8 +22,9 @@ import {
   EntitiesProject,
   EntitiesProjectEndpoint,
   EntitiesProjectEndpointRequest,
+  RepositoriesTimeSeriesData,
 } from "@/api/model";
-import { MirrorIcon, TrashIcon } from "@primer/octicons-react";
+import { MirrorIcon, TrashIcon, GraphIcon } from "@primer/octicons-react";
 import { CopyButton } from "@/components/copy-button";
 import { getEndpointURL, labelColor } from "@/utils/filters";
 import { BackButton } from "@/components/back-button";
@@ -32,6 +33,32 @@ import { toast } from "sonner";
 import { useInView } from "react-intersection-observer";
 import pusherClient from "@/utils/pusher";
 import { useUser } from "@clerk/nextjs";
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  Title,
+  PointElement,
+  Tooltip,
+  TimeScale,
+  Legend,
+  ChartData,
+  Point,
+} from "chart.js";
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  TimeScale,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 export default function EndpointShow() {
   const pathName = usePathname();
@@ -43,6 +70,7 @@ export default function EndpointShow() {
     showProjectEndpoint,
     deleteProjectEndpointRequest,
     indexProjectEndpointRequests,
+    getProjectEndpointTraffic,
   } = useAppStore((state) => state);
   const [loadingEndpoint, setLoadingEndpoint] = useState<boolean>(false);
   const [loadingProjectEndpointRequests, setLoadingProjectEndpointRequests] =
@@ -65,6 +93,8 @@ export default function EndpointShow() {
     setCanLoadMoreProjectEndpointRequests,
   ] = useState<boolean>(false);
   const [streamingIsActive, setStreamingIsActive] = useState<boolean>(false);
+  const [loadingTraffic, setLoadingTraffic] = useState<boolean>(true);
+  const [chartData, setChartData] = useState<ChartData | undefined>(undefined);
 
   const requestLimit: number = 20;
   const onDeleteDialogClose = useCallback(
@@ -191,6 +221,34 @@ export default function EndpointShow() {
     loadProjectEndpointRequests,
   ]);
 
+  useEffect(() => {
+    setLoadingTraffic(true);
+    getProjectEndpointTraffic(projectId, projectEndpointId)
+      .then((timeSeries: RepositoriesTimeSeriesData[]) => {
+        console.log(timeSeries);
+        setChartData({
+          labels: [],
+          datasets: [
+            {
+              label: "HTTP Request Count",
+              data: timeSeries.map((dataPoint) => {
+                return {
+                  x: new Date(dataPoint.timestamp),
+                  y: dataPoint.count,
+                } as unknown as Point;
+              }),
+              borderColor: "rgb(9, 105, 218)",
+              backgroundColor: "rgba(9, 105, 218, 0.2)",
+              fill: true,
+            },
+          ],
+        });
+      })
+      .finally(() => {
+        setLoadingTraffic(false);
+      });
+  }, [getProjectEndpointTraffic, projectId, projectEndpointId]);
+
   const onDeleteProjectEndpointRequest = async (event: MouseEvent) => {
     event.preventDefault();
     setLoadingProjectEndpointRequests(true);
@@ -238,6 +296,21 @@ export default function EndpointShow() {
 
   const getCurlCode = (endpoint: EntitiesProjectEndpoint) => {
     return `curl --header \"Content-Type: application/json\" \\\n\t--request ${endpoint.request_method === "ANY" ? "POST" : endpoint.request_method} ${endpoint.request_method != "GET" ? "\\\n\t--data '{\"success\":true}' \\\n\t" : ""} \"${getEndpointURL(endpoint)}\"`;
+  };
+
+  const chartOptions = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      x: {
+        type: "time",
+      },
+    },
   };
 
   return (
@@ -344,6 +417,28 @@ export default function EndpointShow() {
           </Box>
         </Dialog>
       )}
+
+      <Box display={["none", "none", "block"]}>
+        <Heading sx={{ mt: 4 }} as={"h2"} variant={"medium"}>
+          <GraphIcon size={24} />
+          <Text sx={{ ml: 2 }}>Endpoint Traffic Insights</Text>
+        </Heading>
+        {!loadingTraffic && (
+          <Box
+            sx={{
+              marginTop: 1,
+              borderStyle: "solid",
+              borderWidth: 1,
+              padding: 2,
+              borderRadius: 4,
+              borderColor: "border.default",
+            }}
+          >
+            {/* @ts-expect-error chart types are not consistent */}
+            <Line options={chartOptions} data={chartData} />
+          </Box>
+        )}
+      </Box>
 
       <Heading as="h2" sx={{ mt: 32 }} variant="medium">
         <MirrorIcon size={24} />

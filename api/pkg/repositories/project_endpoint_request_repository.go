@@ -20,6 +20,12 @@ type ProjectEndpointRequestRepository interface {
 	// Load an entities.ProjectEndpointRequest by its ID
 	Load(ctx context.Context, userID entities.UserID, requestID ulid.ULID) (*entities.ProjectEndpointRequest, error)
 
+	// GetProjectTraffic Traffic fetches the traffic data for a project
+	GetProjectTraffic(ctx context.Context, userID entities.UserID, projectID uuid.UUID) ([]*TimeSeriesData, error)
+
+	// GetEndpointTraffic Traffic fetches the traffic data for a project endpoint
+	GetEndpointTraffic(ctx context.Context, userID entities.UserID, endpointID uuid.UUID) ([]*TimeSeriesData, error)
+
 	// Index fetches the list of all project endpoint requests available to the currently authenticated user
 	Index(ctx context.Context, userID entities.UserID, endpointID uuid.UUID, limit uint, previousID *ulid.ULID, nextID *ulid.ULID) ([]*entities.ProjectEndpointRequest, error)
 }

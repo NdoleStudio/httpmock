@@ -16,10 +16,11 @@ import (
 // ProjectService is responsible for managing entities.Project
 type ProjectService struct {
 	service
-	logger          telemetry.Logger
-	tracer          telemetry.Tracer
-	repository      repositories.ProjectRepository
-	eventDispatcher *EventDispatcher
+	logger                           telemetry.Logger
+	tracer                           telemetry.Tracer
+	repository                       repositories.ProjectRepository
+	eventDispatcher                  *EventDispatcher
+	projectEndpointRequestRepository repositories.ProjectEndpointRequestRepository
 }
 
 // NewProjectService creates a new ProjectService
@@ -27,14 +28,30 @@ func NewProjectService(
 	logger telemetry.Logger,
 	tracer telemetry.Tracer,
 	eventDispatcher *EventDispatcher,
+	projectEndpointRequestRepository repositories.ProjectEndpointRequestRepository,
 	repository repositories.ProjectRepository,
 ) (s *ProjectService) {
 	return &ProjectService{
-		logger:          logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
-		tracer:          tracer,
-		eventDispatcher: eventDispatcher,
-		repository:      repository,
+		logger:                           logger.WithCodeNamespace(fmt.Sprintf("%T", s)),
+		tracer:                           tracer,
+		eventDispatcher:                  eventDispatcher,
+		projectEndpointRequestRepository: projectEndpointRequestRepository,
+		repository:                       repository,
 	}
+}
+
+// Traffic an entities.Project for an authenticated user
+func (service *ProjectService) Traffic(ctx context.Context, userID entities.UserID, projectID uuid.UUID) ([]*repositories.TimeSeriesData, error) {
+	ctx, span := service.tracer.Start(ctx)
+	defer span.End()
+
+	traffic, err := service.projectEndpointRequestRepository.GetProjectTraffic(ctx, userID, projectID)
+	if err != nil {
+		msg := fmt.Sprintf("could load project traffic for user with ID [%s] and projectID [%s]", userID, projectID)
+		return nil, service.tracer.WrapErrorSpan(span, stacktrace.PropagateWithCode(err, stacktrace.GetCode(err), msg))
+	}
+
+	return traffic, nil
 }
 
 // Load an entities.Project for an authenticated user

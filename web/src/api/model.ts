@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -88,6 +89,11 @@ export interface EntitiesProjectEndpointRequest {
   user_id: string;
 }
 
+export interface RepositoriesTimeSeriesData {
+  count: number;
+  timestamp: string;
+}
+
 export interface RequestsProjectCreateRequest {
   description: string;
   name: string;
@@ -168,6 +174,14 @@ export interface ResponsesOkArrayEntitiesProjectEndpoint {
 
 export interface ResponsesOkArrayEntitiesProjectEndpointRequest {
   data: EntitiesProjectEndpointRequest[];
+  /** @example "Request handled successfully" */
+  message: string;
+  /** @example "success" */
+  status: string;
+}
+
+export interface ResponsesOkArrayRepositoriesTimeSeriesData {
+  data: RepositoriesTimeSeriesData[];
   /** @example "Request handled successfully" */
   message: string;
   /** @example "success" */

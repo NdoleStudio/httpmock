@@ -51,6 +51,7 @@ func (h *ProjectEndpointHandler) RegisterRoutes(app *fiber.App, middlewares []fi
 	router.Get("/:projectEndpointId", h.computeRoute(h.show, middlewares)...)
 	router.Put("/:projectEndpointId", h.computeRoute(h.update, middlewares)...)
 	router.Delete("/:projectEndpointId", h.computeRoute(h.delete, middlewares)...)
+	router.Get("/:projectEndpointId/traffic", h.computeRoute(h.traffic, middlewares)...)
 }
 
 // @Summary      List of project endpoints
@@ -287,4 +288,46 @@ func (h *ProjectEndpointHandler) delete(c *fiber.Ctx) error {
 	}
 
 	return h.responseNoContent(c, "project endpoint deleted successfully")
+}
+
+// @Summary      Get project traffic
+// @Description  This endpoint returns the time series traffic for a endpoint in the last 30 days.
+// @Security	 BearerAuth
+// @Tags         ProjectEndpoints
+// @Produce      json
+// @Param 		 projectId					path 		string true "Project ID"
+// @Param 		 projectEndpointId			path 		string true "Project Endpoint ID"
+// @Success      200 		{object}	responses.Ok[[]repositories.TimeSeriesData]
+// @Failure      400		{object}	responses.BadRequest
+// @Failure 	 401    	{object}	responses.Unauthorized
+// @Failure      422		{object}	responses.UnprocessableEntity
+// @Failure      500		{object}	responses.InternalServerError
+// @Router       /v1/projects/{projectId}/endpoints/{projectEndpointId}/traffic [get]
+func (h *ProjectEndpointHandler) traffic(c *fiber.Ctx) error {
+	ctx, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
+	defer span.End()
+
+	if errors := h.validator.ValidateUUID(c, "projectEndpointId"); len(errors) != 0 {
+		msg := fmt.Sprintf("validation errors [%s], while loading project endpoint traffic with request [%s]", spew.Sdump(errors), c.Body())
+		ctxLogger.Warn(stacktrace.NewError(msg))
+		return h.responseUnprocessableEntity(c, errors, "validation errors while creating project")
+	}
+
+	projectEndpointID := uuid.MustParse(c.Params("projectEndpointId"))
+	authUser := h.userFromContext(c)
+
+	timeSeries, err := h.service.Traffic(ctx, authUser.ID, projectEndpointID)
+	if stacktrace.GetCode(err) == repositories.ErrCodeNotFound {
+		msg := fmt.Sprintf("cannot load traffic data for project endpoint with id [%s] for user [%s]", projectEndpointID, authUser.ID)
+		ctxLogger.Warn(stacktrace.Propagate(err, msg))
+		return h.responseNotFound(c, msg)
+	}
+
+	if err != nil {
+		msg := fmt.Sprintf("cannot load traffic data for project endpoint [%s] user with ID [%s]", projectEndpointID, authUser.ID)
+		ctxLogger.Error(stacktrace.Propagate(err, msg))
+		return h.responseInternalServerError(c)
+	}
+
+	return h.responseOK(c, "project endpoint traffic fetched successfully", timeSeries)
 }

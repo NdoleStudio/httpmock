@@ -18,7 +18,11 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, MouseEvent, useState } from "react";
 import { useAppStore } from "@/store/provider";
-import { EntitiesProject, EntitiesProjectEndpoint } from "@/api/model";
+import {
+  EntitiesProject,
+  EntitiesProjectEndpoint,
+  RepositoriesTimeSeriesData,
+} from "@/api/model";
 import {
   GearIcon,
   LinkIcon,
@@ -28,17 +32,48 @@ import {
 } from "@primer/octicons-react";
 import { toast } from "sonner";
 import { CopyButton } from "@/components/copy-button";
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  Title,
+  PointElement,
+  Tooltip,
+  TimeScale,
+  Legend,
+  ChartData,
+  Point,
+} from "chart.js";
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  TimeScale,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 export default function ProjectShow() {
   const router = useRouter();
   const pathName = usePathname();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { showProject, deleteProject, indexProjectEndpoint } = useAppStore(
-    (state) => state,
-  );
+  const {
+    showProject,
+    deleteProject,
+    indexProjectEndpoint,
+    getProjectTraffic,
+  } = useAppStore((state) => state);
   const [loading, setLoading] = useState<boolean>(false);
   const [endpoints, setEndpoints] = useState<EntitiesProjectEndpoint[]>([]);
   const [loadingEndpoints, setLoadingEndpoints] = useState<boolean>(false);
+  const [loadingTraffic, setLoadingTraffic] = useState<boolean>(true);
+  const [chartData, setChartData] = useState<ChartData | undefined>(undefined);
   const [project, setProject] = useState<EntitiesProject | undefined>(
     undefined,
   );
@@ -49,6 +84,49 @@ export default function ProjectShow() {
   );
 
   const projectId = pathName.split("/")[2];
+
+  const chartOptions = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      x: {
+        type: "time",
+      },
+    },
+  };
+
+  useEffect(() => {
+    setLoadingTraffic(true);
+    getProjectTraffic(projectId)
+      .then((timeSeries: RepositoriesTimeSeriesData[]) => {
+        console.log(timeSeries);
+        setChartData({
+          labels: [],
+          datasets: [
+            {
+              label: "HTTP Request Count",
+              data: timeSeries.map((dataPoint) => {
+                return {
+                  x: new Date(dataPoint.timestamp),
+                  y: dataPoint.count,
+                } as unknown as Point;
+              }),
+              borderColor: "rgb(9, 105, 218)",
+              backgroundColor: "rgba(9, 105, 218, 0.2)",
+              fill: true,
+            },
+          ],
+        });
+      })
+      .finally(() => {
+        setLoadingTraffic(false);
+      });
+  }, [getProjectTraffic, projectId]);
 
   useEffect(() => {
     setLoading(true);
@@ -227,6 +305,26 @@ export default function ProjectShow() {
         </Dialog>
       )}
 
+      <Box display={["none", "none", "block"]}>
+        <Heading sx={{ mt: 4 }} as={"h2"} variant={"medium"}>
+          Project Traffic Insights
+        </Heading>
+        {!loadingTraffic && (
+          <Box
+            sx={{
+              marginTop: 1,
+              borderStyle: "solid",
+              borderWidth: 1,
+              padding: 2,
+              borderRadius: 4,
+              borderColor: "border.default",
+            }}
+          >
+            {/* @ts-expect-error chart types are not consistent */}
+            <Line options={chartOptions} data={chartData} />
+          </Box>
+        )}
+      </Box>
       <div>
         <Heading as="h2" sx={{ mt: 32 }} variant="medium">
           <LinkIcon size={24} />
