@@ -149,7 +149,7 @@ func (container *Container) App() (app *fiber.App) {
 		os.Getenv("APP_HOSTNAME"),
 		container.ProjectEndpointRequestService(),
 		container.ServerHandler().Handle,
-		container.ReflectHandler().Handle,
+		container.EchoHandler().Handle,
 	))
 	app.Use(healthcheck.New())
 
@@ -159,7 +159,7 @@ func (container *Container) App() (app *fiber.App) {
 	container.RegisterProjectRoutes()
 	container.RegisterProjectEndpointRoutes()
 	container.RegisterProjectEndpointRequestRoutes()
-	container.RegisterReflectRoutes()
+	container.RegisterEchoRoutes()
 	container.RegisterServerRoutes()
 
 	// UnAuthenticated routes
@@ -305,10 +305,10 @@ func (container *Container) RegisterProjectEndpointRequestRoutes() {
 	container.ProjectEndpointRequestHandler().RegisterRoutes(container.App(), container.ClerkBearerAuthMiddlewares())
 }
 
-// RegisterReflectRoutes registers routes for the /reflect
-func (container *Container) RegisterReflectRoutes() {
-	container.logger.Debug(fmt.Sprintf("registering %T routes", &handlers.ReflectHandler{}))
-	container.ReflectHandler().RegisterRoutes(container.App())
+// RegisterEchoRoutes registers routes for the /echo
+func (container *Container) RegisterEchoRoutes() {
+	container.logger.Debug(fmt.Sprintf("registering %T routes", &handlers.EchoHandler{}))
+	container.EchoHandler().RegisterRoutes(container.App())
 }
 
 // RegisterServerRoutes registers routes for the /server
@@ -340,10 +340,10 @@ func (container *Container) ProjectEndpointHandler() (handler *handlers.ProjectE
 	)
 }
 
-// ReflectHandler creates a new instance of handlers.ReflectHandler
-func (container *Container) ReflectHandler() (handler *handlers.ReflectHandler) {
+// EchoHandler creates a new instance of handlers.EchoHandler
+func (container *Container) EchoHandler() (handler *handlers.EchoHandler) {
 	container.logger.Debug(fmt.Sprintf("creating %T", handler))
-	return handlers.NewReflectHandler(
+	return handlers.NewEchoHandler(
 		container.Logger(),
 		container.Tracer(),
 	)

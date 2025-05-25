@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppBar } from "@/components/app-bar";
 import { dark } from "@clerk/themes";
+import "@primer/primitives/dist/css/functional/themes/dark.css";
 
 export const metadata: Metadata = {
   title: "Mock HTTP Server",

@@ -11,32 +11,32 @@ import (
 	"github.com/palantir/stacktrace"
 )
 
-// ReflectHandler handles requests to the /reflect* endpoints
-type ReflectHandler struct {
+// EchoHandler handles requests to the /reflect* endpoints
+type EchoHandler struct {
 	handler
 	logger telemetry.Logger
 	tracer telemetry.Tracer
 }
 
-// NewReflectHandler creates a new ServerHandler
-func NewReflectHandler(
+// NewEchoHandler creates a new EchoHandler
+func NewEchoHandler(
 	logger telemetry.Logger,
 	tracer telemetry.Tracer,
-) (h *ReflectHandler) {
-	return &ReflectHandler{
+) (h *EchoHandler) {
+	return &EchoHandler{
 		logger: logger.WithCodeNamespace(fmt.Sprintf("%T", h)),
 		tracer: tracer,
 	}
 }
 
-// RegisterRoutes registers the routes for the MessageHandler
-func (h *ReflectHandler) RegisterRoutes(app *fiber.App) {
-	router := app.Group("/reflect")
+// RegisterRoutes registers the routes for the EchoHandler
+func (h *EchoHandler) RegisterRoutes(app *fiber.App) {
+	router := app.Group("/echo")
 	router.All("/*", h.Handle)
 }
 
 // Handle handles the request
-func (h *ReflectHandler) Handle(c *fiber.Ctx) error {
+func (h *EchoHandler) Handle(c *fiber.Ctx) error {
 	_, span, ctxLogger := h.tracer.StartFromFiberCtxWithLogger(c, h.logger)
 	defer span.End()
 
@@ -58,7 +58,7 @@ func (h *ReflectHandler) Handle(c *fiber.Ctx) error {
 	return nil
 }
 
-func (h *ReflectHandler) getResponseStatus(ctxLogger telemetry.Logger, c *fiber.Ctx) int {
+func (h *EchoHandler) getResponseStatus(ctxLogger telemetry.Logger, c *fiber.Ctx) int {
 	status := strings.TrimSpace(c.Get("response-status"))
 	if status == "" {
 		return fiber.StatusOK
@@ -73,7 +73,7 @@ func (h *ReflectHandler) getResponseStatus(ctxLogger telemetry.Logger, c *fiber.
 	return statusCode
 }
 
-func (h *ReflectHandler) getResponseHeaders(c *fiber.Ctx) []map[string]string {
+func (h *EchoHandler) getResponseHeaders(c *fiber.Ctx) []map[string]string {
 	var headers []map[string]string
 	for key, value := range c.GetReqHeaders() {
 		for _, header := range value {

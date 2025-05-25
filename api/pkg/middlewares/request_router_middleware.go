@@ -20,7 +20,7 @@ func RequestRouter(
 	hostname string,
 	requestService *services.ProjectEndpointRequestService,
 	serverHandler fiber.Handler,
-	reflectHandler fiber.Handler,
+	echoHandler fiber.Handler,
 ) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		stopwatch := time.Now()
@@ -39,7 +39,7 @@ func RequestRouter(
 		}
 
 		if len(c.Subdomains()[0]) < 8 {
-			return handleNamedSubdomains(c, strings.TrimSpace(c.Subdomains()[0]), serverHandler, reflectHandler)
+			return handleNamedSubdomains(c, strings.TrimSpace(c.Subdomains()[0]), serverHandler, echoHandler)
 		}
 
 		endpoint, err := requestService.LoadByRequest(ctx, c.Subdomains()[0], c.Method(), c.Path())
@@ -65,10 +65,10 @@ func RequestRouter(
 	}
 }
 
-func handleNamedSubdomains(c *fiber.Ctx, subdomain string, serverHandler fiber.Handler, reflectHandler fiber.Handler) error {
+func handleNamedSubdomains(c *fiber.Ctx, subdomain string, serverHandler fiber.Handler, echoHandler fiber.Handler) error {
 	switch subdomain {
-	case "reflect":
-		return reflectHandler(c)
+	case "echo":
+		return echoHandler(c)
 	case "server":
 		return serverHandler(c)
 	}
