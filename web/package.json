@@ -19,7 +19,7 @@
     "chart.js": "^4.4.9",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^4.1.0",
-    "next": "15.3.3",
+    "next": "15.5.4",
     "prettier": "^3.6.2",
     "pusher-js": "^8.4.0",
     "react": "19.0.0",
