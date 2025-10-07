@@ -13,7 +13,7 @@
     "@clerk/nextjs": "^6.33.3",
     "@clerk/themes": "^2.2.46",
     "@primer/octicons-react": "^19.18.0",
-    "@primer/primitives": "^10.7.0",
+    "@primer/primitives": "^11.2.0",
     "@primer/react": "^37.24.0",
     "axios": "^1.12.2",
     "chart.js": "^4.4.9",
