@@ -64,7 +64,7 @@ jobs:
         if: github.event_name != 'pull_request'
 
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v1.2.2
+        uses: appleboy/ssh-action@v1.2.4
         with:
           host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_KEY }}
