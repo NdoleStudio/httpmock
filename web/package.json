@@ -31,7 +31,7 @@
     "zustand": "^5.0.5"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21",
+    "@types/node": "^24.10.1",
     "@types/react": "^18.3.22",
     "@types/react-dom": "^19.1.5",
     "eslint": "^9.39.0",
