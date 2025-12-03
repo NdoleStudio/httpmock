@@ -18,8 +18,8 @@ importers:
         specifier: ^19.20.0
         version: 19.20.0(react@19.2.0)
       '@primer/primitives':
-        specifier: ^11.2.1
-        version: 11.2.1
+        specifier: ^11.3.1
+        version: 11.3.1
       '@primer/react':
         specifier: ^38.0.0
         version: 38.0.0(@types/react-dom@19.1.5(@types/react@19.2.7))(@types/react-is@18.3.1)(@types/react@19.2.7)(react-dom@19.0.0(react@19.2.0))(react-is@18.3.1)(react@19.2.0)
@@ -601,8 +601,8 @@ packages:
     peerDependencies:
       react: '>=16.3'
 
-  '@primer/primitives@11.2.1':
-    resolution: {integrity: sha512-EkAig9PBZMjdWqaIk8l3Co31tUAfhbl/JH2m8U/YnEe3/VSFyYSmSKk46bq83o0ve7vEdNaeCVPuO8/3xFSV/Q==}
+  '@primer/primitives@11.3.1':
+    resolution: {integrity: sha512-f5FXeUHQ0iyxt1UF6MqeajQ9jRV/7uOGLECU5KuFWhMioCZOho09jS6alZA9tiwksHr2LYXfo7AdFczpEz3Npw==}
 
   '@primer/react@38.0.0':
     resolution: {integrity: sha512-MFmbmcal44IPxUIem9kEd7SF0XmJLjXGWMl1OQqsqMAiAhp0fEPpbrz/pmuIkCfg+5ZRJcw36RkQDrBe7fsyqg==}
@@ -2921,7 +2921,7 @@ snapshots:
     dependencies:
       react: 19.2.0
 
-  '@primer/primitives@11.2.1': {}
+  '@primer/primitives@11.3.1': {}
 
   '@primer/react@38.0.0(@types/react-dom@19.1.5(@types/react@19.2.7))(@types/react-is@18.3.1)(@types/react@19.2.7)(react-dom@19.0.0(react@19.2.0))(react-is@18.3.1)(react@19.2.0)':
     dependencies:
@@ -2933,7 +2933,7 @@ snapshots:
       '@primer/behaviors': 1.8.4
       '@primer/live-region-element': 0.7.2
       '@primer/octicons-react': 19.20.0(react@19.2.0)
-      '@primer/primitives': 11.2.1
+      '@primer/primitives': 11.3.1
       clsx: 2.1.1
       color2k: 2.0.3
       deepmerge: 4.3.1
