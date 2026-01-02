@@ -14,7 +14,7 @@
     "@clerk/themes": "^2.4.46",
     "@primer/octicons-react": "^19.21.1",
     "@primer/primitives": "^11.3.1",
-    "@primer/react": "^38.0.0",
+    "@primer/react": "^38.6.2",
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
     "chartjs-adapter-date-fns": "^3.0.0",

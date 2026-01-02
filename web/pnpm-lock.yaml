@@ -21,8 +21,8 @@ importers:
         specifier: ^11.3.1
         version: 11.3.1
       '@primer/react':
-        specifier: ^38.0.0
-        version: 38.0.0(@types/react-dom@19.1.5(@types/react@19.2.7))(@types/react-is@18.3.1)(@types/react@19.2.7)(react-dom@19.0.0(react@19.2.3))(react-is@18.3.1)(react@19.2.3)
+        specifier: ^38.6.2
+        version: 38.6.2(@types/react-dom@19.1.5(@types/react@19.2.7))(@types/react-is@18.3.1)(@types/react@19.2.7)(react-dom@19.0.0(react@19.2.3))(react-is@18.3.1)(react@19.2.3)
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -325,8 +325,8 @@ packages:
   '@github/mini-throttle@2.1.1':
     resolution: {integrity: sha512-KtOPaB+FiKJ6jcKm9UKyaM5fPURHGf+xcp+b4Mzoi81hOc6M1sIGpMZMAVbNzfa2lW5+RPGKq888Px0j76OZ/A==}
 
-  '@github/relative-time-element@4.5.0':
-    resolution: {integrity: sha512-zKC/tUHeDDdbODBuZh3CkT5pCy41M8mGuUplzhtBMuiEQ5+qY/l/iu0X1IBY/6QhNeP/xdQIVkLYKh2O5En4dg==}
+  '@github/relative-time-element@4.5.1':
+    resolution: {integrity: sha512-uxCxCwe9vdwUDmRmM84tN0UERlj8MosLV44+r/VDj7DZUVUSTP4vyWlE9mRK6vHelOmT8DS3RMlaMrLlg1h1PQ==}
 
   '@github/tab-container-element@4.8.2':
     resolution: {integrity: sha512-WkaM4mfs8x7dXRWEaDb5deC0OhH6sGQ5cw8i/sVw25gikl4f8C7mHj0kihL5k3eKIIqmGT1Fdswdoi+9ZLDpRA==}
@@ -517,8 +517,8 @@ packages:
   '@lit-labs/react@1.2.1':
     resolution: {integrity: sha512-DiZdJYFU0tBbdQkfwwRSwYyI/mcWkg3sWesKRsHUd4G+NekTmmeq9fzsurvcKTNVa0comNljwtg4Hvi1ds3V+A==}
 
-  '@lit-labs/ssr-dom-shim@1.4.0':
-    resolution: {integrity: sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==}
+  '@lit-labs/ssr-dom-shim@1.5.0':
+    resolution: {integrity: sha512-HLomZXMmrCFHSRKESF5vklAKsDY7/fsT/ZhqCu3V0UoW/Qbv8wxmO4W9bx4KnCCF2Zak4yuk+AGraK/bPmI4kA==}
 
   '@napi-rs/wasm-runtime@0.2.10':
     resolution: {integrity: sha512-bCsCyeZEwVErsGmyPNSzwfwFn4OdxBj0mmv6hOFucB/k81Ojdu68RbZdxYsRQUPc9l6SU5F/cG+bXgWs3oUgsQ==}
@@ -600,8 +600,8 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@primer/behaviors@1.8.4':
-    resolution: {integrity: sha512-+z7LNbijJqBnsz1u9Jcgrc9yPLwGmzYMnI+yBiS1oNuEW1zLH5ZE7Kp9UFRo7fqPgM/IZ8xbtdTAuBZq9DPs7g==}
+  '@primer/behaviors@1.9.0':
+    resolution: {integrity: sha512-MIVSZlQGJzas44DZDwo4Dqiev289K918oDl/AcA+zTpQAjp+PrJ0LUxEnrSOapyivLYpRpmSCeF0XPh7NgXpCA==}
 
   '@primer/live-region-element@0.7.2':
     resolution: {integrity: sha512-wdxCHfcJzE1IPPjZNFR4RTwRcSWb7TN0fRdMH5HcxphLEnuZBWy0TAxk3xPA+/6lwiN3uEJ+ZWV4UF/glXh43A==}
@@ -615,8 +615,8 @@ packages:
   '@primer/primitives@11.3.1':
     resolution: {integrity: sha512-f5FXeUHQ0iyxt1UF6MqeajQ9jRV/7uOGLECU5KuFWhMioCZOho09jS6alZA9tiwksHr2LYXfo7AdFczpEz3Npw==}
 
-  '@primer/react@38.0.0':
-    resolution: {integrity: sha512-MFmbmcal44IPxUIem9kEd7SF0XmJLjXGWMl1OQqsqMAiAhp0fEPpbrz/pmuIkCfg+5ZRJcw36RkQDrBe7fsyqg==}
+  '@primer/react@38.6.2':
+    resolution: {integrity: sha512-m0GZwm5Bg9CyEIM4I/Cq7yN/JGBWkBEW+Xtsa6Og/2OBmyK/23MELMfi/k5uDHIY3zl2oFsNoOlPWCICJWwHGw==}
     engines: {node: '>=12', npm: '>=7'}
     peerDependencies:
       '@types/react': 18.x || 19.x
@@ -2055,8 +2055,8 @@ packages:
       chart.js: ^4.1.1
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-compiler-runtime@19.1.0-rc.3:
-    resolution: {integrity: sha512-Cssogys2XZu6SqxRdX2xd8cQAf57BBvFbLEBlIa77161lninbKUn/EqbecCe7W3eqDQfg3rIoOwzExzgCh7h/g==}
+  react-compiler-runtime@1.0.0:
+    resolution: {integrity: sha512-rRfjYv66HlG8896yPUDONgKzG5BxZD1nV9U6rkm+7VCuvQc903C4MjcoZR4zPw53IKSOX9wMQVpA1IAbRtzQ7w==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
 
@@ -2735,7 +2735,7 @@ snapshots:
 
   '@github/mini-throttle@2.1.1': {}
 
-  '@github/relative-time-element@4.5.0': {}
+  '@github/relative-time-element@4.5.1': {}
 
   '@github/tab-container-element@4.8.2': {}
 
@@ -2880,7 +2880,7 @@ snapshots:
 
   '@lit-labs/react@1.2.1': {}
 
-  '@lit-labs/ssr-dom-shim@1.4.0': {}
+  '@lit-labs/ssr-dom-shim@1.5.0': {}
 
   '@napi-rs/wasm-runtime@0.2.10':
     dependencies:
@@ -2937,11 +2937,11 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@primer/behaviors@1.8.4': {}
+  '@primer/behaviors@1.9.0': {}
 
   '@primer/live-region-element@0.7.2':
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.4.0
+      '@lit-labs/ssr-dom-shim': 1.5.0
 
   '@primer/octicons-react@19.21.1(react@19.2.3)':
     dependencies:
@@ -2949,14 +2949,14 @@ snapshots:
 
   '@primer/primitives@11.3.1': {}
 
-  '@primer/react@38.0.0(@types/react-dom@19.1.5(@types/react@19.2.7))(@types/react-is@18.3.1)(@types/react@19.2.7)(react-dom@19.0.0(react@19.2.3))(react-is@18.3.1)(react@19.2.3)':
+  '@primer/react@38.6.2(@types/react-dom@19.1.5(@types/react@19.2.7))(@types/react-is@18.3.1)(@types/react@19.2.7)(react-dom@19.0.0(react@19.2.3))(react-is@18.3.1)(react@19.2.3)':
     dependencies:
       '@github/mini-throttle': 2.1.1
-      '@github/relative-time-element': 4.5.0
+      '@github/relative-time-element': 4.5.1
       '@github/tab-container-element': 4.8.2
       '@lit-labs/react': 1.2.1
       '@oddbird/popover-polyfill': 0.5.2
-      '@primer/behaviors': 1.8.4
+      '@primer/behaviors': 1.9.0
       '@primer/live-region-element': 0.7.2
       '@primer/octicons-react': 19.21.1(react@19.2.3)
       '@primer/primitives': 11.3.1
@@ -2969,7 +2969,7 @@ snapshots:
       lodash.isempty: 4.4.0
       lodash.isobject: 3.0.2
       react: 19.2.3
-      react-compiler-runtime: 19.1.0-rc.3(react@19.2.3)
+      react-compiler-runtime: 1.0.0(react@19.2.3)
       react-dom: 19.0.0(react@19.2.3)
       react-intersection-observer: 9.16.0(react-dom@19.0.0(react@19.2.3))(react@19.2.3)
       react-is: 18.3.1
@@ -4671,7 +4671,7 @@ snapshots:
       chart.js: 4.5.1
       react: 19.2.3
 
-  react-compiler-runtime@19.1.0-rc.3(react@19.2.3):
+  react-compiler-runtime@1.0.0(react@19.2.3):
     dependencies:
       react: 19.2.3
 
