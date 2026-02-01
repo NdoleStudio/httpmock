@@ -15,7 +15,7 @@
     "@primer/octicons-react": "^19.21.2",
     "@primer/primitives": "^11.3.2",
     "@primer/react": "^38.6.2",
-    "axios": "^1.13.2",
+    "axios": "^1.13.4",
     "chart.js": "^4.5.1",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^4.1.0",
