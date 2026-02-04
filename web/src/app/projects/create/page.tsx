@@ -65,10 +65,10 @@ export default function ProjectCreate() {
         <BackButton href={"/"}></BackButton>
         <Box
           style={{
-            backgroundColor: "#f6f8fa", // canvas.inset
+            backgroundColor: "#020408", // canvas.inset
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: "#d0d7de", // border.default
+            borderColor: "#3d444d", // border.default
             borderRadius: 8,
             padding: 24,
           }}

@@ -384,7 +384,7 @@ export default function EndpointShow() {
           borderBottomWidth: 1,
           marginTop: 16,
           borderBottomStyle: "solid",
-          borderColor: "#d0d7de",
+          borderColor: "#3d444d",
         }}
       ></Box>
       {isDeleteDialogOpen && (
@@ -435,7 +435,7 @@ export default function EndpointShow() {
               borderWidth: 1,
               padding: 16,
               borderRadius: 4,
-              borderColor: "#d0d7de",
+              borderColor: "#3d444d",
             }}
           >
             {/* @ts-expect-error chart types are not consistent */}

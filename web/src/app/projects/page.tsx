@@ -65,7 +65,7 @@ export default function ProjectIndex() {
           borderBottomWidth: 1,
           marginTop: 16,
           borderBottomStyle: "solid",
-          borderColor: "#d0d7de",
+          borderColor: "#3d444d",
         }}
       ></Box>
 

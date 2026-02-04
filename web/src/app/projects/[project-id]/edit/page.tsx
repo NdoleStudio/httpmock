@@ -81,10 +81,10 @@ export default function ProjectEdit() {
         <BackButton href={`/projects/${projectId}`}></BackButton>
         <Box
           style={{
-            backgroundColor: "#f6f8fa",
+            backgroundColor: "#020408",
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: "#d0d7de",
+            borderColor: "#3d444d",
             borderRadius: 6,
             padding: 24,
           }}

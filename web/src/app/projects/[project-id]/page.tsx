@@ -269,7 +269,7 @@ export default function ProjectShow() {
           borderBottomWidth: 1,
           marginTop: 16,
           borderBottomStyle: "solid",
-          borderColor: "#d0d7de",
+          borderColor: "#3d444d",
         }}
       ></Box>
       {isDeleteDialogOpen && (
@@ -329,7 +329,7 @@ export default function ProjectShow() {
         )}
       </Box>
       <div>
-        <Heading as="h2" style={{ marginTop: 256 }} variant="medium">
+        <Heading as="h2" style={{ marginTop: 24 }} variant="medium">
           <LinkIcon size={24} />
           <Text style={{ marginLeft: 8 }}>Endpoints</Text>
         </Heading>
