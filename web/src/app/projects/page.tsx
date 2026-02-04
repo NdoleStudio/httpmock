@@ -3,13 +3,13 @@
 import { redirect, useRouter } from "next/navigation";
 import {
   Box,
-  BranchName,
   Button,
   Heading,
   PageHeader,
   Spinner,
   Text,
-} from "@primer/react";
+} from "@primer/styled-react";
+import { BranchName } from "@primer/react";
 import { PlusIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { EntitiesProject } from "@/api/model";

@@ -9,9 +9,9 @@ import {
   ActionList,
   Avatar,
   Box,
+  Heading,
   Text,
-} from "@primer/react";
-import { Heading } from "@primer/react";
+} from "@primer/styled-react";
 import Logo from "@/app/logo.svg";
 import {
   SignInIcon,
@@ -63,25 +63,19 @@ export function AppBar() {
         onClick={() => router.push("/")}
       >
         <Image src={Logo} height={48} alt={"httpmock.dev logo"} />
-        <Heading
-          sx={{ fontWeight: "lighter", display: ["none", "block"] }}
-          as={"h2"}
-        >
+        <Heading style={{ fontWeight: "lighter", display: "block" }} as={"h2"}>
           httpmock
         </Heading>
         {activeProject === null && (
-          <Heading
-            sx={{ fontWeight: "lighter", display: ["block", "none"] }}
-            as={"h2"}
-          >
+          <Heading style={{ fontWeight: "lighter", display: "none" }} as={"h2"}>
             httpmock
           </Heading>
         )}
       </Header.Item>
       {activeProject && (
         <ActionMenu>
-          <ActionMenu.Button size={"large"} sx={{ mt: 2 }}>
-            <Text variant={"large"} weight={"semibold"}>
+          <ActionMenu.Button size={"large"} style={{ marginTop: 16 }}>
+            <Text size={"large"} weight={"semibold"}>
               {activeProject.name}
             </Text>
           </ActionMenu.Button>
@@ -113,7 +107,7 @@ export function AppBar() {
           </ActionMenu.Overlay>
         </ActionMenu>
       )}
-      <Box sx={{ flex: "auto" }}></Box>
+      <Box style={{ flex: "auto" }}></Box>
       <Header.Item>
         {pathname === "/sign-up" && (
           <Button
@@ -140,7 +134,7 @@ export function AppBar() {
             <ActionMenu.Anchor>
               <Avatar
                 size={30}
-                sx={{ cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
                 alt={"account image"}
                 src={user.user.imageUrl}
               />

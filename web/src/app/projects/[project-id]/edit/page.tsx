@@ -8,7 +8,7 @@ import {
   Text,
   Textarea,
   TextInput,
-} from "@primer/react";
+} from "@primer/styled-react";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Heading, Spinner, Text } from "@primer/react";
+import { Box, Spinner, Heading, Text } from "@primer/styled-react";
 import Logo from "@/app/logo.svg";
 import Image from "next/image";
 

@@ -6,15 +6,14 @@ import {
   PageHeader,
   Spinner,
   Dialog,
-  BranchName,
   Heading,
   Button,
   Label,
   TextInput,
   Textarea,
-  RelativeTime,
   IconButton,
-} from "@primer/react";
+} from "@primer/styled-react";
+import { BranchName, RelativeTime } from "@primer/react";
 import { usePathname } from "next/navigation";
 import React, { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useAppStore } from "@/store/provider";

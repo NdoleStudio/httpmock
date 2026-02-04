@@ -8,7 +8,7 @@ import {
   Text,
   Textarea,
   TextInput,
-} from "@primer/react";
+} from "@primer/styled-react";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
@@ -52,32 +52,37 @@ export default function ProjectCreate() {
 
   return (
     <Box
-      sx={{
-        mt: 4,
-        px: 2,
+      style={{
+        marginTop: 32, // mt: 4
+        paddingLeft: 16, // px: 2
+        paddingRight: 16,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <Box sx={{ maxWidth: "500px" }}>
+      <Box style={{ maxWidth: 500 }}>
         <BackButton href={"/"}></BackButton>
         <Box
-          sx={{
-            backgroundColor: "canvas.inset",
+          style={{
+            backgroundColor: "#f6f8fa", // canvas.inset
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: "border.default",
-            borderRadius: 2,
-            p: 3,
+            borderColor: "#d0d7de", // border.default
+            borderRadius: 8,
+            padding: 24,
           }}
         >
           <Heading as={"h2"}>Create Project</Heading>
-          <Text sx={{ color: "fg.muted" }}>
+          <Text style={{ color: "#6e7781" }}>
             Your mocked endpoints are grouped into projects for better
             organization.
           </Text>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Project Subdomain</FormControl.Label>
             <TextInput
               trailingVisual={
@@ -101,7 +106,11 @@ export default function ProjectCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Project Name</FormControl.Label>
             <TextInput
               validationStatus={errorMessages.has("name") ? "error" : undefined}
@@ -118,7 +127,7 @@ export default function ProjectCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 32 }} disabled={loading}>
             <FormControl.Label>Project Description</FormControl.Label>
             <Textarea
               validationStatus={
@@ -141,7 +150,7 @@ export default function ProjectCreate() {
             loading={loading}
             disabled={loading}
             onClick={onCreateProject}
-            sx={{ mt: 4 }}
+            style={{ marginTop: 32 }}
             variant={"primary"}
           >
             Create Project

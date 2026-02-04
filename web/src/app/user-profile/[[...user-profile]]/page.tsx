@@ -1,7 +1,7 @@
 "use client";
 
 import { UserProfile } from "@clerk/nextjs";
-import { Box } from "@primer/react";
+import { Box } from "@primer/styled-react";
 import { BackButton } from "@/components/back-button";
 
 export default function Page() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { SignIn } from "@clerk/nextjs";
-import { Box } from "@primer/react";
+import { Box } from "@primer/styled-react";
 
 export default function Page() {
   return (

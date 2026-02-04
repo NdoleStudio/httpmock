@@ -1,7 +1,7 @@
 "use client";
 
 import { MouseEvent } from "react";
-import { Button } from "@primer/react";
+import { Button } from "@primer/styled-react";
 import { CheckIcon, CopyIcon } from "@primer/octicons-react";
 import { useState } from "react";
 

@@ -9,12 +9,11 @@ import {
   ActionList,
   Spinner,
   Dialog,
-  BranchName,
   Heading,
   Label,
-  RelativeTime,
   Link,
-} from "@primer/react";
+} from "@primer/styled-react";
+import { BranchName, RelativeTime } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, MouseEvent, useState } from "react";
 import { useAppStore } from "@/store/provider";
@@ -191,11 +190,13 @@ export default function ProjectShow() {
 
   return (
     <Box
-      sx={{
-        maxWidth: "xlarge",
-        mx: "auto",
-        mt: 4,
-        px: 2,
+      style={{
+        maxWidth: 1200, // xlarge
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginTop: 32, // mt: 4
+        paddingLeft: 16, // px: 2
+        paddingRight: 16,
         minHeight: "calc(100vh - 200px)",
       }}
     >
@@ -212,7 +213,7 @@ export default function ProjectShow() {
           <PageHeader.Description>
             <div>
               {project.description && (
-                <Text as={"p"} sx={{ color: "fg.muted", mb: 1 }}>
+                <Text as={"p"} style={{ color: "#6e7781", marginBottom: 4 }}>
                   {project.description}
                 </Text>
               )}
@@ -231,8 +232,8 @@ export default function ProjectShow() {
             }
             leadingVisual={PlusIcon}
           >
-            <Text sx={{ display: ["none", "inline-block"] }}>New Endpoint</Text>
-            <Text sx={{ display: ["inline-block", "none"] }}>Endpoint</Text>
+            <Text style={{ display: "inline-block" }}>New Endpoint</Text>
+            <Text style={{ display: "none" }}>Endpoint</Text>
           </Button>
           <ActionMenu>
             <ActionMenu.Anchor aria-label={"Manage project"}>
@@ -264,11 +265,11 @@ export default function ProjectShow() {
         </PageHeader.Actions>
       </PageHeader>
       <Box
-        sx={{
+        style={{
           borderBottomWidth: 1,
-          mt: 2,
+          marginTop: 16,
           borderBottomStyle: "solid",
-          borderColor: "border.default",
+          borderColor: "#d0d7de",
         }}
       ></Box>
       {isDeleteDialogOpen && (
@@ -299,8 +300,8 @@ export default function ProjectShow() {
               permanent action and it cannot be reversed.
             </p>
           </div>
-          <Box sx={{ mt: 2 }}>
-            <Text sx={{ color: "fg.muted" }}>
+          <Box style={{ marginTop: 16 }}>
+            <Text style={{ color: "#6e7781" }}>
               {project?.subdomain}.httpmock.dev
             </Text>
           </Box>
@@ -308,18 +309,18 @@ export default function ProjectShow() {
       )}
 
       <Box display={["none", "none", "block"]}>
-        <Heading sx={{ mt: 4 }} as={"h2"} variant={"medium"}>
+        <Heading style={{ marginTop: 64 }} as={"h2"} variant={"medium"}>
           Project Traffic Insights
         </Heading>
         {!loadingTraffic && (
           <Box
-            sx={{
-              marginTop: 1,
+            style={{
+              marginTop: 8,
               borderStyle: "solid",
               borderWidth: 1,
-              padding: 2,
+              padding: 16,
               borderRadius: 4,
-              borderColor: "border.default",
+              borderColor: "#d0d7de",
             }}
           >
             {/* @ts-expect-error chart types are not consistent */}
@@ -328,9 +329,9 @@ export default function ProjectShow() {
         )}
       </Box>
       <div>
-        <Heading as="h2" sx={{ mt: 32 }} variant="medium">
+        <Heading as="h2" style={{ marginTop: 256 }} variant="medium">
           <LinkIcon size={24} />
-          <Text sx={{ ml: 2 }}>Endpoints</Text>
+          <Text style={{ marginLeft: 8 }}>Endpoints</Text>
         </Heading>
       </div>
       {loadingEndpoints && (
@@ -340,62 +341,46 @@ export default function ProjectShow() {
       )}
       {!loadingEndpoints && endpoints.length === 0 && (
         <p>
-          <Text sx={{ color: "fg.muted" }}>
+          <Text style={{ color: "#6e7781" }}>
             This project does not have any have any mocked HTTP endpoints.{" "}
           </Text>
           <Link
-            sx={{ color: "accent.emphasis", cursor: "pointer" }}
+            style={{ color: "#0969da", cursor: "pointer" }}
             onClick={() =>
               router.push(`/projects/${projectId}/endpoints/create`)
             }
           >
             Create a new endpoint
           </Link>
-          <Text sx={{ color: "fg.muted" }}> to start mocking your APIs</Text>
+          <Text style={{ color: "#6e7781" }}> to start mocking your APIs</Text>
         </p>
       )}
       {!loadingEndpoints && (
         <Box
-          sx={{
-            mt: 2,
-            "> *": {
-              borderWidth: 1,
-              borderColor: "border.default",
-              borderStyle: "solid",
-              borderBottomWidth: 0,
-              padding: [2, 4],
-              "&:first-child": {
-                borderTopLeftRadius: 2,
-                borderTopRightRadius: 2,
-              },
-              "&:last-child": {
-                borderBottomLeftRadius: 2,
-                borderBottomRightRadius: 2,
-                borderBottomWidth: 1,
-              },
-              "&:hover": {
-                bg: "canvas.inset",
-              },
-            },
+          style={{
+            marginTop: 16,
+            // Note: Complex child selectors and responsive padding are omitted for inline styles
           }}
         >
           {endpoints.map((endpoint) => (
             <div key={endpoint.id}>
-              <Box sx={{ display: "flex", alignItems: "baseline" }}>
+              <Box style={{ display: "flex", alignItems: "baseline" }}>
                 <Label
-                  sx={{
-                    display: ["none", "flex"],
+                  style={{
+                    display: "flex",
                     color: getLabelColor(endpoint.request_method),
                   }}
                 >
                   {endpoint.request_method}
                 </Label>
-                <Text sx={{ ml: 1, mr: 1, fontWeight: "bold" }}>
+                <Text
+                  style={{ marginLeft: 4, marginRight: 4, fontWeight: "bold" }}
+                >
                   {getEndpointURL(endpoint.request_path)}
                 </Text>
                 <CopyButton data={getEndpointURL(endpoint.request_path)} />
               </Box>
-              <Box sx={{ mt: 2, display: "flex" }}>
+              <Box style={{ marginTop: 16, display: "flex" }}>
                 <Button
                   onClick={() =>
                     router.push(
@@ -405,7 +390,7 @@ export default function ProjectShow() {
                   size={"small"}
                   count={endpoint.request_count}
                   variant="default"
-                  sx={{ mr: 2 }}
+                  style={{ marginRight: 8 }}
                 >
                   HTTP Requests
                 </Button>
@@ -417,17 +402,20 @@ export default function ProjectShow() {
                   }
                   size={"small"}
                   variant="default"
-                  sx={{ mr: 2 }}
+                  style={{ marginRight: 8 }}
                   leadingVisual={GearIcon}
                 >
                   Manage
                 </Button>
                 <div>
-                  <Text size="small" sx={{ mr: 1, color: "fg.muted" }}>
+                  <Text
+                    size="small"
+                    style={{ marginRight: 4, color: "#6e7781" }}
+                  >
                     Updated
                   </Text>
                   <RelativeTime
-                    sx={{ color: "fg.muted", fontSize: "small" }}
+                    style={{ color: "#6e7781", fontSize: "small" }}
                     date={new Date(endpoint.updated_at)}
                     noTitle={true}
                   ></RelativeTime>

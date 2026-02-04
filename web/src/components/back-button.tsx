@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@primer/react";
+import { Button } from "@primer/styled-react";
 import { ArrowLeftIcon } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 

@@ -2,16 +2,15 @@
 
 import {
   Box,
-  BranchName,
   Button,
   Dialog,
   FormControl,
   Heading,
-  Select,
   Text,
   Textarea,
   TextInput,
-} from "@primer/react";
+} from "@primer/styled-react";
+import { BranchName, Select } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";

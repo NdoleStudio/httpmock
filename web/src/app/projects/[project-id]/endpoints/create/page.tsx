@@ -5,11 +5,11 @@ import {
   Button,
   FormControl,
   Heading,
-  Select,
   Text,
   Textarea,
   TextInput,
-} from "@primer/react";
+} from "@primer/styled-react";
+import { Select } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
