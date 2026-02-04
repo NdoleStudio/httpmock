@@ -89,11 +89,11 @@ export default function ProjectIndex() {
             style={{
               cursor: "pointer",
               padding: 24,
-              backgroundColor: "#f6f8fa",
+              backgroundColor: "#020408",
               borderWidth: 1,
               borderRadius: 6,
               borderStyle: "solid",
-              borderColor: "#d0d7de",
+              borderColor: "#0e1116",
             }}
             onClick={() => {
               router.push(`/projects/${project.id}`);

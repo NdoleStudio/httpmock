@@ -2,16 +2,17 @@
 
 import * as React from "react";
 import Image from "next/image";
+import { Box } from "@primer/styled-react";
+
 import {
   Header,
   Button,
   ActionMenu,
   ActionList,
   Avatar,
-  Box,
   Heading,
   Text,
-} from "@primer/styled-react";
+} from "@primer/react";
 import Logo from "@/app/logo.svg";
 import {
   SignInIcon,

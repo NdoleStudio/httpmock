@@ -320,7 +320,7 @@ export default function ProjectShow() {
               borderWidth: 1,
               padding: 16,
               borderRadius: 4,
-              borderColor: "#d0d7de",
+              borderColor: "#3d444d",
             }}
           >
             {/* @ts-expect-error chart types are not consistent */}
