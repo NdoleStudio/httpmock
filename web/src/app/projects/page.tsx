@@ -34,11 +34,13 @@ export default function ProjectIndex() {
 
   return (
     <Box
-      sx={{
-        maxWidth: "xlarge",
-        mx: "auto",
-        px: 2,
-        mt: 6,
+      style={{
+        maxWidth: 1200,
+        marginLeft: "auto",
+        marginRight: "auto",
+        paddingLeft: 16,
+        paddingRight: 16,
+        marginTop: 48,
         minHeight: "calc(100vh - 200px)",
       }}
     >
@@ -59,42 +61,39 @@ export default function ProjectIndex() {
         </PageHeader.Actions>
       </PageHeader>
       <Box
-        sx={{
+        style={{
           borderBottomWidth: 1,
-          mt: 2,
+          marginTop: 16,
           borderBottomStyle: "solid",
-          borderColor: "border.default",
+          borderColor: "#d0d7de",
         }}
       ></Box>
 
       {projects.length === 0 && (
-        <Box sx={{ textAlign: "center", mt: 4 }}>
-          <Spinner size="large" sx={{ color: "accent.emphasis" }} />
+        <Box style={{ textAlign: "center", marginTop: 32 }}>
+          <Spinner size="large" style={{ color: "#0969da" }} />
         </Box>
       )}
 
       <Box
-        sx={{
-          mt: 4,
+        style={{
+          marginTop: 32,
           display: "grid",
-          gridTemplateColumns: ["1fr", "repeat(2, 1fr)", "repeat(4, 1fr)"],
-          gap: 3,
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: 24,
         }}
       >
         {projects.map((project: EntitiesProject) => (
           <Box
             key={project.id}
-            sx={{
+            style={{
               cursor: "pointer",
-              p: 3,
-              backgroundColor: "canvas.inset",
+              padding: 24,
+              backgroundColor: "#f6f8fa",
               borderWidth: 1,
-              borderRadius: 2,
+              borderRadius: 6,
               borderStyle: "solid",
-              borderColor: "border.default",
-              "&:hover": {
-                bg: "neutral.muted",
-              },
+              borderColor: "#d0d7de",
             }}
             onClick={() => {
               router.push(`/projects/${project.id}`);
@@ -103,7 +102,7 @@ export default function ProjectIndex() {
             <Heading className="text--clamp-1" variant="medium" as="h2">
               {project.name}
             </Heading>
-            <Text as="p" className="text--clamp-3" sx={{ color: "fg.muted" }}>
+            <Text as="p" className="text--clamp-3" style={{ color: "#6e7781" }}>
               {project.description}
             </Text>
             <BranchName>{project.subdomain}.httpmock.dev</BranchName>

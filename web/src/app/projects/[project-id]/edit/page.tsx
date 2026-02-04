@@ -68,33 +68,38 @@ export default function ProjectEdit() {
 
   return (
     <Box
-      sx={{
-        mt: 4,
-        px: 2,
+      style={{
+        marginTop: 32,
+        paddingLeft: 16,
+        paddingRight: 16,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <Box sx={{ maxWidth: "500px" }}>
+      <Box style={{ maxWidth: 500 }}>
         <BackButton href={`/projects/${projectId}`}></BackButton>
         <Box
-          sx={{
-            backgroundColor: "canvas.inset",
+          style={{
+            backgroundColor: "#f6f8fa",
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: "border.default",
-            borderRadius: 2,
-            p: 3,
+            borderColor: "#d0d7de",
+            borderRadius: 6,
+            padding: 24,
           }}
         >
           <Heading as={"h2"}>Edit Project</Heading>
-          <Text sx={{ color: "fg.muted" }}>
+          <Text style={{ color: "#6e7781" }}>
             Your mocked endpoints are grouped into projects for better
             organization.
           </Text>
 
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Project Subdomain</FormControl.Label>
             <TextInput
               trailingVisual={
@@ -118,7 +123,11 @@ export default function ProjectEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Project Name</FormControl.Label>
             <TextInput
               validationStatus={errorMessages.has("name") ? "error" : undefined}
@@ -135,7 +144,7 @@ export default function ProjectEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 32 }} disabled={loading}>
             <FormControl.Label>Project Description</FormControl.Label>
             <Textarea
               validationStatus={
@@ -158,7 +167,7 @@ export default function ProjectEdit() {
             loading={loading}
             disabled={loading}
             onClick={onUpdateProject}
-            sx={{ mt: 4 }}
+            style={{ marginTop: 32 }}
             variant={"primary"}
           >
             Update Project

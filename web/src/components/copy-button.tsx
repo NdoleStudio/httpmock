@@ -4,14 +4,11 @@ import { MouseEvent } from "react";
 import { Button } from "@primer/styled-react";
 import { CheckIcon, CopyIcon } from "@primer/octicons-react";
 import { useState } from "react";
+import { CSSProperties } from "react";
 
 type CopyButtonProps = {
   size?: "small" | "medium" | "large";
-  sx?: {
-    mt?: number;
-    ml?: number;
-    display?: string | Array<string>;
-  };
+  style?: CSSProperties;
   data: string;
 };
 
@@ -27,7 +24,7 @@ export function CopyButton({ ...props }: CopyButtonProps) {
   return (
     <Button
       onClick={onClick}
-      sx={props.sx}
+      style={props.style}
       size={props.size ?? "small"}
       variant="invisible"
     >

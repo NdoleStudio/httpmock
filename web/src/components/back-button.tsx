@@ -14,7 +14,7 @@ export function BackButton({ ...props }: BackButtonProps) {
   return (
     <Button
       onClick={() => router.push(props.href)}
-      sx={{ mb: 3 }}
+      style={{ marginBottom: 24 }}
       leadingVisual={ArrowLeftIcon}
     >
       Go Back

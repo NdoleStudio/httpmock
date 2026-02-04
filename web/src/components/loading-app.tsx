@@ -14,7 +14,7 @@ export function LoadingApp() {
     <React.Fragment>
       {show && (
         <Box
-          sx={{
+          style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -27,11 +27,14 @@ export function LoadingApp() {
             </div>
             <div style={{ display: "flex" }}>
               <Spinner
-                sx={{ mt: 2, color: "accent.emphasis" }}
+                style={{ marginTop: 16, color: "#0969da" }}
                 size={"medium"}
               />
-              <Heading as={"h2"} sx={{ ml: 2, fontWeight: "light" }}>
-                Loading httpmock<Text sx={{ color: "accent.emphasis" }}>.</Text>
+              <Heading
+                as={"h2"}
+                style={{ marginLeft: 16, fontWeight: "light" }}
+              >
+                Loading httpmock<Text style={{ color: "#0969da" }}>.</Text>
                 dev
               </Heading>
             </div>

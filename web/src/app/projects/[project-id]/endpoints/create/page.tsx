@@ -78,27 +78,31 @@ export default function EndpointsCreate() {
 
   return (
     <Box
-      sx={{
-        mt: 6,
+      style={{
+        marginTop: 48,
         display: "flex",
         justifyContent: "center",
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      <Box sx={{ maxWidth: "100%", width: "small", mb: 16 }}>
+      <Box style={{ maxWidth: "100%", width: 400, marginBottom: 64 }}>
         <BackButton href={`/projects/${projectId}`}></BackButton>
         <Box
-          sx={{
-            backgroundColor: "canvas.inset",
+          style={{
+            backgroundColor: "#f6f8fa",
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: "border.default",
-            borderRadius: 2,
-            p: 3,
+            borderColor: "#d0d7de",
+            borderRadius: 6,
+            padding: 24,
           }}
         >
           <Heading as={"h2"}>Create Mock Endpoint</Heading>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Request Method</FormControl.Label>
             <FormControl.Caption>
               Use ANY if you want to match all HTTP methods (GET, POST, DELETE
@@ -129,11 +133,15 @@ export default function EndpointsCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Request Path</FormControl.Label>
             <FormControl.Caption>
               Your full URL will look like{" "}
-              <Text sx={{ color: "accent.emphasis", fontWeight: "bold" }}>
+              <Text style={{ color: "#0969da", fontWeight: "bold" }}>
                 https://{project?.subdomain}.httmock.dev{requestPath}
               </Text>
             </FormControl.Caption>
@@ -155,7 +163,11 @@ export default function EndpointsCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 32 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Response Code</FormControl.Label>
             <FormControl.Caption>
               HTTP status code to return in the response
@@ -179,7 +191,7 @@ export default function EndpointsCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 32 }} disabled={loading}>
             <FormControl.Label>Response Body</FormControl.Label>
             <FormControl.Caption>
               The response body can be any valid JSON, XML, or plain text

@@ -7,9 +7,10 @@ import { BackButton } from "@/components/back-button";
 export default function Page() {
   return (
     <Box
-      sx={{
-        mt: 2,
-        px: 2,
+      style={{
+        marginTop: 16,
+        paddingLeft: 16,
+        paddingRight: 16,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

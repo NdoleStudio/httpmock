@@ -317,11 +317,13 @@ export default function EndpointShow() {
 
   return (
     <Box
-      sx={{
-        maxWidth: "xlarge",
-        mx: "auto",
-        mt: 4,
-        px: 2,
+      style={{
+        maxWidth: 1200,
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginTop: 32,
+        paddingLeft: 16,
+        paddingRight: 16,
         minHeight: "calc(100vh - 200px)",
       }}
     >
@@ -332,20 +334,20 @@ export default function EndpointShow() {
         >
           {project && projectEndpoint && (
             <PageHeader.Title>
-              <Box sx={{ display: "flex", alignItems: "flexStart" }}>
+              <Box style={{ display: "flex", alignItems: "flexStart" }}>
                 <Label
-                  sx={{
-                    mt: 3,
-                    display: ["none", "flex"],
+                  style={{
+                    marginTop: 24,
+                    display: "flex",
                     color: labelColor(projectEndpoint.request_method),
                   }}
                 >
                   {projectEndpoint.request_method}
                 </Label>
                 <Text
-                  sx={{
-                    ml: 1,
-                    mr: 1,
+                  style={{
+                    marginLeft: 4,
+                    marginRight: 4,
                     fontWeight: "bold",
                     wordBreak: "break-all",
                   }}
@@ -354,7 +356,7 @@ export default function EndpointShow() {
                 </Text>
                 <CopyButton
                   size={"medium"}
-                  sx={{ display: ["none", "block"], mt: 2 }}
+                  style={{ display: "block", marginTop: 16 }}
                   data={getEndpointURL(projectEndpoint)}
                 />
               </Box>
@@ -368,21 +370,21 @@ export default function EndpointShow() {
         </PageHeader.TitleArea>
         {project && (
           <PageHeader.Description>
-            <Text as={"p"} sx={{ fontSize: 1, color: "fg.muted" }}>
+            <Text as={"p"} style={{ fontSize: 12, color: "#6e7781" }}>
               {project?.description}
             </Text>
           </PageHeader.Description>
         )}
-        <PageHeader.Actions sx={{ display: ["none", "flex"] }}>
+        <PageHeader.Actions sx={{ display: "flex" }}>
           <BackButton href={`/projects/${projectId}/`} />
         </PageHeader.Actions>
       </PageHeader>
       <Box
-        sx={{
+        style={{
           borderBottomWidth: 1,
-          mt: 2,
+          marginTop: 16,
           borderBottomStyle: "solid",
-          borderColor: "border.default",
+          borderColor: "#d0d7de",
         }}
       ></Box>
       {isDeleteDialogOpen && (
@@ -412,8 +414,8 @@ export default function EndpointShow() {
               permanent action and it cannot be reversed.
             </p>
           </div>
-          <Box sx={{ mt: 2 }}>
-            <Text sx={{ color: "fg.muted" }}>
+          <Box style={{ marginTop: 16 }}>
+            <Text style={{ color: "#6e7781" }}>
               {project?.subdomain}.httpmock.dev
             </Text>
           </Box>
@@ -421,19 +423,19 @@ export default function EndpointShow() {
       )}
 
       <Box display={["none", "none", "block"]}>
-        <Heading sx={{ mt: 4 }} as={"h2"} variant={"medium"}>
+        <Heading style={{ marginTop: 64 }} as={"h2"} variant={"medium"}>
           <GraphIcon size={24} />
-          <Text sx={{ ml: 2 }}>Endpoint Traffic Insights</Text>
+          <Text style={{ marginLeft: 8 }}>Endpoint Traffic Insights</Text>
         </Heading>
         {!loadingTraffic && (
           <Box
-            sx={{
-              marginTop: 1,
+            style={{
+              marginTop: 8,
               borderStyle: "solid",
               borderWidth: 1,
-              padding: 2,
+              padding: 16,
               borderRadius: 4,
-              borderColor: "border.default",
+              borderColor: "#d0d7de",
             }}
           >
             {/* @ts-expect-error chart types are not consistent */}
@@ -442,74 +444,58 @@ export default function EndpointShow() {
         )}
       </Box>
 
-      <Heading as="h2" sx={{ mt: 32 }} variant="medium">
+      <Heading as="h2" style={{ marginTop: 256 }} variant="medium">
         <MirrorIcon size={24} />
-        <Text sx={{ ml: 2 }}>HTTP Request Stream</Text>
+        <Text style={{ marginLeft: 8 }}>HTTP Request Stream</Text>
         {streamingIsActive && (
-          <Spinner sx={{ ml: 2, color: "accent.emphasis" }} size="small" />
+          <Spinner style={{ marginLeft: 8, color: "#0969da" }} size="small" />
         )}
       </Heading>
       {loadingProjectEndpointRequests &&
         projectEndpointRequests.length === 0 && (
-          <Spinner sx={{ ml: 2, color: "accent.emphasis" }} size="large" />
+          <Spinner style={{ marginLeft: 8, color: "#0969da" }} size="large" />
         )}
       {!loadingProjectEndpointRequests &&
         projectEndpoint &&
         projectEndpointRequests.length === 0 && (
           <React.Fragment>
-            <Text as={"p"} sx={{ color: "fg.muted" }}>
+            <Text as={"p"} style={{ color: "#6e7781" }}>
               The endpoint{" "}
               <BranchName>{getEndpointURL(projectEndpoint)}</BranchName> does
               not have any have any HTTP requests. You can make an http request
               using the <BranchName>curl</BranchName> command below
             </Text>
-            <Box sx={{ display: "flex", mt: 2 }}>
+            <Box style={{ display: "flex", marginTop: 16 }}>
               <Textarea
                 value={getCurlCode(projectEndpoint)}
                 readOnly={true}
                 block={true}
                 rows={4}
               />
-              <CopyButton sx={{ ml: 2 }} data={getCurlCode(projectEndpoint)} />
+              <CopyButton
+                style={{ marginLeft: 8 }}
+                data={getCurlCode(projectEndpoint)}
+              />
             </Box>
           </React.Fragment>
         )}
       {!loadingProjectEndpointRequests && (
         <Box
-          sx={{
-            mt: 2,
-            mb: 4,
-            "> *": {
-              borderWidth: 1,
-              borderColor: "border.default",
-              borderStyle: "solid",
-              borderBottomWidth: 0,
-              padding: 3,
-              "&:first-child": {
-                borderTopLeftRadius: 2,
-                borderTopRightRadius: 2,
-              },
-              "&:last-child": {
-                borderBottomLeftRadius: 2,
-                borderBottomRightRadius: 2,
-                borderBottomWidth: 1,
-              },
-              "&:hover": {
-                bg: "canvas.inset",
-              },
-            },
+          style={{
+            marginTop: 16,
+            marginBottom: 64,
           }}
         >
           {projectEndpointRequests.map((request) => (
             <div key={request.id}>
-              <Box sx={{ display: "flex", alignItems: "baseline" }}>
-                <Label sx={{ color: labelColor(request.request_method) }}>
+              <Box style={{ display: "flex", alignItems: "baseline" }}>
+                <Label style={{ color: labelColor(request.request_method) }}>
                   {request.request_method}
                 </Label>
                 <Text
-                  sx={{
-                    ml: 1,
-                    mr: 1,
+                  style={{
+                    marginLeft: 4,
+                    marginRight: 4,
                     fontWeight: "bold",
                     wordBreak: "break-all",
                   }}
@@ -517,7 +503,7 @@ export default function EndpointShow() {
                   {request.request_url}
                 </Text>
                 <CopyButton
-                  sx={{ display: ["none", "inline-block"] }}
+                  style={{ display: "inline-block" }}
                   data={request.request_url}
                 />
                 <IconButton
@@ -526,7 +512,12 @@ export default function EndpointShow() {
                     setDeleteRequestId(request.id);
                     setIsDeleteDialogOpen(true);
                   }}
-                  sx={{ ml: "auto", px: 2, display: ["inline-block", "none"] }}
+                  style={{
+                    marginLeft: "auto",
+                    paddingLeft: 16,
+                    paddingRight: 16,
+                    display: "none",
+                  }}
                   variant={"danger"}
                   icon={TrashIcon}
                   aria-label="Delete"
@@ -538,13 +529,13 @@ export default function EndpointShow() {
                     setDeleteRequestId(request.id);
                     setIsDeleteDialogOpen(true);
                   }}
-                  sx={{ ml: "auto", display: ["none", "inline-block"] }}
+                  style={{ marginLeft: "auto", display: "inline-block" }}
                   variant={"danger"}
                 >
                   Delete
                 </Button>
               </Box>
-              <Text sx={{ color: "fg.muted", fontSize: "small" }}>
+              <Text style={{ color: "#6e7781", fontSize: "small" }}>
                 Received{" "}
                 <RelativeTime
                   date={new Date(request.created_at)}
@@ -553,13 +544,17 @@ export default function EndpointShow() {
                 {secondsSince(request.created_at) < 120 && (
                   <Label
                     size={"small"}
-                    sx={{ color: "#4c8341", ml: 1, fontSize: "small" }}
+                    style={{
+                      color: "#4c8341",
+                      marginLeft: 4,
+                      fontSize: "small",
+                    }}
                   >
                     NEW
                   </Label>
                 )}
               </Text>
-              <Box sx={{ mt: 2, display: "flex" }}>
+              <Box style={{ marginTop: 16, display: "flex" }}>
                 <UnderlinePanels aria-label="HTTP request details">
                   {requestTabs.map((tab: string, index: number) => (
                     <UnderlinePanels.Tab
@@ -568,7 +563,9 @@ export default function EndpointShow() {
                       aria-selected={index === 0 ? true : undefined}
                     >
                       <p>
-                        <Text sx={{ display: ["none", "inline-block"], mr: 1 }}>
+                        <Text
+                          style={{ display: "inline-block", marginRight: 4 }}
+                        >
                           Request
                         </Text>{" "}
                         {tab}
@@ -576,7 +573,7 @@ export default function EndpointShow() {
                     </UnderlinePanels.Tab>
                   ))}
                   <UnderlinePanels.Panel key={0}>
-                    <Box sx={{ mt: 2 }}>
+                    <Box style={{ marginTop: 16 }}>
                       <table>
                         <tbody>
                           <tr>
@@ -638,7 +635,7 @@ export default function EndpointShow() {
                     </Box>
                   </UnderlinePanels.Panel>
                   <UnderlinePanels.Panel key={1}>
-                    <Box sx={{ mt: 2 }}>
+                    <Box style={{ marginTop: 16 }}>
                       <table>
                         <tbody>
                           {getHeaders(request.request_headers).map(
@@ -677,7 +674,7 @@ export default function EndpointShow() {
                     </Box>
                   </UnderlinePanels.Panel>
                   <UnderlinePanels.Panel key={2}>
-                    <Box sx={{ mt: 2 }}>
+                    <Box style={{ marginTop: 16 }}>
                       <table>
                         <tbody>
                           <tr>
@@ -714,7 +711,7 @@ export default function EndpointShow() {
         </Box>
       )}
       {canLoadMoreProjectEndpointRequests && (
-        <Box ref={ref} sx={{ mb: 2, color: "fg.muted" }}>
+        <Box ref={ref} style={{ marginBottom: 16, color: "#6e7781" }}>
           <Spinner size={"small"} /> Loading more requests...
         </Box>
       )}
@@ -745,8 +742,8 @@ export default function EndpointShow() {
               permanent action and it cannot be reversed.
             </p>
           </div>
-          <Box sx={{ mt: 2 }}>
-            <Text sx={{ color: "fg.muted" }}>{deleteRequestId}</Text>
+          <Box style={{ marginTop: 16 }}>
+            <Text style={{ color: "#6e7781" }}>{deleteRequestId}</Text>
           </Box>
         </Dialog>
       )}
