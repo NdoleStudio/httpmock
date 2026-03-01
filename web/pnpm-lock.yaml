@@ -25,7 +25,7 @@ importers:
         version: 38.6.2(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
       '@primer/styled-react':
         specifier: ^1.0.3
-        version: 1.0.3(@primer/react@38.6.2(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.8(react-dom@19.0.0(react@19.2.4))(react@19.2.4))
+        version: 1.0.3(@primer/react@38.6.2(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.11(react-dom@19.0.0(react@19.2.4))(react@19.2.4))
       axios:
         specifier: ^1.13.5
         version: 1.13.5
@@ -63,8 +63,8 @@ importers:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.0.0(react@19.2.4))(react@19.2.4)
       styled-components:
-        specifier: ^6.3.8
-        version: 6.3.8(react-dom@19.0.0(react@19.2.4))(react@19.2.4)
+        specifier: ^6.3.11
+        version: 6.3.11(react-dom@19.0.0(react@19.2.4))(react@19.2.4)
       zustand:
         specifier: ^5.0.10
         version: 5.0.10(@types/react@19.2.10)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
@@ -2179,8 +2179,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  styled-components@6.3.8:
-    resolution: {integrity: sha512-Kq/W41AKQloOqKM39zfaMdJ4BcYDw/N5CIq4/GTI0YjU6pKcZ1KKhk6b4du0a+6RA9pIfOP/eu94Ge7cu+PDCA==}
+  styled-components@6.3.11:
+    resolution: {integrity: sha512-opzgceGlQ5rdZdGwf9ddLW7EM2F4L7tgsgLn6fFzQ2JgE5EVQ4HZwNkcgB1p8WfOBx1GEZP3fa66ajJmtXhSrA==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
@@ -2857,7 +2857,7 @@ snapshots:
       '@types/react-dom': 19.1.5(@types/react@19.2.10)
       '@types/react-is': 18.3.1
 
-  '@primer/styled-react@1.0.3(@primer/react@38.6.2(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.8(react-dom@19.0.0(react@19.2.4))(react@19.2.4))':
+  '@primer/styled-react@1.0.3(@primer/react@38.6.2(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.11(react-dom@19.0.0(react@19.2.4))(react@19.2.4))':
     dependencies:
       '@primer/react': 38.6.2(@types/react-dom@19.1.5(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.0.0(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
       '@styled-system/css': 5.1.5
@@ -2869,7 +2869,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.0.0(react@19.2.4)
       react-is: 18.3.1
-      styled-components: 6.3.8(react-dom@19.0.0(react@19.2.4))(react@19.2.4)
+      styled-components: 6.3.11(react-dom@19.0.0(react@19.2.4))(react@19.2.4)
       styled-system: 5.1.5
     optionalDependencies:
       '@types/react': 19.2.10
@@ -4733,7 +4733,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-components@6.3.8(react-dom@19.0.0(react@19.2.4))(react@19.2.4):
+  styled-components@6.3.11(react-dom@19.0.0(react@19.2.4))(react@19.2.4):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       '@emotion/unitless': 0.10.0
