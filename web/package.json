@@ -37,7 +37,7 @@
     "@types/react-dom": "^19.1.5",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.6",
-    "eslint-plugin-primer-react": "^8.5.0",
+    "eslint-plugin-primer-react": "^8.5.2",
     "typescript": "^5.8.3"
   }
 }
