@@ -25,7 +25,7 @@
     "pusher-js": "^8.4.0",
     "react": "19.2.4",
     "react-chartjs-2": "^5.3.1",
-    "react-dom": "19.0.0",
+    "react-dom": "19.2.4",
     "react-intersection-observer": "^10.0.3",
     "sonner": "^2.0.7",
     "styled-components": "^6.3.11",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/node": "^25.3.3",
     "@types/react": "^19.2.10",
-    "@types/react-dom": "^19.1.5",
+    "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-primer-react": "^8.5.2",
