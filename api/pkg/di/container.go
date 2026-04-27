@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/clerk/clerk-sdk-go/v2/jwks"
 	"github.com/pusher/pusher-http-go/v5"
 
 	"github.com/NdoleStudio/httpmock/pkg/listeners"
@@ -88,7 +89,7 @@ func NewLiteContainer() (container *Container) {
 		TimeLocation: time.UTC,
 	}
 
-	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
+	clerk.SetKey(os.Getenv("CLERK_SECRET_KEY"))
 
 	return &Container{
 		logger: logger(3).WithCodeNamespace(fmt.Sprintf("%T", container)),
@@ -102,7 +103,7 @@ func NewContainer(projectID string, version string) (container *Container) {
 		TimeLocation: time.UTC,
 	}
 
-	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
+	clerk.SetKey(os.Getenv("CLERK_SECRET_KEY"))
 
 	container = &Container{
 		projectID: projectID,
@@ -150,8 +151,8 @@ func (container *Container) App() (app *fiber.App) {
 
 	container.app = app
 
-	container.EnsureCollections()
-	container.EnsureIndexes()
+	container.EnsureDBCollections()
+	container.EnsureDBIndexes()
 
 	container.RegisterEventRoutes()
 	container.RegisterProjectRoutes()
@@ -205,19 +206,23 @@ func (container *Container) Cluster() *gocb.Cluster {
 
 	container.logger.Debug("creating *gocb.Cluster")
 
-	cluster, err := gocb.Connect(os.Getenv("COUCHBASE_CONNECTION_STRING"), gocb.ClusterOptions{
+	options := gocb.ClusterOptions{
 		Authenticator: gocb.PasswordAuthenticator{
 			Username: os.Getenv("COUCHBASE_USERNAME"),
 			Password: os.Getenv("COUCHBASE_PASSWORD"),
 		},
-	})
-	if err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, "cannot connect to Couchbase cluster"))
 	}
 
-	err = cluster.WaitUntilReady(10*time.Second, nil)
+	// Sets a pre-configured profile called "wan-development" to help avoid latency issues
+	// when accessing Capella from a different Wide Area Network
+	// or Availability Zone (e.g. your laptop).
+	if err := options.ApplyProfile(gocb.ClusterConfigProfileWanDevelopment); err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot apply [wan-development] profile"))
+	}
+
+	cluster, err := gocb.Connect(os.Getenv("COUCHBASE_CONNECTION_STRING"), options)
 	if err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, "Couchbase cluster not ready"))
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot connect to Couchbase cluster"))
 	}
 
 	container.cluster = cluster
@@ -231,72 +236,75 @@ func (container *Container) Bucket() *gocb.Bucket {
 	}
 
 	container.logger.Debug("creating *gocb.Bucket")
+
 	container.bucket = container.Cluster().Bucket(os.Getenv("COUCHBASE_BUCKET"))
-	err := container.bucket.WaitUntilReady(10*time.Second, nil)
-	if err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, "Couchbase bucket not ready"))
+	if err := container.bucket.WaitUntilReady(5*time.Second, nil); err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot connect to Couchbase bucket"))
 	}
+
 	return container.bucket
+}
+
+// CouchbaseDBScope returns the default Couchbase scope name
+func (container *Container) CouchbaseDBScope() string {
+	return "_default"
 }
 
 // ProjectsCollection returns the projects collection
 func (container *Container) ProjectsCollection() *gocb.Collection {
-	return container.Bucket().Scope("_default").Collection("projects")
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("projects")
 }
 
 // EndpointsCollection returns the project_endpoints collection
 func (container *Container) EndpointsCollection() *gocb.Collection {
-	return container.Bucket().Scope("_default").Collection("project_endpoints")
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("project_endpoints")
 }
 
 // EndpointRequestsCollection returns the project_endpoint_requests collection
 func (container *Container) EndpointRequestsCollection() *gocb.Collection {
-	return container.Bucket().Scope("_default").Collection("project_endpoint_requests")
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("project_endpoint_requests")
 }
 
 // UsersCollection returns the users collection
 func (container *Container) UsersCollection() *gocb.Collection {
-	return container.Bucket().Scope("_default").Collection("users")
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("users")
 }
 
-// EnsureCollections creates Couchbase collections if they don't exist
-func (container *Container) EnsureCollections() {
+// EnsureDBCollections creates Couchbase collections if they don't exist
+func (container *Container) EnsureDBCollections() {
 	container.logger.Debug("ensuring Couchbase collections exist")
-	collections := container.Bucket().Collections()
+	collections := container.Bucket().CollectionsV2()
 
 	collectionNames := []string{"projects", "project_endpoints", "project_endpoint_requests", "users"}
 	for _, name := range collectionNames {
-		err := collections.CreateCollection(gocb.CollectionSpec{
-			Name:      name,
-			ScopeName: "_default",
-		}, nil)
+		err := collections.CreateCollection(container.CouchbaseDBScope(), name, nil, nil)
 		if err != nil && !errors.Is(err, gocb.ErrCollectionExists) {
 			container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create collection [%s]", name)))
 		}
 	}
 }
 
-// EnsureIndexes creates N1QL indexes if they don't exist
-func (container *Container) EnsureIndexes() {
+// EnsureDBIndexes creates N1QL indexes if they don't exist
+func (container *Container) EnsureDBIndexes() {
 	container.logger.Debug("ensuring Couchbase indexes exist")
 	bucket := os.Getenv("COUCHBASE_BUCKET")
 
 	indexes := []string{
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_projects_user_id ON `%s`.`_default`.`projects`(user_id)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_projects_subdomain ON `%s`.`_default`.`projects`(subdomain)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_user_project ON `%s`.`_default`.`project_endpoints`(user_id, project_id)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_subdomain_request ON `%s`.`_default`.`project_endpoints`(project_subdomain, request_method, request_path)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_project_id ON `%s`.`_default`.`project_endpoints`(project_id)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_endpoint ON `%s`.`_default`.`project_endpoint_requests`(user_id, project_endpoint_id, id DESC)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_project_created ON `%s`.`_default`.`project_endpoint_requests`(user_id, project_id, created_at)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_endpoint_created ON `%s`.`_default`.`project_endpoint_requests`(user_id, project_endpoint_id, created_at)", bucket),
-		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_users_subscription_id ON `%s`.`_default`.`users`(subscription_id)", bucket),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_projects_user_id ON `%s`.`%s`.`projects`(user_id)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_projects_subdomain ON `%s`.`%s`.`projects`(subdomain)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_user_project ON `%s`.`%s`.`project_endpoints`(user_id, project_id)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_subdomain_request ON `%s`.`%s`.`project_endpoints`(project_subdomain, request_method, request_path)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_project_id ON `%s`.`%s`.`project_endpoints`(project_id)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_endpoint ON `%s`.`%s`.`project_endpoint_requests`(user_id, project_endpoint_id, id DESC)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_project_created ON `%s`.`%s`.`project_endpoint_requests`(user_id, project_id, created_at)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_endpoint_created ON `%s`.`%s`.`project_endpoint_requests`(user_id, project_endpoint_id, created_at)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_users_subscription_id ON `%s`.`%s`.`users`(subscription_id)", bucket, container.CouchbaseDBScope()),
 	}
 
 	for _, query := range indexes {
 		_, err := container.Cluster().Query(query, nil)
 		if err != nil {
-			container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create index: %s", query)))
+			container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create index: [%s]", query)))
 		}
 	}
 }
@@ -319,6 +327,14 @@ func (container *Container) CloudTasksClient() (client *cloudtasks.Client) {
 	return client
 }
 
+// ClerkJWKSClient creates a new instance of *jwks.Client
+func (container *Container) ClerkJWKSClient() *jwks.Client {
+	container.logger.Debug(fmt.Sprintf("creating %T", container))
+	config := &clerk.ClientConfig{}
+	config.Key = clerk.String(os.Getenv("CLERK_SECRET_KEY"))
+	return jwks.NewClient(config)
+}
+
 // ClerkBearerAuthMiddlewares creates router for authenticated requests
 func (container *Container) ClerkBearerAuthMiddlewares() []fiber.Handler {
 	container.logger.Debug("creating ClerkBearerAuthRouter")
@@ -326,6 +342,7 @@ func (container *Container) ClerkBearerAuthMiddlewares() []fiber.Handler {
 		middlewares.ClerkBearerAuth(
 			container.Logger().WithCodeNamespace(fmt.Sprintf("%T", middlewares.ClerkBearerAuth)),
 			container.Tracer(),
+			container.ClerkJWKSClient(),
 		),
 		container.AuthenticatedMiddleware(),
 	}

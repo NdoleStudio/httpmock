@@ -146,7 +146,7 @@ func (repository *couchbaseProjectEndpointRepository) Fetch(ctx context.Context,
 		}
 	}()
 
-	var endpoints []*entities.ProjectEndpoint
+	endpoints := make([]*entities.ProjectEndpoint, 0)
 	for rows.Next() {
 		endpoint := new(entities.ProjectEndpoint)
 		if err = rows.Row(endpoint); err != nil {

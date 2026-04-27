@@ -86,7 +86,7 @@ func (repository *couchbaseProjectRepository) Fetch(ctx context.Context, userID 
 		}
 	}()
 
-	var projects []*entities.Project
+	projects := make([]*entities.Project, 0)
 	for rows.Next() {
 		project := new(entities.Project)
 		if err = rows.Row(project); err != nil {

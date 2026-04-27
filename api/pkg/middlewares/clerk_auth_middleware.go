@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/clerk/clerk-sdk-go/v2/jwks"
 	"github.com/clerk/clerk-sdk-go/v2/jwt"
 	"github.com/gofiber/fiber/v2"
 
@@ -14,7 +15,7 @@ import (
 )
 
 // ClerkBearerAuth authenticates a user based on the bearer token
-func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer) fiber.Handler {
+func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer, client *jwks.Client) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		_, span, ctxLogger := tracer.StartFromFiberCtxWithLogger(c, logger, "middlewares.ClerkBearerAuth")
 		defer span.End()
@@ -25,13 +26,13 @@ func ClerkBearerAuth(logger telemetry.Logger, tracer telemetry.Tracer) fiber.Han
 			return c.Next()
 		}
 
-		if len(authToken) > len(bearerScheme)+1 {
-			authToken = authToken[len(bearerScheme)+1:]
+		if strings.HasPrefix(authToken, bearerPrefix) {
+			authToken = strings.TrimPrefix(authToken, bearerPrefix)
 		}
 
 		claims, err := jwt.Verify(c.Context(), &jwt.VerifyParams{Token: authToken})
 		if err != nil {
-			msg := fmt.Sprintf("invalid clerk id token [%s] and error message [%s]", tracer.Redact(authToken), err.Error())
+			msg := fmt.Sprintf("invalid clerk token [%s] and error message [%s]", tracer.Redact(authToken), err.Error())
 			span.AddEvent(msg)
 			return c.Next()
 		}

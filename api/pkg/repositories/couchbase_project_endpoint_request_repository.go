@@ -108,8 +108,8 @@ func (repository *couchbaseProjectEndpointRequestRepository) GetProjectTraffic(c
 	rows, err := repository.cluster.Query(query, &gocb.QueryOptions{
 		Context: ctx,
 		NamedParameters: map[string]interface{}{
-			"userID":       string(userID),
-			"projectID":    projectID.String(),
+			"userID":        string(userID),
+			"projectID":     projectID.String(),
 			"thirtyDaysAgo": thirtyDaysAgo,
 		},
 	})
@@ -222,7 +222,7 @@ func (repository *couchbaseProjectEndpointRequestRepository) Index(ctx context.C
 		}
 	}()
 
-	var requests []*entities.ProjectEndpointRequest
+	requests := make([]*entities.ProjectEndpointRequest, 0)
 	for rows.Next() {
 		request := new(entities.ProjectEndpointRequest)
 		if err = rows.Row(request); err != nil {

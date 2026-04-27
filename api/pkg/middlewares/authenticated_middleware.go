@@ -8,6 +8,7 @@ import (
 const (
 	authHeaderBearer = "Authorization"
 	bearerScheme     = "Bearer"
+	bearerPrefix     = "Bearer "
 )
 
 const (
