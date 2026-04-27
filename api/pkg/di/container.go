@@ -603,7 +603,7 @@ func (container *Container) EventDispatcher() (dispatcher *services.EventDispatc
 
 // Float64Histogram creates a new instance of metric.Float64Histogram
 func (container *Container) Float64Histogram(name, unit, description string) otelMetric.Float64Histogram {
-	container.logger.Debug("creating GORM repositories.MessageRepository")
+	container.logger.Debug("creating otelMetric.Float64Histogram")
 	meter := otel.GetMeterProvider().Meter(
 		container.projectID,
 		otelMetric.WithInstrumentationVersion(otel.Version()),
