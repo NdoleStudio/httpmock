@@ -8,12 +8,12 @@ import (
 
 // ProjectEndpointRequest is the model for a project endpoint request
 type ProjectEndpointRequest struct {
-	ID                          string    `json:"id" gorm:"primaryKey" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
+	ID                          string    `json:"id" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
 	ProjectID                   uuid.UUID `json:"project_id" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
 	ProjectEndpointID           uuid.UUID `json:"project_endpoint_id" example:"8f9c71b8-b84e-4417-8408-a62274f65a08"`
 	UserID                      UserID    `json:"user_id" example:"user_2oeyIzOf9xxxxxxxxxxxxxx"`
-	RequestMethod               string    `json:"request_method" example:"GET" gorm:"type:varchar(7)"`
-	RequestURL                  string    `json:"request_url" example:"https://stripe-mock-api.httpmock.dev/v1/products" gorm:"type:varchar(255)"`
+	RequestMethod               string    `json:"request_method" example:"GET"`
+	RequestURL                  string    `json:"request_url" example:"https://stripe-mock-api.httpmock.dev/v1/products"`
 	RequestHeaders              *string   `json:"request_headers" example:"[{\"Authorization\":\"Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc\"}]"`
 	RequestBody                 *string   `json:"request_body" example:"{\"name\": \"Product 1\"}"`
 	RequestIPAddress            string    `json:"request_ip_address" example:"127.0.0.1"`

@@ -73,7 +73,7 @@ func (h *handler) responseNoContent(c *fiber.Ctx, message string) error {
 	})
 }
 
-func (h *handler) responseOK(c *fiber.Ctx, message string, data interface{}) error {
+func (h *handler) responseOK(c *fiber.Ctx, message string, data any) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status":  "success",
 		"message": message,
@@ -116,21 +116,6 @@ func (h *handler) validateULID(c *fiber.Ctx, param string) url.Values {
 	}
 	return nil
 }
-
-//func (h *handler) responseCreated(c *fiber.Ctx, message string, data interface{}) error {
-//	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-//		"status":  "success",
-//		"message": message,
-//		"data":    data,
-//	})
-//}
-
-//func (h *handler) pluralize(value string, count int) string {
-//	if count == 1 {
-//		return value
-//	}
-//	return value + "s"
-//}
 
 func (h *handler) userFromContext(c *fiber.Ctx) *entities.AuthUser {
 	if tokenUser, ok := c.Locals(middlewares.ContextKeyAuthUserID).(*entities.AuthUser); ok {

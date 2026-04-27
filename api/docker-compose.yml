@@ -5,6 +5,5 @@ services:
       - "80:8000"
       - "443:8443"
     env_file: .env
-
     volumes:
       - ./certs:/app/certs

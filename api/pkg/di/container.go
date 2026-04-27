@@ -3,6 +3,7 @@ package di
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -11,15 +12,15 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/clerk/clerk-sdk-go/v2/jwks"
 	"github.com/pusher/pusher-http-go/v5"
-
-	"github.com/dgraph-io/ristretto/v2"
 
 	"github.com/NdoleStudio/httpmock/pkg/listeners"
 
 	"github.com/NdoleStudio/httpmock/docs"
 
 	"github.com/caarlos0/env/v11"
+	"github.com/couchbase/gocb/v2"
 	"github.com/lmittmann/tint"
 	"go.opentelemetry.io/contrib/bridges/otelslog"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"
@@ -34,7 +35,6 @@ import (
 	"github.com/clerk/clerk-sdk-go/v2"
 
 	"github.com/NdoleStudio/go-otelroundtripper"
-	"github.com/NdoleStudio/httpmock/pkg/entities"
 	"github.com/NdoleStudio/httpmock/pkg/handlers"
 	"github.com/NdoleStudio/httpmock/pkg/middlewares"
 	"github.com/NdoleStudio/httpmock/pkg/queue"
@@ -48,7 +48,6 @@ import (
 	otelMetric "go.opentelemetry.io/otel/metric"
 
 	"github.com/gofiber/contrib/otelfiber"
-	"gorm.io/plugin/opentelemetry/tracing"
 
 	"github.com/jinzhu/now"
 
@@ -68,10 +67,6 @@ import (
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 	"github.com/palantir/stacktrace"
-	"gorm.io/gorm"
-
-	"gorm.io/driver/postgres"
-	gormLogger "gorm.io/gorm/logger"
 )
 
 var configuration *Configuration
@@ -80,7 +75,8 @@ var configuration *Configuration
 type Container struct {
 	projectID       string
 	version         string
-	db              *gorm.DB
+	cluster         *gocb.Cluster
+	bucket          *gocb.Bucket
 	app             *fiber.App
 	eventDispatcher *services.EventDispatcher
 	logger          telemetry.Logger
@@ -93,7 +89,7 @@ func NewLiteContainer() (container *Container) {
 		TimeLocation: time.UTC,
 	}
 
-	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
+	clerk.SetKey(os.Getenv("CLERK_SECRET_KEY"))
 
 	return &Container{
 		logger: logger(3).WithCodeNamespace(fmt.Sprintf("%T", container)),
@@ -107,7 +103,7 @@ func NewContainer(projectID string, version string) (container *Container) {
 		TimeLocation: time.UTC,
 	}
 
-	clerk.SetKey(os.Getenv("CLERK_API_KEY"))
+	clerk.SetKey(os.Getenv("CLERK_SECRET_KEY"))
 
 	container = &Container{
 		projectID: projectID,
@@ -155,6 +151,9 @@ func (container *Container) App() (app *fiber.App) {
 
 	container.app = app
 
+	container.EnsureDBCollections()
+	container.EnsureDBIndexes()
+
 	container.RegisterEventRoutes()
 	container.RegisterProjectRoutes()
 	container.RegisterProjectEndpointRoutes()
@@ -199,62 +198,115 @@ func (container *Container) Logger(skipFrameCount ...int) telemetry.Logger {
 	return logger(2)
 }
 
-// GormLogger creates a new instance of gormLogger.Interface
-func (container *Container) GormLogger() gormLogger.Interface {
-	container.logger.Debug("creating gormLogger.Interface")
-	return telemetry.NewGormLogger(
-		container.Tracer(),
-		container.Logger(5),
-	)
+// Cluster creates a Couchbase cluster connection
+func (container *Container) Cluster() *gocb.Cluster {
+	if container.cluster != nil {
+		return container.cluster
+	}
+
+	container.logger.Debug("creating *gocb.Cluster")
+
+	options := gocb.ClusterOptions{
+		Authenticator: gocb.PasswordAuthenticator{
+			Username: os.Getenv("COUCHBASE_USERNAME"),
+			Password: os.Getenv("COUCHBASE_PASSWORD"),
+		},
+	}
+
+	// Sets a pre-configured profile called "wan-development" to help avoid latency issues
+	// when accessing Capella from a different Wide Area Network
+	// or Availability Zone (e.g. your laptop).
+	if err := options.ApplyProfile(gocb.ClusterConfigProfileWanDevelopment); err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot apply [wan-development] profile"))
+	}
+
+	cluster, err := gocb.Connect(os.Getenv("COUCHBASE_CONNECTION_STRING"), options)
+	if err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot connect to Couchbase cluster"))
+	}
+
+	container.cluster = cluster
+	return cluster
 }
 
-// DB creates an instance of gorm.DB if it has not been created already
-func (container *Container) DB() (db *gorm.DB) {
-	if container.db != nil {
-		return container.db
+// Bucket returns the Couchbase bucket
+func (container *Container) Bucket() *gocb.Bucket {
+	if container.bucket != nil {
+		return container.bucket
 	}
 
-	container.logger.Debug(fmt.Sprintf("creating %T", db))
+	container.logger.Debug("creating *gocb.Bucket")
 
-	config := &gorm.Config{TranslateError: true}
-	if isLocal() {
-		config.Logger = container.GormLogger()
+	container.bucket = container.Cluster().Bucket(os.Getenv("COUCHBASE_BUCKET"))
+	if err := container.bucket.WaitUntilReady(5*time.Second, nil); err != nil {
+		container.logger.Fatal(stacktrace.Propagate(err, "cannot connect to Couchbase bucket"))
 	}
 
-	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), config)
-	if err != nil {
-		container.logger.Fatal(err)
-	}
-	container.db = db
+	return container.bucket
+}
 
-	sqlDB, err := db.DB()
-	if err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, "cannot get sql.DB from GORM"))
+// CouchbaseDBScope returns the default Couchbase scope name
+func (container *Container) CouchbaseDBScope() string {
+	return "_default"
+}
+
+// ProjectsCollection returns the projects collection
+func (container *Container) ProjectsCollection() *gocb.Collection {
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("projects")
+}
+
+// EndpointsCollection returns the project_endpoints collection
+func (container *Container) EndpointsCollection() *gocb.Collection {
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("project_endpoints")
+}
+
+// EndpointRequestsCollection returns the project_endpoint_requests collection
+func (container *Container) EndpointRequestsCollection() *gocb.Collection {
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("project_endpoint_requests")
+}
+
+// UsersCollection returns the users collection
+func (container *Container) UsersCollection() *gocb.Collection {
+	return container.Bucket().Scope(container.CouchbaseDBScope()).Collection("users")
+}
+
+// EnsureDBCollections creates Couchbase collections if they don't exist
+func (container *Container) EnsureDBCollections() {
+	container.logger.Debug("ensuring Couchbase collections exist")
+	collections := container.Bucket().CollectionsV2()
+
+	collectionNames := []string{"projects", "project_endpoints", "project_endpoint_requests", "users"}
+	for _, name := range collectionNames {
+		err := collections.CreateCollection(container.CouchbaseDBScope(), name, nil, nil)
+		if err != nil && !errors.Is(err, gocb.ErrCollectionExists) {
+			container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create collection [%s]", name)))
+		}
+	}
+}
+
+// EnsureDBIndexes creates N1QL indexes if they don't exist
+func (container *Container) EnsureDBIndexes() {
+	container.logger.Debug("ensuring Couchbase indexes exist")
+	bucket := os.Getenv("COUCHBASE_BUCKET")
+
+	indexes := []string{
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_projects_user_id ON `%s`.`%s`.`projects`(user_id)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_projects_subdomain ON `%s`.`%s`.`projects`(subdomain)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_user_project ON `%s`.`%s`.`project_endpoints`(user_id, project_id)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_subdomain_request ON `%s`.`%s`.`project_endpoints`(project_subdomain, request_method, request_path)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_endpoints_project_id ON `%s`.`%s`.`project_endpoints`(project_id)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_endpoint ON `%s`.`%s`.`project_endpoint_requests`(user_id, project_endpoint_id, id DESC)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_project_created ON `%s`.`%s`.`project_endpoint_requests`(user_id, project_id, created_at)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_requests_user_endpoint_created ON `%s`.`%s`.`project_endpoint_requests`(user_id, project_endpoint_id, created_at)", bucket, container.CouchbaseDBScope()),
+		fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_users_subscription_id ON `%s`.`%s`.`users`(subscription_id)", bucket, container.CouchbaseDBScope()),
 	}
 
-	sqlDB.SetMaxOpenConns(2)
-	sqlDB.SetConnMaxLifetime(time.Hour)
-
-	if err = db.Use(tracing.NewPlugin()); err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, "cannot use GORM tracing plugin"))
+	for _, query := range indexes {
+		_, err := container.Cluster().Query(query, nil)
+		if err != nil {
+			container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create index: [%s]", query)))
+		}
 	}
-
-	container.logger.Debug(fmt.Sprintf("Running migrations for [%T]", db))
-
-	if err = db.AutoMigrate(&entities.Project{}); err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.Project{})))
-	}
-	if err = db.AutoMigrate(&entities.ProjectEndpoint{}); err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.ProjectEndpoint{})))
-	}
-	if err = db.AutoMigrate(&entities.ProjectEndpointRequest{}); err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.ProjectEndpointRequest{})))
-	}
-	if err = db.AutoMigrate(&entities.User{}); err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot migrate [%T]", &entities.User{})))
-	}
-
-	return container.db
 }
 
 // GoogleCredentials returns google credentials as bytes.
@@ -275,6 +327,14 @@ func (container *Container) CloudTasksClient() (client *cloudtasks.Client) {
 	return client
 }
 
+// ClerkJWKSClient creates a new instance of *jwks.Client
+func (container *Container) ClerkJWKSClient() *jwks.Client {
+	container.logger.Debug(fmt.Sprintf("creating %T", container))
+	config := &clerk.ClientConfig{}
+	config.Key = clerk.String(os.Getenv("CLERK_SECRET_KEY"))
+	return jwks.NewClient(config)
+}
+
 // ClerkBearerAuthMiddlewares creates router for authenticated requests
 func (container *Container) ClerkBearerAuthMiddlewares() []fiber.Handler {
 	container.logger.Debug("creating ClerkBearerAuthRouter")
@@ -282,6 +342,7 @@ func (container *Container) ClerkBearerAuthMiddlewares() []fiber.Handler {
 		middlewares.ClerkBearerAuth(
 			container.Logger().WithCodeNamespace(fmt.Sprintf("%T", middlewares.ClerkBearerAuth)),
 			container.Tracer(),
+			container.ClerkJWKSClient(),
 		),
 		container.AuthenticatedMiddleware(),
 	}
@@ -484,46 +545,34 @@ func (container *Container) ProjectEndpointRequestService() (service *services.P
 
 // ProjectRepository registers a new instance of repositories.ProjectRepository
 func (container *Container) ProjectRepository() repositories.ProjectRepository {
-	container.logger.Debug("creating GORM repositories.ProjectRepository")
-	return repositories.NewGormProjectRepository(
+	container.logger.Debug("creating Couchbase repositories.ProjectRepository")
+	return repositories.NewCouchbaseProjectRepository(
 		container.Logger(),
 		container.Tracer(),
-		container.DB(),
+		container.ProjectsCollection(),
+		container.Cluster(),
 	)
 }
 
 // ProjectEndpointRepository registers a new instance of repositories.ProjectEndpointRepository
 func (container *Container) ProjectEndpointRepository() repositories.ProjectEndpointRepository {
-	container.logger.Debug("creating GORM repositories.ProjectEndpointRepository")
-	return repositories.NewGormProjectEndpointRepository(
+	container.logger.Debug("creating Couchbase repositories.ProjectEndpointRepository")
+	return repositories.NewCouchbaseProjectEndpointRepository(
 		container.Logger(),
 		container.Tracer(),
-		container.DB(),
-		container.ProjectEndpointRistrettoCache(),
+		container.EndpointsCollection(),
+		container.Cluster(),
 	)
-}
-
-// ProjectEndpointRistrettoCache creates an in-memory *ristretto.Cache[string, entities.AuthUser]
-func (container *Container) ProjectEndpointRistrettoCache() (cache *ristretto.Cache[string, *entities.ProjectEndpoint]) {
-	container.logger.Debug(fmt.Sprintf("creating %T", cache))
-	ristrettoCache, err := ristretto.NewCache[string, *entities.ProjectEndpoint](&ristretto.Config[string, *entities.ProjectEndpoint]{
-		MaxCost:     5000,
-		NumCounters: 5000 * 10,
-		BufferItems: 64,
-	})
-	if err != nil {
-		container.logger.Fatal(stacktrace.Propagate(err, fmt.Sprintf("cannot create %T cache", cache)))
-	}
-	return ristrettoCache
 }
 
 // ProjectEndpointRequestRepository registers a new instance of repositories.ProjectEndpointRequestRepository
 func (container *Container) ProjectEndpointRequestRepository() repositories.ProjectEndpointRequestRepository {
-	container.logger.Debug("creating GORM repositories.ProjectEndpointRequestRepository")
-	return repositories.NewGormProjectEndpointRequestRepository(
+	container.logger.Debug("creating Couchbase repositories.ProjectEndpointRequestRepository")
+	return repositories.NewCouchbaseProjectEndpointRequestRepository(
 		container.Logger(),
 		container.Tracer(),
-		container.DB(),
+		container.EndpointRequestsCollection(),
+		container.Cluster(),
 	)
 }
 
@@ -571,7 +620,7 @@ func (container *Container) EventDispatcher() (dispatcher *services.EventDispatc
 
 // Float64Histogram creates a new instance of metric.Float64Histogram
 func (container *Container) Float64Histogram(name, unit, description string) otelMetric.Float64Histogram {
-	container.logger.Debug("creating GORM repositories.MessageRepository")
+	container.logger.Debug("creating otelMetric.Float64Histogram")
 	meter := otel.GetMeterProvider().Meter(
 		container.projectID,
 		otelMetric.WithInstrumentationVersion(otel.Version()),
@@ -635,11 +684,12 @@ func (container *Container) EventsHandler() (handler *handlers.EventsHandler) {
 
 // UserRepository registers a new instance of repositories.UserRepository
 func (container *Container) UserRepository() repositories.UserRepository {
-	container.logger.Debug("creating GORM repositories.UserRepository")
-	return repositories.NewGormUserRepository(
+	container.logger.Debug("creating Couchbase repositories.UserRepository")
+	return repositories.NewCouchbaseUserRepository(
 		container.Logger(),
 		container.Tracer(),
-		container.DB(),
+		container.UsersCollection(),
+		container.Cluster(),
 	)
 }
 
