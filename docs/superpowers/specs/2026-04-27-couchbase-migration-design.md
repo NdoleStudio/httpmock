@@ -85,6 +85,7 @@ func NewCouchbaseProjectRepository(
 | Delete                    | `db.Delete(entity)`           | `collection.Remove(id, nil)`                                            |
 | Query/Filter              | `db.Where(...).Find(...)`     | `cluster.Query(n1ql, ...)`                                              |
 | Atomic increment          | `gorm.Expr("field + 1")`      | `collection.MutateIn(id, []gocb.MutateInSpec{gocb.IncrementSpec(...)})` |
+| Atomic decrement          | `gorm.Expr("field - 1")`      | `collection.MutateIn(id, []gocb.MutateInSpec{gocb.DecrementSpec(...)})` |
 | Transaction (LoadOrStore) | `db.Transaction(func(tx)...)` | Try `Insert`; on `ErrDocumentExists`, fall back to `Get`                |
 
 ### Error Mapping
@@ -114,7 +115,8 @@ The `normalizeTimeSeries` helper remains in Go (fills in zero-count days for the
 - `EndpointsCollection() *gocb.Collection`
 - `EndpointRequestsCollection() *gocb.Collection`
 - `UsersCollection() *gocb.Collection`
-- `EnsureIndexes()` — runs `CREATE INDEX IF NOT EXISTS` statements
+- `EnsureCollections()` — creates bucket, scope, and collections if they don't exist via `CollectionManager`
+- `EnsureIndexes()` — runs `CREATE INDEX IF NOT EXISTS` statements (called after `EnsureCollections`)
 
 ### Removed
 
