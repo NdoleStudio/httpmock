@@ -14,6 +14,7 @@ import {
 import {
   ActionMenu,
   BranchName,
+  CounterLabel,
   PageHeader,
   RelativeTime,
 } from "@primer/react";
@@ -147,6 +148,7 @@ export default function ProjectShow() {
     setLoadingEndpoints(true);
     indexProjectEndpoint(projectId)
       .then((endpoints: EntitiesProjectEndpoint[]) => {
+        console.log(endpoints);
         setEndpoints(endpoints);
       })
       .finally(() => {
@@ -171,7 +173,7 @@ export default function ProjectShow() {
   const getLabelColor = (requestMethod: string): string => {
     switch (requestMethod) {
       case "GET":
-        return "accent.fg";
+        return "color-fg-accent";
       case "POST":
         return "success.fg";
       case "PUT":
@@ -368,7 +370,9 @@ export default function ProjectShow() {
           {endpoints.map((endpoint) => (
             <div key={endpoint.id}>
               <Box style={{ display: "flex", alignItems: "baseline" }}>
+                <div className={"fgColor-success color-fg-success"}>Hello</div>
                 <Label
+                  className={getLabelColor(endpoint.request_method)}
                   style={{
                     display: "flex",
                     color: getLabelColor(endpoint.request_method),
@@ -391,7 +395,9 @@ export default function ProjectShow() {
                     )
                   }
                   size={"small"}
-                  count={endpoint.request_count}
+                  trailingVisual={() => (
+                    <CounterLabel>{endpoint.request_count}</CounterLabel>
+                  )}
                   variant="default"
                   style={{ marginRight: 8 }}
                 >

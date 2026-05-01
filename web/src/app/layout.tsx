@@ -21,7 +21,7 @@ export default function RootLayout({
     <ClerkProvider dynamic appearance={{ baseTheme: dark }}>
       <html lang="en">
         <body>
-          <ThemeProvider>
+          <ThemeProvider colorMode={"auto"}>
             <AppBar></AppBar>
             <main>{children}</main>
           </ThemeProvider>

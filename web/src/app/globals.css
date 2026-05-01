@@ -74,6 +74,6 @@ a {
   -webkit-box-orient: vertical;
 }
 
-tab-container {
+.tab-container {
   max-width: 90vw;
 }
