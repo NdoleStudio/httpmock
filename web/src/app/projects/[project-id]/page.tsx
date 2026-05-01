@@ -4,8 +4,6 @@ import {
   Box,
   Text,
   Button,
-  PageHeader,
-  ActionMenu,
   ActionList,
   Spinner,
   Dialog,
@@ -13,7 +11,12 @@ import {
   Label,
   Link,
 } from "@primer/styled-react";
-import { BranchName, RelativeTime } from "@primer/react";
+import {
+  ActionMenu,
+  BranchName,
+  PageHeader,
+  RelativeTime,
+} from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, MouseEvent, useState } from "react";
 import { useAppStore } from "@/store/provider";

@@ -3,17 +3,15 @@
 import {
   Box,
   Text,
-  PageHeader,
   Spinner,
   Dialog,
   Heading,
   Button,
   Label,
   TextInput,
-  Textarea,
   IconButton,
 } from "@primer/styled-react";
-import { BranchName, RelativeTime } from "@primer/react";
+import { BranchName, PageHeader, RelativeTime, Textarea } from "@primer/react";
 import { usePathname } from "next/navigation";
 import React, { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useAppStore } from "@/store/provider";
@@ -375,7 +373,7 @@ export default function EndpointShow() {
             </Text>
           </PageHeader.Description>
         )}
-        <PageHeader.Actions sx={{ display: "flex" }}>
+        <PageHeader.Actions>
           <BackButton href={`/projects/${projectId}/`} />
         </PageHeader.Actions>
       </PageHeader>

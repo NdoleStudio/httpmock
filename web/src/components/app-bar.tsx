@@ -63,7 +63,12 @@ export function AppBar() {
         style={{ cursor: "pointer" }}
         onClick={() => router.push("/")}
       >
-        <Image src={Logo} height={48} alt={"httpmock.dev logo"} />
+        <Image
+          loading={"eager"}
+          src={Logo}
+          height={48}
+          alt={"httpmock.dev logo"}
+        />
         <Heading style={{ fontWeight: "lighter", display: "block" }} as={"h2"}>
           httpmock
         </Heading>

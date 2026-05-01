@@ -1,15 +1,8 @@
 "use client";
 
 import { redirect, useRouter } from "next/navigation";
-import {
-  Box,
-  Button,
-  Heading,
-  PageHeader,
-  Spinner,
-  Text,
-} from "@primer/styled-react";
-import { BranchName } from "@primer/react";
+import { Box, Button, Heading, Spinner, Text } from "@primer/styled-react";
+import { BranchName, PageHeader } from "@primer/react";
 import { PlusIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { EntitiesProject } from "@/api/model";

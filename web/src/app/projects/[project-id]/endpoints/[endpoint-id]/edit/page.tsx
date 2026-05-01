@@ -7,10 +7,9 @@ import {
   FormControl,
   Heading,
   Text,
-  Textarea,
   TextInput,
 } from "@primer/styled-react";
-import { BranchName, Select } from "@primer/react";
+import { BranchName, Select, Textarea } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
