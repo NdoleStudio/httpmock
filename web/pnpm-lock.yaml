@@ -17,14 +17,14 @@ importers:
         specifier: ^19.22.0
         version: 19.22.0(react@19.2.4)
       "@primer/primitives":
-        specifier: ^11.7.1
-        version: 11.7.1
+        specifier: ^11.5.1
+        version: 11.5.1
       "@primer/react":
         specifier: ^38.14.0
         version: 38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
       "@primer/styled-react":
-        specifier: ^1.0.3
-        version: 1.0.3(@primer/react@38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.11(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
+        specifier: ^1.0.6
+        version: 1.0.6(@primer/react@38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.11(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       axios:
         specifier: ^1.15.0
         version: 1.15.0
@@ -877,10 +877,10 @@ packages:
     peerDependencies:
       react: ">=16.3"
 
-  "@primer/primitives@11.7.1":
+  "@primer/primitives@11.5.1":
     resolution:
       {
-        integrity: sha512-+ch43fCGwMHe22AOvgVEg9UTCbqU3XevnnMzxk7J+jajPA0GouIJPrLFLN00uV7Fp6ZxqTj3F3vxigumEIg6Kw==,
+        integrity: sha512-NB9uYfJ01FVY6zp+33EoUbJ0paS3JrWY+PqdHPebTvyRtQgL3sX8//3jWqjt3/jL81UMEulJRM2A0hPj0/vFpQ==,
       }
 
   "@primer/react@38.14.0":
@@ -904,10 +904,10 @@ packages:
       "@types/react-is":
         optional: true
 
-  "@primer/styled-react@1.0.3":
+  "@primer/styled-react@1.0.6":
     resolution:
       {
-        integrity: sha512-JamI030qMcEClaSfGu4Rm13JDXgwonVhO2VrKyfhaypBtr+g3Ir00ddNx4LRRHwaQvx5riQJCv9DU34wRC4CaA==,
+        integrity: sha512-77EDKbuJx2mRVlI1x20dTmsDc1PZDndLP9k2OWGYpyfb0HNLhwmJ7dAylg1x0PycmsfS1j5WajZpH088GJXSHQ==,
       }
     peerDependencies:
       "@primer/react": "*"
@@ -4465,7 +4465,7 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  "@primer/primitives@11.7.1": {}
+  "@primer/primitives@11.5.1": {}
 
   "@primer/react@38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)":
     dependencies:
@@ -4477,7 +4477,7 @@ snapshots:
       "@primer/behaviors": 1.10.2
       "@primer/live-region-element": 0.7.2
       "@primer/octicons-react": 19.22.0(react@19.2.4)
-      "@primer/primitives": 11.7.1
+      "@primer/primitives": 11.5.1
       "@tanstack/react-virtual": 3.13.19(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx: 2.1.1
       color2k: 2.0.3
@@ -4497,7 +4497,7 @@ snapshots:
       "@types/react-dom": 19.2.3(@types/react@19.2.10)
       "@types/react-is": 18.3.1
 
-  "@primer/styled-react@1.0.3(@primer/react@38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.11(react-dom@19.2.4(react@19.2.4))(react@19.2.4))":
+  "@primer/styled-react@1.0.6(@primer/react@38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.3.11(react-dom@19.2.4(react@19.2.4))(react@19.2.4))":
     dependencies:
       "@primer/react": 38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
       "@styled-system/css": 5.1.5
@@ -4506,6 +4506,9 @@ snapshots:
       "@types/styled-system": 5.1.25
       "@types/styled-system__css": 5.0.22
       "@types/styled-system__theme-get": 5.0.4
+      clsx: 2.1.1
+      deepmerge: 4.3.1
+      focus-visible: 5.2.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       react-is: 18.3.1
