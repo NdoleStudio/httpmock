@@ -18,8 +18,8 @@ importers:
         specifier: ^19.22.0
         version: 19.22.0(react@19.2.4)
       '@primer/primitives':
-        specifier: ^11.5.1
-        version: 11.5.1
+        specifier: ^11.7.1
+        version: 11.7.1
       '@primer/react':
         specifier: ^38.14.0
         version: 38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
@@ -570,8 +570,8 @@ packages:
     peerDependencies:
       react: '>=16.3'
 
-  '@primer/primitives@11.5.1':
-    resolution: {integrity: sha512-NB9uYfJ01FVY6zp+33EoUbJ0paS3JrWY+PqdHPebTvyRtQgL3sX8//3jWqjt3/jL81UMEulJRM2A0hPj0/vFpQ==}
+  '@primer/primitives@11.7.1':
+    resolution: {integrity: sha512-+ch43fCGwMHe22AOvgVEg9UTCbqU3XevnnMzxk7J+jajPA0GouIJPrLFLN00uV7Fp6ZxqTj3F3vxigumEIg6Kw==}
 
   '@primer/react@38.14.0':
     resolution: {integrity: sha512-S9alLFr8KY7T4w9WBas+ZTGBvk1sUyve4C/2gKyrxmjPGlAA6yzeDHNkzivLBz4LMvsOw/Klnw9ACR+K63hYDQ==}
@@ -2884,7 +2884,7 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  '@primer/primitives@11.5.1': {}
+  '@primer/primitives@11.7.1': {}
 
   '@primer/react@38.14.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react-is@18.3.1)(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)':
     dependencies:
@@ -2896,7 +2896,7 @@ snapshots:
       '@primer/behaviors': 1.10.2
       '@primer/live-region-element': 0.7.2
       '@primer/octicons-react': 19.22.0(react@19.2.4)
-      '@primer/primitives': 11.5.1
+      '@primer/primitives': 11.7.1
       '@tanstack/react-virtual': 3.13.19(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx: 2.1.1
       color2k: 2.0.3
@@ -3703,7 +3703,7 @@ snapshots:
       eslint: 9.39.2
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2)
       eslint-plugin-react: 7.37.5(eslint@9.39.2)
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.2)
@@ -3740,7 +3740,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -3789,7 +3789,7 @@ snapshots:
       eslint-plugin-eslint-comments: 3.2.0(eslint@9.39.2)
       eslint-plugin-filenames: 1.3.2(eslint@9.39.2)
       eslint-plugin-i18n-text: 1.0.1(eslint@9.39.2)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2)
       eslint-plugin-no-only-tests: 3.3.0
       eslint-plugin-prettier: 5.5.5(eslint-config-prettier@10.1.8(eslint@9.39.2))(eslint@9.39.2)(prettier@3.8.1)
@@ -3810,7 +3810,7 @@ snapshots:
     dependencies:
       eslint: 9.39.2
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
