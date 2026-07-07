@@ -15,7 +15,7 @@
     "@primer/css": "^22.2.0",
     "@primer/octicons-react": "^19.28.0",
     "@primer/primitives": "^11.9.0",
-    "@primer/react": "^38.14.0",
+    "@primer/react": "^38.30.0",
     "@primer/styled-react": "^1.0.8",
     "axios": "^1.16.0",
     "chart.js": "^4.5.1",
