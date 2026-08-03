@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider dynamic appearance={{ baseTheme: dark }}>
+    <ClerkProvider dynamic appearance={{ theme: dark }}>
       <html lang="en">
         <body>
           <ThemeProvider colorMode={"auto"}>
