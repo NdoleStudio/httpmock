@@ -17,7 +17,7 @@
     "@primer/primitives": "^11.9.0",
     "@primer/react": "^38.14.0",
     "@primer/styled-react": "^1.0.8",
-    "axios": "^1.16.0",
+    "axios": "^1.18.1",
     "chart.js": "^4.5.1",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^4.4.0",
