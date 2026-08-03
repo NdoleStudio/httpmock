@@ -3,12 +3,11 @@
 import {
   Box,
   Button,
-  FormControl,
   Heading,
   Text,
   TextInput,
 } from "@primer/styled-react";
-import { Select, Textarea } from "@primer/react";
+import { FormControl, Select, Textarea } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
@@ -215,7 +214,7 @@ export default function EndpointsCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>Response Headers</FormControl.Label>
             <FormControl.Caption>
               This should be a JSON array of headers that will be returned with
@@ -241,7 +240,7 @@ export default function EndpointsCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>
               Response Delay in Milliseconds
             </FormControl.Label>
@@ -271,7 +270,7 @@ export default function EndpointsCreate() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>Endpoint Description</FormControl.Label>
             <FormControl.Caption>
               Use the description field to add more context to your mock

@@ -4,12 +4,11 @@ import {
   Box,
   Button,
   Dialog,
-  FormControl,
   Heading,
   Text,
   TextInput,
 } from "@primer/styled-react";
-import { BranchName, Select, Textarea } from "@primer/react";
+import { BranchName, FormControl, Select, Textarea } from "@primer/react";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { ErrorMessages } from "@/utils/errors";
@@ -150,7 +149,11 @@ export default function EndpointsEdit() {
           }}
         >
           <Heading as={"h2"}>Update Mock Endpoint</Heading>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 24 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Request Method</FormControl.Label>
             <FormControl.Caption>
               Use ANY if you want to match all HTTP methods (GET, POST, DELETE
@@ -181,7 +184,11 @@ export default function EndpointsEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 24 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Request Path</FormControl.Label>
             <FormControl.Caption>
               Your full URL will look like{" "}
@@ -207,7 +214,11 @@ export default function EndpointsEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} required={true} disabled={loading}>
+          <FormControl
+            style={{ marginTop: 24 }}
+            required={true}
+            disabled={loading}
+          >
             <FormControl.Label>Response Code</FormControl.Label>
             <FormControl.Caption>
               HTTP status code to return in the response
@@ -231,7 +242,7 @@ export default function EndpointsEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>Response Body</FormControl.Label>
             <FormControl.Caption>
               The response body can be any valid JSON, XML, or plain text
@@ -256,7 +267,7 @@ export default function EndpointsEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>Response Headers</FormControl.Label>
             <FormControl.Caption>
               This should be a JSON array of headers that will be returned with
@@ -282,7 +293,7 @@ export default function EndpointsEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>Delay in Milliseconds</FormControl.Label>
             <FormControl.Caption>
               The time in milliseconds to wait before sending the HTTP response
@@ -308,7 +319,7 @@ export default function EndpointsEdit() {
               </FormControl.Validation>
             )}
           </FormControl>
-          <FormControl sx={{ mt: 4 }} disabled={loading}>
+          <FormControl style={{ marginTop: 24 }} disabled={loading}>
             <FormControl.Label>Endpoint Description</FormControl.Label>
             <FormControl.Caption>
               Use the description field to add more context to your mock
