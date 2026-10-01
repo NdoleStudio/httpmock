@@ -28,7 +28,7 @@ importers:
         version: 38.37.0(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0)
       '@primer/styled-react':
         specifier: ^1.0.8
-        version: 1.0.8(@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0))(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0)(styled-components@6.4.4(react-dom@19.2.4(react@19.3.0))(react@19.3.0))
+        version: 1.0.8(@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0))(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0)(styled-components@6.5.3(react-dom@19.2.4(react@19.3.0))(react@19.3.0))
       axios:
         specifier: ^1.20.0
         version: 1.20.0
@@ -66,8 +66,8 @@ importers:
         specifier: ^2.0.8
         version: 2.0.8(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react@19.3.0)
       styled-components:
-        specifier: ^6.4.3
-        version: 6.4.4(react-dom@19.2.4(react@19.3.0))(react@19.3.0)
+        specifier: ^6.5.3
+        version: 6.5.3(react-dom@19.2.4(react@19.3.0))(react@19.3.0)
       zustand:
         specifier: ^5.0.15
         version: 5.0.15(@types/react@19.3.0)(react@19.3.0)(use-sync-external-store@1.6.0(react@19.3.0))
@@ -2373,8 +2373,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  styled-components@6.4.4:
-    resolution: {integrity: sha512-tJk5CmKUPMDoTsZQ8m0hHInBk9HFKUPSusqmbBuefDX+yUbMBWea2Ob/wdXFyHW8XZqXkprJscysAdKeGWNqlA==}
+  styled-components@6.5.3:
+    resolution: {integrity: sha512-vAX79sfpmUerP9fsTTxoTrBDE0RuO4ahjInyWYoohNgqrdg63Ms4q6FJ/o2Fyity82NU3cujOT8Ewl9TThBdwg==}
     engines: {node: '>= 16'}
     peerDependencies:
       css-to-react-native: '>= 3.2.0'
@@ -3097,7 +3097,7 @@ snapshots:
       '@types/react': 19.3.0
       '@types/react-dom': 19.2.3(@types/react@19.3.0)
 
-  '@primer/styled-react@1.0.8(@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0))(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0)(styled-components@6.4.4(react-dom@19.2.4(react@19.3.0))(react@19.3.0))':
+  '@primer/styled-react@1.0.8(@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0))(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0)(styled-components@6.5.3(react-dom@19.2.4(react@19.3.0))(react@19.3.0))':
     dependencies:
       '@primer/react': 38.37.0(@types/react-dom@19.2.3(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.3.0))(react-is@18.3.1)(react@19.3.0)
       '@styled-system/css': 5.1.5
@@ -3112,7 +3112,7 @@ snapshots:
       react: 19.3.0
       react-dom: 19.2.4(react@19.3.0)
       react-is: 18.3.1
-      styled-components: 6.4.4(react-dom@19.2.4(react@19.3.0))(react@19.3.0)
+      styled-components: 6.5.3(react-dom@19.2.4(react@19.3.0))(react@19.3.0)
       styled-system: 5.1.5
     optionalDependencies:
       '@types/react': 19.3.0
@@ -5074,7 +5074,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-components@6.4.4(react-dom@19.2.4(react@19.3.0))(react@19.3.0):
+  styled-components@6.5.3(react-dom@19.2.4(react@19.3.0))(react@19.3.0):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       csstype: 3.2.3
