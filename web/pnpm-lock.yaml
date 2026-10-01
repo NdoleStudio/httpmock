@@ -24,11 +24,11 @@ importers:
         specifier: ^11.10.0
         version: 11.10.0
       '@primer/react':
-        specifier: ^38.36.0
-        version: 38.37.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
+        specifier: ^38.40.0
+        version: 38.40.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
       '@primer/styled-react':
         specifier: ^1.0.8
-        version: 1.0.8(@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.4.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
+        version: 1.0.8(@primer/react@38.40.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.4.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       axios:
         specifier: ^1.20.0
         version: 1.20.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -625,11 +625,8 @@ packages:
   '@primer/primitives@11.10.0':
     resolution: {integrity: sha512-ihZxIst4Izry284StKFjpbYvX6R/IBFTLu+qiuAmR93PsKF2hdjoabhSYwKI8iCxOUx94jVP55bI3NoY7STjYQ==}
 
-  '@primer/primitives@11.9.0':
-    resolution: {integrity: sha512-yESOalhd7s7S3unV1V32v3Z0RszXiiz6pzy6hVI9xpdTh1q1Gt8vyDFxRlqIvuwc5ZaO1+gYQTDbjxb4nWBzMw==}
-
-  '@primer/react@38.37.0':
-    resolution: {integrity: sha512-iV4hA3aWZAe5WPaxL0T7LgsBqXhsS9x1wIt1Ky7dbn8wgyTWBCfto+yq3JrWbfHRGAbm1Khijc6yhxBYZ53ryQ==}
+  '@primer/react@38.40.0':
+    resolution: {integrity: sha512-tBCUkD+OwlRZDiV4I4Ft2WxW9g3jrYKi2LkGaHi6BJat8RPTo/47rW4G7GNvkiDSSpe6jGFnU2cP4NIzd52kzA==}
     engines: {node: '>=12', npm: '>=7'}
     peerDependencies:
       '@types/react': 18.x || 19.x
@@ -2054,11 +2051,6 @@ packages:
       chart.js: ^4.1.1
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-compiler-runtime@1.0.0:
-    resolution: {integrity: sha512-rRfjYv66HlG8896yPUDONgKzG5BxZD1nV9U6rkm+7VCuvQc903C4MjcoZR4zPw53IKSOX9wMQVpA1IAbRtzQ7w==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
-
   react-dom@19.2.4:
     resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
     peerDependencies:
@@ -2948,9 +2940,7 @@ snapshots:
 
   '@primer/primitives@11.10.0': {}
 
-  '@primer/primitives@11.9.0': {}
-
-  '@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)':
+  '@primer/react@38.40.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)':
     dependencies:
       '@github/mini-throttle': 2.1.1
       '@github/relative-time-element': 5.3.0
@@ -2959,7 +2949,7 @@ snapshots:
       '@primer/behaviors': 1.10.3
       '@primer/live-region-element': 0.8.0
       '@primer/octicons-react': 19.33.0(react@19.2.4)
-      '@primer/primitives': 11.9.0
+      '@primer/primitives': 11.10.0
       '@tanstack/react-virtual': 3.13.19(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx: 2.1.1
       color2k: 2.0.3
@@ -2970,7 +2960,6 @@ snapshots:
       lodash.isempty: 4.4.0
       lodash.isobject: 3.0.2
       react: 19.2.4
-      react-compiler-runtime: 1.0.0(react@19.2.4)
       react-dom: 19.2.4(react@19.2.4)
       react-intersection-observer: 10.0.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-is: 18.3.1
@@ -2978,9 +2967,9 @@ snapshots:
       '@types/react': 19.2.10
       '@types/react-dom': 19.2.3(@types/react@19.2.10)
 
-  '@primer/styled-react@1.0.8(@primer/react@38.37.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.4.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4))':
+  '@primer/styled-react@1.0.8(@primer/react@38.40.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(styled-components@6.4.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4))':
     dependencies:
-      '@primer/react': 38.37.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
+      '@primer/react': 38.40.0(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)
       '@styled-system/css': 5.1.5
       '@styled-system/props': 5.1.5
       '@styled-system/theme-get': 5.1.2
@@ -4653,10 +4642,6 @@ snapshots:
   react-chartjs-2@5.3.1(chart.js@4.5.1)(react@19.2.4):
     dependencies:
       chart.js: 4.5.1
-      react: 19.2.4
-
-  react-compiler-runtime@1.0.0(react@19.2.4):
-    dependencies:
       react: 19.2.4
 
   react-dom@19.2.4(react@19.2.4):
