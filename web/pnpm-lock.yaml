@@ -18,8 +18,8 @@ importers:
         specifier: ^22.3.2
         version: 22.3.2(@primer/primitives@11.10.0)
       '@primer/octicons-react':
-        specifier: ^19.33.0
-        version: 19.33.0(react@19.3.0)
+        specifier: ^19.38.0
+        version: 19.38.0(react@19.3.0)
       '@primer/primitives':
         specifier: ^11.10.0
         version: 11.10.0
@@ -619,6 +619,11 @@ packages:
   '@primer/octicons-react@19.33.0':
     resolution: {integrity: sha512-7VL8WuLXXZvUV/DP895ESFXPl/FJq816amCT3KZcmpQgxM1uv6lJGCcsEFpLX3K6SE+3qcmsftPpxn3ctr06+g==}
     engines: {node: '>=8'}
+    peerDependencies:
+      react: '>=16.3'
+
+  '@primer/octicons-react@19.38.0':
+    resolution: {integrity: sha512-ZzWVrX6kluBaCepsDj/jAxagBOMaRX18LEf723IKpr4E/jdkTdCOtlsN+60Oj7IV9YEVrlUpo9Oky0Tn1heSCA==}
     peerDependencies:
       react: '>=16.3'
 
@@ -3062,6 +3067,10 @@ snapshots:
       '@lit-labs/ssr-dom-shim': 1.5.1
 
   '@primer/octicons-react@19.33.0(react@19.3.0)':
+    dependencies:
+      react: 19.3.0
+
+  '@primer/octicons-react@19.38.0(react@19.3.0)':
     dependencies:
       react: 19.3.0
 
