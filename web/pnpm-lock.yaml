@@ -88,8 +88,8 @@ importers:
         specifier: 16.4.3
         version: 16.4.3(@typescript-eslint/parser@8.56.1(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.0.2)
       eslint-plugin-primer-react:
-        specifier: ^9.3.0
-        version: 9.3.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^9.3.1
+        version: 9.3.1(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -1498,8 +1498,8 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-primer-react@9.3.0:
-    resolution: {integrity: sha512-wfqeqyvQJzoj0XK6S6gZp367KrjyfdzWMhdTFXUUujio8NPi7F2pJFE3/s5s78MjEK4dD1WUtPJvlK7fqF47jQ==}
+  eslint-plugin-primer-react@9.3.1:
+    resolution: {integrity: sha512-/7CvVxoxsTMWEFFKz5gfxCV/yEh3r4kj6w9HqyzvgIWtnfeKYDyP94bO7QbFoIGkcJ2iP/b5T1S1uyu3lNufzg==}
     engines: {node: '>=20'}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
@@ -4114,7 +4114,7 @@ snapshots:
     optionalDependencies:
       eslint-config-prettier: 10.1.8(eslint@9.39.2(supports-color@7.2.0))
 
-  eslint-plugin-primer-react@9.3.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0):
+  eslint-plugin-primer-react@9.3.1(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
       '@typescript-eslint/utils': 8.65.0(eslint@9.39.2(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       eslint: 9.39.2(supports-color@7.2.0)
